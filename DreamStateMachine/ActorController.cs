@@ -53,6 +53,9 @@ namespace DreamStateMachine.Behaviors
                     //actor.movementIntent.Y += impulse.Y;
                     victim.velocity += damageInfo.attacker.sightVector * 20;
                     victim.onHurt(damageInfo);
+                    Recoil recoil = new Recoil(victim.animationList, victim);
+                    if (!victim.animationList.has(recoil))
+                        victim.animationList.pushFront(recoil);
                     if (victim.GetType() == typeof(Enemy))
                     {
                         enemy = (Enemy)victim;
@@ -63,6 +66,7 @@ namespace DreamStateMachine.Behaviors
                         Stunned stunned = new Stunned(enemy.behaviorList, enemy);
                         if (!enemy.behaviorList.has(stunned))
                             enemy.behaviorList.pushFront(stunned);
+                        
                     }
 
 

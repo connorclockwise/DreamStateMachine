@@ -13,7 +13,6 @@ namespace DreamStateMachine.Actions
         AnimationInfo animationInfo;
         Actor owner;
         Vector2 walkDirection;
-        //int curWalkFrame;
         double dotProduct;
 
         public Walk(ActionList ownerList, Actor owner)

@@ -16,17 +16,6 @@ namespace DreamStateMachine
         public int textureColumn;
         public int textureRow;
 
-        public AnimationInfo(String name, int frames, float speed, int column, int row, List<List<Point>> hits, int damage)
-        {
-            this.name = name;
-            this.frames = frames;
-            fps = speed;
-            textureColumn = column;
-            textureRow = row;
-            hitPoints = hits; 
-            hitDamage = damage;
-        }
-
         public AnimationInfo(String name, int frames, float speed, int column, int row)
         {
             this.name = name;
@@ -35,7 +24,6 @@ namespace DreamStateMachine
             textureColumn = column;
             textureRow = row;
         }
-
 
     };
 }
