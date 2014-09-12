@@ -10,18 +10,16 @@ namespace DreamStateMachine.Actions
     class Alert:Behavior
     {
         ActionList ownerList;
-        ActorController actorController;
-        Enemy owner;
+        Actor owner;
         Actor target;
         World world;
 
-        public Alert(ActionList ol, Enemy o, Actor t, World w, ActorController aC)
+        public Alert(ActionList ownerList, Actor owner, Actor target)
         {
-            actorController = aC;
-            ownerList = ol;
-            owner = o;
-            world = w;
-            target = t;
+            this.ownerList = ownerList;
+            this.owner = owner;
+            world = owner.world;
+            this.target = target;
             elapsed = 0;
             duration = -1;
         }
@@ -40,13 +38,13 @@ namespace DreamStateMachine.Actions
         {
             if (world.isInSight(owner, target.hitBox.Center))
             {
-                owner.behaviorList.endAll();
+                ownerList.endAll();
                 //Follow follow = new Follow(enemy.behaviorList, enemy, protagonist);
                 //if (!enemy.behaviorList.has(follow))
                 //    enemy.behaviorList.pushFront(follow);
-                Aggravated aggravated = new Aggravated(owner.behaviorList, owner, target, world, actorController);
-                if (!owner.behaviorList.has(aggravated))
-                    owner.behaviorList.pushFront(aggravated);
+                Aggravated aggravated = new Aggravated(ownerList, owner, target, world);
+                if (!ownerList.has(aggravated))
+                    ownerList.pushFront(aggravated);
                 //Follow follow = new Follow(ownerList, owner, target, world);
                 //if (!owner.behaviorList.has(follow))
                 //    owner.behaviorList.pushFront(follow);

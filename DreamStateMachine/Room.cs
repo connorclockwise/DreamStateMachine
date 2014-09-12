@@ -10,7 +10,7 @@ namespace DreamStateMachine
     {
         public Rectangle dimensions;
         public bool startRoom;
-        public List<Enemy> enemyList;
+        //public List<Enemy> enemyList;
             
         public Room(Rectangle rect)
         {

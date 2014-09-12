@@ -10,8 +10,8 @@ namespace DreamStateMachine.Actions
     class Wander:Behavior
     {
         ActionList ownerList;
-        ActorController actorController;
-        Enemy owner;
+        ActorManager actorManager;
+        Actor owner;
         List<Point> searchPath;
         World world;
         Random random;
@@ -20,18 +20,17 @@ namespace DreamStateMachine.Actions
        
 
 
-        public Wander(ActionList ol, Enemy o, World w, Random r, ActorController aC)
+        public Wander(ActionList ownerList, Actor owner)
         {
-            actorController = aC;
-            ownerList = ol;
-            owner = o;
+            this.ownerList = ownerList;;
+            this.owner = owner;
             elapsed = 0;
             duration = -1;
             searchPath = new List<Point>();
             nextPathPoint = new Point(0, 0);
             isBlocking = true;
-            world = w;
-            random = r;
+            world = owner.world;
+            random = new Random();
         }
 
         override public void onStart()

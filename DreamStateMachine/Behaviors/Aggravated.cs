@@ -10,18 +10,13 @@ namespace DreamStateMachine.Actions
     class Aggravated:Behavior
     {
         ActionList ownerList;
-        ActorController actorController;
-        Enemy owner;
+        Actor owner;
         Actor target;
-        World world;
-        Point ownerTilePos;
-        Point pathTilePos;
 
-        public Aggravated(ActionList ol, Enemy o, Actor toFollow, World w, ActorController aC)
+        public Aggravated(ActionList ownerList, Actor owner, Actor toFollow, World w)
         {
-            actorController = aC;
-            ownerList = ol;
-            owner = o;
+            this.ownerList = ownerList;
+            this.owner = owner;
             target = toFollow;
             nextPathPoint = new Point(0,0);
             elapsed = 0;
@@ -62,7 +57,7 @@ namespace DreamStateMachine.Actions
             else
             {
                 owner.setGaze(target.hitBox.Center);
-                Punch punch = new Punch(owner.animationList, owner, actorController);
+                Punch punch = new Punch(owner.animationList, owner);
                 if (!owner.animationList.has(punch))
                 {
                     owner.animationList.pushFront(punch);

@@ -33,3 +33,4 @@ C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamSta
 C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Tao.Sdl.dll
 C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\obj\x86\Debug\DreamStateMachine.csprojResolveAssemblyReference.cache
 C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Content\SpriteFont1.xnb
+C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Content\skeletonAnimations.png

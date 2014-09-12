@@ -12,6 +12,11 @@ namespace DreamStateMachine
 {
     class Actor:ICloneable
     {
+        public static event EventHandler<SpawnEventArgs> Spawn;
+        public static event EventHandler<AttackEventArgs> Attack;
+        public static event EventHandler<EventArgs> Death;
+        
+
         public ActionList animationList;
         public Dictionary<String, AnimationInfo> animations;
         //public Attributes attributes;
@@ -28,10 +33,13 @@ namespace DreamStateMachine
         public Vector2 sightVector;
         public Vector2 velocity;
         public Walk walkAnimation;
+        public World world;
         //public Weapon activeWeapon;
         public int maxSpeed;
         public int minSpeed;
         public int health;
+        public int reach;
+        public int sight;
         public float rotationVelocity;
         public float maxRotationVelocity;
         
@@ -78,6 +86,9 @@ namespace DreamStateMachine
             Actor actorCopy = new Actor(texture, hitBox.Width, hitBox.Height, body.Width, body.Height);
             actorCopy.animations = animations;
             actorCopy.color = color;
+            actorCopy.health = health;
+            actorCopy.sight = sight;
+            actorCopy.reach = reach;
             return actorCopy;
         }
 
@@ -91,9 +102,15 @@ namespace DreamStateMachine
             lockedMovement = true;
         }
 
-        virtual public void onKill(DamageInfo damageInfo)
+        public void onAttack(DamageInfo damageInfo)
         {
+            AttackEventArgs attackEventArgs = new AttackEventArgs(damageInfo);
+            Attack(this, attackEventArgs);
+        }
 
+        public void onKill(DamageInfo damageInfo)
+        {
+            Death(this, EventArgs.Empty);
         }
 
         virtual public void onHurt(DamageInfo damageInfo)
@@ -101,9 +118,10 @@ namespace DreamStateMachine
             health -= damageInfo.damage;
         }
 
-        virtual public void onSpawn()
+        virtual public void onSpawn( int spawnType )
         {
-            return;
+            SpawnEventArgs spawnEventArgs = new SpawnEventArgs(spawnType);
+            Spawn(this, spawnEventArgs);
         }
 
         public void setAnimationFrame(int x, int y)

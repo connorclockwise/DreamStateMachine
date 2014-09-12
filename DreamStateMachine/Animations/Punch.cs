@@ -10,18 +10,17 @@ namespace DreamStateMachine.Actions
     class Punch:Action
     {
         ActionList ownerList;
-        ActorController actorController;
+        ActorManager actorManager;
         Actor owner;
         Rectangle attackBox;
         bool hitActor;
         int curFrame;
         int lastFrame;
 
-        public Punch(ActionList ol, Actor o, ActorController aC)
+        public Punch(ActionList ownerList, Actor owner)
         {
-            actorController = aC;
-            ownerList = ol;
-            owner = o;
+            this.ownerList = ownerList;
+            this.owner = owner;
             isBlocking = true;
             attackBox = new Rectangle(0, 0, 9, 9);
             duration = (5f / 12f);
@@ -64,7 +63,8 @@ namespace DreamStateMachine.Actions
                         owner.velocity.X += (float)Math.Cos(owner.bodyRotation + MathHelper.Pi / 2) * 2;
                         owner.velocity.Y += (float)Math.Sin(owner.bodyRotation + MathHelper.Pi / 2) * 2;
                         DamageInfo damageInfo = new DamageInfo(owner, 20, this.attackBox);
-                        hitActor = actorController.handleActorAttack(damageInfo);
+                        owner.onAttack(damageInfo);
+                        //hitActor = actorManager.handleActorAttack(damageInfo);
                     }
                     owner.setAnimationFrame(curFrame, 1);
                     break;

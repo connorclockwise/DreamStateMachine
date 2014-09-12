@@ -300,6 +300,8 @@ namespace DreamStateMachine
             firstRoom.startRoom = true;
 
             Point spawnPos = new Point(coors.X, coors.Y);
+            SpawnFlag playerSpawn = new SpawnFlag("player_spawn", spawnPos, 1);
+            spawns.Add(playerSpawn);
             newWorld.setSpawnTile(spawnPos);
             tileMap[coors.Y, coors.X] = 14;
 
@@ -390,7 +392,7 @@ namespace DreamStateMachine
                 }
             }
 
-            SpawnFlag spawnFlag = new SpawnFlag("thief", coors, 2);
+            SpawnFlag spawnFlag = new SpawnFlag("skeleton", coors, 2);
             spawns.Add(spawnFlag);
         }
 

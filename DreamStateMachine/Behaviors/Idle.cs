@@ -10,21 +10,20 @@ namespace DreamStateMachine.Actions
     class Idle:Behavior
     {
         ActionList ownerList;
-        ActorController actorController;
-        Enemy owner;
+        ActorManager actorManager;
+        Actor owner;
         float nextWander;
         Random random;
         World world;
 
-        public Idle(ActionList ol, Enemy o, World w, Random r, ActorController aC)
+        public Idle(ActionList ownerList, Actor owner)
         {
-            actorController = aC;
-            ownerList = ol;
-            owner = o;
+            this.ownerList = ownerList;
+            this.owner = owner;
             elapsed = 0;
             duration = -1;
-            world = w;
-            random = r;
+            world = owner.world;
+            random = new Random();
         }
 
         override public void onStart()
@@ -45,7 +44,7 @@ namespace DreamStateMachine.Actions
             {
                 elapsed = 0;
                 nextWander = random.Next(3, 10);
-                Wander wander = new Wander(ownerList, owner, world, random, actorController);
+                Wander wander = new Wander(ownerList, owner);
                 if (!ownerList.has(wander))
                 {
                     ownerList.pushFront(wander);

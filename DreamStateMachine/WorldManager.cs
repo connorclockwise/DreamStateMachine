@@ -29,6 +29,14 @@ namespace DreamStateMachine
             worldFactory = new WorldFactory(r);
             worldTree = new Tree<World>();
             curLevel = 1;
+
+            Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
+        }
+
+        private void Actor_Spawn(object sender, SpawnEventArgs e)
+        {
+            Actor spawnedActor = (Actor)sender;
+            spawnedActor.world = curWorld;
         }
 
         public void initWorldConfig(ContentManager content, String actorConfigFile)

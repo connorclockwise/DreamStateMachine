@@ -21,7 +21,8 @@ namespace DreamStateMachine
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        ActorController actorController;
+        ActorManager actorManager;
+        AIController aiController;
         List<Actor> actors;
         Actor player;
         GraphicsDeviceManager graphics;
@@ -91,22 +92,24 @@ namespace DreamStateMachine
 
             random = new Random();
 
-            actors = new List<Actor>();
+            //actors = new List<Actor>();
             worldManager = new WorldManager(random);
             worldManager.initWorldConfig(Content, "content/Worlds.xml");
             worldManager.initStartingWorld();
-            actorController = new ActorController(worldManager, actors, random);
-            actorController.initActorConfig(Content, "content/Actors.xml");
+            actorManager = new ActorManager(worldManager, random);
+            actorManager.initActorConfig(Content, "content/Actors.xml");
+            aiController = new AIController();
+
 
             //spawnTile = worldManager.curWorld.getSpawnTile();
             tileRect = new Rectangle(0,0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 
-            cam = new Camera(spriteBatch, tileRect, worldManager, actors, debugSquare);
+            cam = new Camera(spriteBatch, tileRect, worldManager, debugSquare);
             player = new Actor(playerTexture, 25, 25, 64, 64);
             player.isPlayer = true;
             //Point spawnPosition = new Point(spawnTile.X * tileSize + tileSize / 2, spawnTile.Y * tileSize + tileSize / 2);
-            actorController.spawnActor(player, worldManager.curWorld.getSpawnPos());
-            actorController.spawnActors(worldManager.curWorld.getSpawns());
+            actorManager.spawnActor(player, worldManager.curWorld.getSpawnPos(), 1);
+            actorManager.spawnActors(worldManager.curWorld.getSpawns());
         }
 
         /// <summary>
@@ -137,7 +140,8 @@ namespace DreamStateMachine
 
             float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
             UpdateInput();
-            actorController.update(dt);
+            actorManager.update(dt);
+            aiController.update(dt);
             cam.update(cam, player);
 
             base.Update(gameTime);
@@ -153,7 +157,7 @@ namespace DreamStateMachine
 
                 float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
                 //UpdateInput();
-                //actorController.update(dt);
+                //actorManager.update(dt);
                 //UpdateCamera(cam, player);
 
                 base.Update(gameTime);
@@ -223,7 +227,7 @@ namespace DreamStateMachine
                 if (length < worldManager.curWorld.tileSize)
                 {
                     Point mouseTilePos = new Point(mouseWorldPoint.X / worldManager.curWorld.tileSize, mouseWorldPoint.Y / worldManager.curWorld.tileSize);
-                    actorController.handleActorUse(player, mouseTilePos);
+                    actorManager.handleActorUse(player, mouseTilePos);
                     //LoadNextWorld();
                 }
             }
@@ -242,7 +246,7 @@ namespace DreamStateMachine
 
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                Punch punchAnimation = new Punch(player.animationList, player, actorController);
+                Punch punchAnimation = new Punch(player.animationList, player);
                 if (!player.animationList.has(punchAnimation))
                     player.animationList.pushFront(punchAnimation);
             }

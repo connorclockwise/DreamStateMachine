@@ -18,14 +18,28 @@ namespace DreamStateMachine
         World curWorld;
 
 
-        public Camera(SpriteBatch sB, Rectangle dS, WorldManager w, List<Actor> a, Texture2D debugSq)
+        public Camera(SpriteBatch sB, Rectangle dS, WorldManager w, Texture2D debugSq)
         {
             spriteBatch = sB;
             drawSpace = dS;
             worldManager = w;
-            actors = a;
+            actors = new List<Actor>();
             //debug = true;
             debugTex = debugSq;
+
+            Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
+            Actor.Death += new EventHandler<EventArgs>(Actor_Death);
+        }
+
+        private void Actor_Spawn(object sender, EventArgs e)
+        {
+            Actor spawnedActor = (Actor)sender;
+            actors.Add(spawnedActor);
+        }
+
+        private void Actor_Death(object sender, EventArgs e)
+        {
+            actors.Remove((Actor)sender);
         }
 
         public void ToggleDebug(){

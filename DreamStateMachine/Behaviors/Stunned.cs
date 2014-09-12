@@ -10,13 +10,13 @@ namespace DreamStateMachine.Actions
     class Stunned:Behavior
     {
         ActionList ownerList;
-        Enemy owner;
+        Actor owner;
 
-        public Stunned(ActionList ol, Enemy o)
+        public Stunned(ActionList ownerList, Actor actor)
         {
-            ownerList = ol;
-            owner = o;
-            duration = 0.4f;
+            this.ownerList = ownerList;
+            this.owner = owner;
+            duration = 3/12f;
             isBlocking = true;
         }
 

@@ -53,7 +53,7 @@
     <Compile Include="Action.cs" />
     <Compile Include="ActionList.cs" />
     <Compile Include="Actor.cs" />
-    <Compile Include="ActorController.cs" />
+    <Compile Include="ActorManager.cs" />
     <Compile Include="Animations\Punch.cs" />
     <Compile Include="Animations\Recoil.cs" />
     <Compile Include="Animations\Walk.cs" />
@@ -68,8 +68,10 @@
     <Compile Include="Camera.cs" />
     <Compile Include="AnimationInfo.cs" />
     <Compile Include="Animation.cs" />
+    <Compile Include="AIController.cs" />
+    <Compile Include="AttackEventArgs.cs" />
+    <Compile Include="SpawnEventArgs.cs" />
     <Compile Include="DamageInfo.cs" />
-    <Compile Include="Enemy.cs" />
     <Compile Include="game.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="NodeList.cs" />
@@ -120,6 +122,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\protagonistBodyAnimations.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\skeletonAnimations.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\TempleFloor.png">

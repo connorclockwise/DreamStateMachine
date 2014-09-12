@@ -10,18 +10,18 @@ namespace DreamStateMachine.Actions
     class Follow:Behavior
     {
         ActionList ownerList;
-        ActorController actorController;
-        Enemy owner;
+        ActorManager actorManager;
+        Actor owner;
         Actor target;
         World world;
         Point ownerTilePos;
         Point pathTilePos;
 
-        public Follow(ActionList ol, Enemy o, Actor toFollow, World w, ActorController aC)
+        public Follow(ActionList ownerList, Actor actor, Actor toFollow, World w, ActorManager aC)
         {
-            actorController = aC;
-            ownerList = ol;
-            owner = o;
+            actorManager = aC;
+            this.ownerList = ownerList;
+            this.owner = owner;
             target = toFollow;
             world = w;
             nextPathPoint = new Point(0,0);

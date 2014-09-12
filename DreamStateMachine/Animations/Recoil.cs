@@ -10,7 +10,7 @@ namespace DreamStateMachine.Actions
     class Recoil:Action
     {
         ActionList ownerList;
-        //ActorController actorController;
+        //actorManager actorManager;
         Actor owner;
         Color originalColor;
         //double dotProduct;

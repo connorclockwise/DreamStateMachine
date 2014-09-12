@@ -245,18 +245,18 @@ namespace DreamStateMachine
                 return false;
         }
 
-        public bool isInSight(Enemy enemy, Point point)
+        public bool isInSight(Actor actor, Point point)
         {
-            double distance = Math.Sqrt(Math.Pow(point.X - enemy.hitBox.Center.X, 2) + Math.Pow(point.Y - enemy.hitBox.Center.Y, 2));
-            if (distance < enemy.sight)
+            double distance = Math.Sqrt(Math.Pow(point.X - actor.hitBox.Center.X, 2) + Math.Pow(point.Y - actor.hitBox.Center.Y, 2));
+            if (distance < actor.sight)
             {
-                Vector2 direction = new Vector2(point.X - enemy.hitBox.Center.X, point.Y - enemy.hitBox.Center.Y);
+                Vector2 direction = new Vector2(point.X - actor.hitBox.Center.X, point.Y - actor.hitBox.Center.Y);
                 direction.Normalize();
 
-                double dotProduct = Vector2.Dot(direction, enemy.sightVector);
+                double dotProduct = Vector2.Dot(direction, actor.sightVector);
                 if (dotProduct > 0)
                 {
-                    TraceInfo traceInfo = this.traceWorld(point, enemy.hitBox.Center);
+                    TraceInfo traceInfo = this.traceWorld(point, actor.hitBox.Center);
                     if (!traceInfo.hitWorld)
                     {
                         return true;

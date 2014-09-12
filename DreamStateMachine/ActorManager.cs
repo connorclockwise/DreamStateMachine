@@ -10,16 +10,16 @@ using System.Xml.Linq;
 
 namespace DreamStateMachine.Behaviors
 {
-    class ActorController
+    class ActorManager
     {
         Dictionary<String, Actor> actorPrototypes;
         List<Actor> actors;
         List<ActionList> behaviorLists;
-        List<ActionList> actionLists;
+        //List<ActionList> actionLists;
         Actor curActor;
         Actor victim;
         Actor protagonist;
-        Enemy enemy;
+        //Enemy enemy;
         Random random;
         Rectangle predictedMove;
         WorldManager worldManager;
@@ -28,13 +28,28 @@ namespace DreamStateMachine.Behaviors
         int actorW;
         int actorH;
 
-        public ActorController(WorldManager w, List<Actor> a, Random r)
+        public ActorManager(WorldManager w, Random r)
         {
             worldManager = w;
-            actors = a;
+            
             random = r;
             actorPrototypes = new Dictionary<string,Actor>();
             behaviorLists = new List<ActionList>();
+            actors = new List<Actor>();
+
+            Actor.Death += new EventHandler<EventArgs>(Actor_Death);
+            Actor.Attack += new EventHandler<AttackEventArgs>(Actor_Attack);
+
+        }
+
+        private void Actor_Attack(object sender, AttackEventArgs e)
+        {
+            handleActorAttack(e.damageInfo);
+        }
+
+        private void Actor_Death(object sender, EventArgs e)
+        {
+            actors.Remove((Actor)sender);
         }
 
         public bool handleActorAttack(DamageInfo damageInfo)
@@ -56,22 +71,23 @@ namespace DreamStateMachine.Behaviors
                     Recoil recoil = new Recoil(victim.animationList, victim);
                     if (!victim.animationList.has(recoil))
                         victim.animationList.pushFront(recoil);
-                    if (victim.GetType() == typeof(Enemy))
-                    {
-                        enemy = (Enemy)victim;
+                    //if (victim.GetType() == typeof(Enemy))
+                    //{
+                    //    enemy = (Enemy)victim;
                         
-                        Aggravated aggravated = new Aggravated(enemy.behaviorList, enemy, damageInfo.attacker, worldManager.getCurWorld(), this );
-                        if (!enemy.behaviorList.has(aggravated))
-                            enemy.behaviorList.pushFront(aggravated);
-                        Stunned stunned = new Stunned(enemy.behaviorList, enemy);
-                        if (!enemy.behaviorList.has(stunned))
-                            enemy.behaviorList.pushFront(stunned);
+                        //Aggravated aggravated = new Aggravated(enemy.behaviorList, enemy, damageInfo.attacker, worldManager.getCurWorld());
+                        //if (!enemy.behaviorList.has(aggravated))
+                        //    enemy.behaviorList.pushFront(aggravated);
+                        //Stunned stunned = new Stunned(enemy.behaviorList, enemy);
+                        //if (!enemy.behaviorList.has(stunned))
+                        //    enemy.behaviorList.pushFront(stunned);
                         
-                    }
+                    //}
 
 
                     if (victim.health <= 0)
                     {
+                        victim.onKill(damageInfo);
                         actors.Remove(victim);
                     }
                     return true;
@@ -94,9 +110,9 @@ namespace DreamStateMachine.Behaviors
                     World newWorld = worldManager.createNextWorld(0);
                     actors.Clear();
                     //cam.world = newWorld;
-                    //actorController.world = newWorld;
-                    //actorController.spawnActor(player, newWorld.getSpawnPos());
-                    this.spawnActor(protagonist, worldManager.curWorld.getSpawnPos());
+                    //actorManager.world = newWorld;
+                    //actorManager.spawnActor(player, newWorld.getSpawnPos());
+                    this.spawnActor(protagonist, worldManager.curWorld.getSpawnPos(), 1);
                     this.spawnActors(worldManager.curWorld.getSpawns());
                 }
                 //isLoadingWorld = false;
@@ -311,6 +327,9 @@ namespace DreamStateMachine.Behaviors
             Texture2D actorTexture;
             int actorWidth;
             int actorHeight;
+            int actorHealth;
+            int actorSight;
+            int actorReach;
             int texWidth;
             int texHeight;
             foreach (XElement actor in actors)
@@ -321,8 +340,14 @@ namespace DreamStateMachine.Behaviors
                 actorHeight = int.Parse(actor.Attribute("height").Value);
                 texWidth = int.Parse(actor.Attribute("texWidth").Value);
                 texHeight = int.Parse(actor.Attribute("texHeight").Value);
+                actorHealth = int.Parse(actor.Attribute("health").Value);
+                actorSight = int.Parse(actor.Attribute("sight").Value);
+                actorReach = int.Parse(actor.Attribute("reach").Value);
                 this.actorPrototypes[actorClass] = new Actor(actorTexture, actorWidth, actorHeight, texWidth, texHeight);
                 this.actorPrototypes[actorClass].className = actorClass;
+                this.actorPrototypes[actorClass].health = actorHealth;
+                this.actorPrototypes[actorClass].sight = actorSight;
+                this.actorPrototypes[actorClass].reach = actorReach;
             }
        }
 
@@ -331,23 +356,20 @@ namespace DreamStateMachine.Behaviors
             protagonist = a;
         }
 
-        public void spawnActor(Actor actor, Point point){
+        public void spawnActor(Actor actor, Point point, int spawnType){
             
             actor.setPos(point);
-            actor.onSpawn();
+            actor.onSpawn(spawnType);
             actors.Add(actor);
             if (actor.isPlayer)
                 protagonist = actor;
-            else if (actor.GetType() == typeof(Enemy))
-            {
-                enemy = (Enemy)actor;
-                enemy.color = Color.Crimson;
-                enemy.setGaze(new Vector2(random.Next(-1,1), random.Next(-1,1)));
-                Idle idle = new Idle(enemy.behaviorList, enemy, worldManager.curWorld, random, this);
-                enemy.behaviorList.pushFront(idle);
-                Alert alert = new Alert(enemy.behaviorList, enemy, protagonist, worldManager.curWorld, this);
-                enemy.behaviorList.pushFront(alert);
-            }
+            //else if (actor.GetType() == typeof(Enemy))
+            //{
+            //    enemy = (Enemy)actor;
+            //    //enemy.color = Color.Crimson;
+            //    enemy.setGaze(new Vector2(random.Next(-1,1), random.Next(-1,1)));
+                
+            //}
         }
 
         public void spawnActors(List<SpawnFlag> spawns)
@@ -356,14 +378,18 @@ namespace DreamStateMachine.Behaviors
             {
                 if (actorPrototypes.ContainsKey(spawn.className))
                 {
-                    if(spawn.spawnType == 2)
-                    {
-                        Actor actorToCopy = (Actor)actorPrototypes[spawn.className];
-                        Enemy newEnemy = new Enemy(actorToCopy.texture, actorToCopy.hitBox.Width, actorToCopy.hitBox.Height, actorToCopy.body.Width, actorToCopy.body.Height);
+                    //if(spawn.spawnType == 2)
+                    //{
+                        Actor actorToCopy = (Actor)actorPrototypes[spawn.className].Clone();
+                        //Enemy newEnemy = new Enemy(actorToCopy.texture, actorToCopy.hitBox.Width, actorToCopy.hitBox.Height, actorToCopy.body.Width, actorToCopy.body.Height);
                         Point spawnPoint = new Point(spawn.tilePosition.X * worldManager.curWorld.tileSize, spawn.tilePosition.Y * worldManager.curWorld.tileSize);
-                        spawnActor(newEnemy, spawnPoint);
-                    }
+                        spawnActor(actorToCopy, spawnPoint, spawn.spawnType);
+                    //}
                 }
+                //else if (spawn.className == "player_spawn")
+                //{
+                //    Actor protagonist = new Protagonist
+                //}
 
                 
             }
