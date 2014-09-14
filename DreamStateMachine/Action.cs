@@ -18,6 +18,6 @@ namespace DreamStateMachine
         public float elapsed;
         public float duration;
  
-        private ActionList ownerList;
+        public ActionList ownerList;
     };
 }

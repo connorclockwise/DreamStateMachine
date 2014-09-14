@@ -12,9 +12,11 @@ namespace DreamStateMachine
 {
     class Actor:ICloneable
     {
-        public static event EventHandler<SpawnEventArgs> Spawn;
+        
         public static event EventHandler<AttackEventArgs> Attack;
         public static event EventHandler<EventArgs> Death;
+        public static event EventHandler<AttackEventArgs> Hurt;
+        public static event EventHandler<SpawnEventArgs> Spawn;
         
 
         public ActionList animationList;
@@ -85,6 +87,7 @@ namespace DreamStateMachine
         {
             Actor actorCopy = new Actor(texture, hitBox.Width, hitBox.Height, body.Width, body.Height);
             actorCopy.animations = animations;
+            actorCopy.className = className;
             actorCopy.color = color;
             actorCopy.health = health;
             actorCopy.sight = sight;
@@ -115,7 +118,9 @@ namespace DreamStateMachine
 
         virtual public void onHurt(DamageInfo damageInfo)
         {
+            AttackEventArgs attackEventArgs = new AttackEventArgs(damageInfo);
             health -= damageInfo.damage;
+            Hurt(this, attackEventArgs);
         }
 
         virtual public void onSpawn( int spawnType )

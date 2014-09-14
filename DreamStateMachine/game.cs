@@ -23,7 +23,6 @@ namespace DreamStateMachine
     {
         ActorManager actorManager;
         AIController aiController;
-        List<Actor> actors;
         Actor player;
         GraphicsDeviceManager graphics;
         GraphicsDevice device;
@@ -45,6 +44,7 @@ namespace DreamStateMachine
 
         public delegate void GameUpdate( GameTime gameTime);
         public delegate void GameDraw(GameTime gameTime);
+
         GameUpdate gameUpdate;
         GameDraw gameDraw;
 
@@ -235,7 +235,7 @@ namespace DreamStateMachine
             {
                 //gameUpdate = LoadWorldUpdate;
                 //gameDraw = LoadWorldDraw;
-
+                Console.WriteLine("shit");
                 //isLoadingWorld = true;
                 //LoadNextWorld();
                 //Thread thread = new Thread(new ThreadStart(LoadNextWorld));

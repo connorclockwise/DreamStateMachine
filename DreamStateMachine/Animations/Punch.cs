@@ -10,12 +10,10 @@ namespace DreamStateMachine.Actions
     class Punch:Action
     {
         ActionList ownerList;
-        ActorManager actorManager;
         Actor owner;
         Rectangle attackBox;
         bool hitActor;
         int curFrame;
-        int lastFrame;
 
         public Punch(ActionList ownerList, Actor owner)
         {

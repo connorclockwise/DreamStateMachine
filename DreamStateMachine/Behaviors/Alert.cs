@@ -9,7 +9,6 @@ namespace DreamStateMachine.Actions
 {
     class Alert:Behavior
     {
-        ActionList ownerList;
         Actor owner;
         Actor target;
         World world;
@@ -42,7 +41,7 @@ namespace DreamStateMachine.Actions
                 //Follow follow = new Follow(enemy.behaviorList, enemy, protagonist);
                 //if (!enemy.behaviorList.has(follow))
                 //    enemy.behaviorList.pushFront(follow);
-                Aggravated aggravated = new Aggravated(ownerList, owner, target, world);
+                Aggravated aggravated = new Aggravated(ownerList, owner, target);
                 if (!ownerList.has(aggravated))
                     ownerList.pushFront(aggravated);
                 //Follow follow = new Follow(ownerList, owner, target, world);

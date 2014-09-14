@@ -9,15 +9,15 @@ namespace DreamStateMachine.Actions
 {
     class Aggravated:Behavior
     {
-        ActionList ownerList;
         Actor owner;
         Actor target;
 
-        public Aggravated(ActionList ownerList, Actor owner, Actor toFollow, World w)
+        public Aggravated(ActionList ownerList, Actor owner, Actor toFollow)
         {
             this.ownerList = ownerList;
             this.owner = owner;
             target = toFollow;
+
             nextPathPoint = new Point(0,0);
             elapsed = 0;
             duration = -1;

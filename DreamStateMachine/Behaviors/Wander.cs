@@ -9,8 +9,6 @@ namespace DreamStateMachine.Actions
 {
     class Wander:Behavior
     {
-        ActionList ownerList;
-        ActorManager actorManager;
         Actor owner;
         List<Point> searchPath;
         World world;
@@ -22,7 +20,7 @@ namespace DreamStateMachine.Actions
 
         public Wander(ActionList ownerList, Actor owner)
         {
-            this.ownerList = ownerList;;
+            this.ownerList = ownerList;
             this.owner = owner;
             elapsed = 0;
             duration = -1;

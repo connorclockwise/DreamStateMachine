@@ -9,8 +9,6 @@ namespace DreamStateMachine.Actions
 {
     class Idle:Behavior
     {
-        ActionList ownerList;
-        ActorManager actorManager;
         Actor owner;
         float nextWander;
         Random random;

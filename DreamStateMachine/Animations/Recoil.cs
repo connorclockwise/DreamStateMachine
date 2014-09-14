@@ -9,19 +9,18 @@ namespace DreamStateMachine.Actions
 {
     class Recoil:Action
     {
-        ActionList ownerList;
         //actorManager actorManager;
         Actor owner;
         Color originalColor;
         //double dotProduct;
         
 
-        public Recoil(ActionList ol, Actor o)
+        public Recoil(ActionList ownerList, Actor owner)
         {
-            ownerList = ol;
-            owner = o;
+            this.ownerList = ownerList;
+            this.owner = owner;
             duration = 2/12F;
-            originalColor = o.color;
+            originalColor = owner.color;
             isBlocking = true;
             
         }
@@ -29,6 +28,7 @@ namespace DreamStateMachine.Actions
         override public void onStart()
         {
             elapsed = 0;
+            owner.color = Color.Crimson;
         }
 
         override public void onEnd()
@@ -44,6 +44,7 @@ namespace DreamStateMachine.Actions
             //owner.color.G = (byte)(255 - ((elapsed / duration) * (255 - originalColor.G)));
             //owner.color.B = (byte)(255 - ((elapsed / duration) * (255 - originalColor.B)));
             //owner.color.A = (byte)(255 - ((elapsed / duration) * (255 - originalColor.A)));
+            
             
         }
     }

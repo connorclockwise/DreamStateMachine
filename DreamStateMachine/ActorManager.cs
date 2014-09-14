@@ -351,25 +351,20 @@ namespace DreamStateMachine.Behaviors
             }
        }
 
-        public void setProtagonist(Actor a)
+        public void setProtagonist(Actor actor)
         {
-            protagonist = a;
+            protagonist = actor;
         }
 
         public void spawnActor(Actor actor, Point point, int spawnType){
             
             actor.setPos(point);
             actor.onSpawn(spawnType);
+            //actor.world = worldManager.curWorld;
+            actor.sightVector = new Vector2(random.Next(-1, 1), random.Next(-1, 1));
             actors.Add(actor);
             if (actor.isPlayer)
                 protagonist = actor;
-            //else if (actor.GetType() == typeof(Enemy))
-            //{
-            //    enemy = (Enemy)actor;
-            //    //enemy.color = Color.Crimson;
-            //    enemy.setGaze(new Vector2(random.Next(-1,1), random.Next(-1,1)));
-                
-            //}
         }
 
         public void spawnActors(List<SpawnFlag> spawns)
@@ -378,18 +373,16 @@ namespace DreamStateMachine.Behaviors
             {
                 if (actorPrototypes.ContainsKey(spawn.className))
                 {
-                    //if(spawn.spawnType == 2)
-                    //{
                         Actor actorToCopy = (Actor)actorPrototypes[spawn.className].Clone();
                         //Enemy newEnemy = new Enemy(actorToCopy.texture, actorToCopy.hitBox.Width, actorToCopy.hitBox.Height, actorToCopy.body.Width, actorToCopy.body.Height);
                         Point spawnPoint = new Point(spawn.tilePosition.X * worldManager.curWorld.tileSize, spawn.tilePosition.Y * worldManager.curWorld.tileSize);
                         spawnActor(actorToCopy, spawnPoint, spawn.spawnType);
-                    //}
                 }
-                //else if (spawn.className == "player_spawn")
-                //{
-                //    Actor protagonist = new Protagonist
-                //}
+                else if (spawn.className == "player_spawn")
+                {
+                    //Actor protagonist = new Actor();
+
+                }
 
                 
             }
@@ -397,21 +390,12 @@ namespace DreamStateMachine.Behaviors
 
         public void update(float dt)
         {
-
             for (int i = 0; i < actors.Count; i++)
             {
-
                 curActor = actors.ElementAt(i);
-
                 curActor.update(dt);
-
                 this.handleMapCollision(curActor);
                 this.handleMovement(curActor);
-
-                //if (curActor.isAttacking)
-                //{
-                //    this.handleAttack(curActor);
-                //}
             }
         }
 

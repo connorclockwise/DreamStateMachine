@@ -9,10 +9,9 @@ namespace DreamStateMachine.Actions
 {
     class Stunned:Behavior
     {
-        ActionList ownerList;
         Actor owner;
 
-        public Stunned(ActionList ownerList, Actor actor)
+        public Stunned(ActionList ownerList, Actor owner)
         {
             this.ownerList = ownerList;
             this.owner = owner;
@@ -42,6 +41,7 @@ namespace DreamStateMachine.Actions
         override public void update(float dt)
         {
             elapsed += dt;
+            //owner.color = Color.Crimson;
         }
     }
 }
