@@ -71,20 +71,6 @@ namespace DreamStateMachine.Behaviors
                     Recoil recoil = new Recoil(victim.animationList, victim);
                     if (!victim.animationList.has(recoil))
                         victim.animationList.pushFront(recoil);
-                    //if (victim.GetType() == typeof(Enemy))
-                    //{
-                    //    enemy = (Enemy)victim;
-                        
-                        //Aggravated aggravated = new Aggravated(enemy.behaviorList, enemy, damageInfo.attacker, worldManager.getCurWorld());
-                        //if (!enemy.behaviorList.has(aggravated))
-                        //    enemy.behaviorList.pushFront(aggravated);
-                        //Stunned stunned = new Stunned(enemy.behaviorList, enemy);
-                        //if (!enemy.behaviorList.has(stunned))
-                        //    enemy.behaviorList.pushFront(stunned);
-                        
-                    //}
-
-
                     if (victim.health <= 0)
                     {
                         victim.onKill(damageInfo);
