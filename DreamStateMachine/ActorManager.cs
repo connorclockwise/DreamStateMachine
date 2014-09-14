@@ -61,11 +61,6 @@ namespace DreamStateMachine.Behaviors
                     continue;
                 else if (victim.hitBox.Intersects(damageInfo.attackRect))
                 {
-                    //victim.velocity += actor.velocity * 5;
-
-                    //Vector2 impulse = new Vector2(actor.sightVector.X, actor.sightVector.Y);
-                    //actor.movementIntent.X += impulse.X;
-                    //actor.movementIntent.Y += impulse.Y;
                     victim.velocity += damageInfo.attacker.sightVector * 20;
                     victim.onHurt(damageInfo);
                     Recoil recoil = new Recoil(victim.animationList, victim);
