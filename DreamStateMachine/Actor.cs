@@ -10,7 +10,6 @@ using DreamStateMachine.Actions;
 
 namespace DreamStateMachine
 {
-    // Testing
     class Actor:ICloneable
     {
         
