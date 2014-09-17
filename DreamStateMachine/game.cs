@@ -237,13 +237,7 @@ namespace DreamStateMachine
             }
             if (keyBoardState.IsKeyDown(Keys.G))
             {
-                //gameUpdate = LoadWorldUpdate;
-                //gameDraw = LoadWorldDraw;
-                //isLoadingWorld = true;
-                //LoadNextWorld();
-                //Thread thread = new Thread(new ThreadStart(LoadNextWorld));
-                //thread.IsBackground = true;
-                //thread.Start();
+                Console.WriteLine("Oh no!");
             }
 
 
