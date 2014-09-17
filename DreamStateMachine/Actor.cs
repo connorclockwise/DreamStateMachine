@@ -72,7 +72,7 @@ namespace DreamStateMachine
             sightVector = new Vector2(0, 0);
             velocity = new Vector2(0, 0);
             curAnimFrame = new Point(0, 0);
-            maxSpeed = 7;
+            maxSpeed = 6;
             minSpeed = 3;
             bodyRotation = 0;
             targetRotation = 0;
