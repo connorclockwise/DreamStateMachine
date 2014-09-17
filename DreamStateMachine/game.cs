@@ -28,6 +28,8 @@ namespace DreamStateMachine
         GraphicsDevice device;
         KeyboardState keyBoardState;
         MouseState mouseState;
+        GamePadState gamePadState;
+        bool usingGamePad = true;
         Random random;
         Rectangle tileRect;
         Point origin;
@@ -168,90 +170,124 @@ namespace DreamStateMachine
 
         private void UpdateInput()
         {
-            keyBoardState = Keyboard.GetState();
-            mouseState = Mouse.GetState();
-            curMousePosX = mouseState.X;
-            curMousePosY = mouseState.Y;
-
-            Vector2 playerDirection = new Vector2(curMousePosX - origin.X, curMousePosY - origin.Y);
-            playerDirection.Normalize();
-            player.setGaze(playerDirection);
-
-            if (!player.lockedMovement)
+            if (usingGamePad)
             {
-                if (keyBoardState.IsKeyDown(Keys.A))
+                gamePadState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
+                Vector2 playerDirectionControl = gamePadState.ThumbSticks.Right;
+                // 0.1f is arbitrary, might need to change
+                if (playerDirectionControl.Length() > 0.1f)
                 {
-                    player.movementIntent.X = -.7f;
-                    player.isWalking = true;
+                    playerDirectionControl.Normalize();
+                    player.setGaze(playerDirectionControl);
                 }
 
-                if (keyBoardState.IsKeyDown(Keys.D))
+                if (!player.lockedMovement)
                 {
-                    player.movementIntent.X = .7f;
-                    player.isWalking = true;
-                }
-                if (keyBoardState.IsKeyDown(Keys.W))
-                {
-                    player.movementIntent.Y = -.7f;
-                    player.isWalking = true;
+                    Vector2 movementIntentControl = gamePadState.ThumbSticks.Left;
+                    movementIntentControl.Normalize();
+                    player.movementIntent = movementIntentControl;
                 }
 
-                if (keyBoardState.IsKeyDown(Keys.S))
+                if (gamePadState.IsButtonDown(Buttons.A))
                 {
-                    player.movementIntent.Y = .7f;
-                    player.isWalking = true;
+                    // Handle going down stairs
+                    // If player center is in tile, move down floor?
                 }
-            }
-            if (keyBoardState.IsKeyUp(Keys.A) && keyBoardState.IsKeyUp(Keys.D))
-            {
-                player.movementIntent.X = 0;
-            }
-            if (keyBoardState.IsKeyUp(Keys.W) && keyBoardState.IsKeyUp(Keys.S))
-            {
-                player.movementIntent.Y = 0;
-            }
-            if (keyBoardState.IsKeyDown(Keys.F))
-            {
-                //Follow follow = new Follow(badGuy.behaviorList, badGuy, player, world);
-                //if (!badGuy.behaviorList.has(follow))
-                //    badGuy.behaviorList.pushFront(follow);
-            }
-            if (keyBoardState.IsKeyDown(Keys.E))
-            {
-                //Wander wander = new Wander(badGuy.behaviorList, badGuy, world, r);
-                //if (!badGuy.behaviorList.has(wander))
-                //    badGuy.behaviorList.pushFront(wander);
-                Point mouseWorldPoint = new Point(curMousePosX + cam.drawSpace.X, curMousePosY + cam.drawSpace.Y);
-                Vector2 playerToMouse = new Vector2(mouseWorldPoint.X - player.body.Center.X, mouseWorldPoint.Y - player.body.Center.Y);
-                float length = playerToMouse.Length();
-                if (length < worldManager.curWorld.tileSize)
+
+                if (gamePadState.IsButtonDown(Buttons.RightShoulder))
                 {
-                    Point mouseTilePos = new Point(mouseWorldPoint.X / worldManager.curWorld.tileSize, mouseWorldPoint.Y / worldManager.curWorld.tileSize);
-                    actorManager.handleActorUse(player, mouseTilePos);
+                    Punch punchAnimation = new Punch(player.animationList, player);
+                    if (!player.animationList.has(punchAnimation))
+                        player.animationList.pushFront(punchAnimation);
+                }
+
+            }
+            else
+            {
+                keyBoardState = Keyboard.GetState();
+                mouseState = Mouse.GetState();
+                gamePadState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
+                curMousePosX = mouseState.X;
+                curMousePosY = mouseState.Y;
+
+                Vector2 playerDirection = new Vector2(curMousePosX - origin.X, curMousePosY - origin.Y);
+                playerDirection.Normalize();
+                player.setGaze(playerDirection);
+
+                if (!player.lockedMovement)
+                {
+                    if (keyBoardState.IsKeyDown(Keys.A))
+                    {
+                        player.movementIntent.X = -.7f;
+                        player.isWalking = true;
+                    }
+
+                    if (keyBoardState.IsKeyDown(Keys.D))
+                    {
+                        player.movementIntent.X = .7f;
+                        player.isWalking = true;
+                    }
+                    if (keyBoardState.IsKeyDown(Keys.W))
+                    {
+                        player.movementIntent.Y = -.7f;
+                        player.isWalking = true;
+                    }
+
+                    if (keyBoardState.IsKeyDown(Keys.S))
+                    {
+                        player.movementIntent.Y = .7f;
+                        player.isWalking = true;
+                    }
+                }
+                if (keyBoardState.IsKeyUp(Keys.A) && keyBoardState.IsKeyUp(Keys.D))
+                {
+                    player.movementIntent.X = 0;
+                }
+                if (keyBoardState.IsKeyUp(Keys.W) && keyBoardState.IsKeyUp(Keys.S))
+                {
+                    player.movementIntent.Y = 0;
+                }
+                if (keyBoardState.IsKeyDown(Keys.F))
+                {
+                    //Follow follow = new Follow(badGuy.behaviorList, badGuy, player, world);
+                    //if (!badGuy.behaviorList.has(follow))
+                    //    badGuy.behaviorList.pushFront(follow);
+                }
+                if (keyBoardState.IsKeyDown(Keys.E))
+                {
+                    //Wander wander = new Wander(badGuy.behaviorList, badGuy, world, r);
+                    //if (!badGuy.behaviorList.has(wander))
+                    //    badGuy.behaviorList.pushFront(wander);
+                    Point mouseWorldPoint = new Point(curMousePosX + cam.drawSpace.X, curMousePosY + cam.drawSpace.Y);
+                    Vector2 playerToMouse = new Vector2(mouseWorldPoint.X - player.body.Center.X, mouseWorldPoint.Y - player.body.Center.Y);
+                    float length = playerToMouse.Length();
+                    if (length < worldManager.curWorld.tileSize)
+                    {
+                        Point mouseTilePos = new Point(mouseWorldPoint.X / worldManager.curWorld.tileSize, mouseWorldPoint.Y / worldManager.curWorld.tileSize);
+                        actorManager.handleActorUse(player, mouseTilePos);
+                        //LoadNextWorld();
+                    }
+                }
+                if (keyBoardState.IsKeyDown(Keys.G))
+                {
+                    //gameUpdate = LoadWorldUpdate;
+                    //gameDraw = LoadWorldDraw;
+                    Console.WriteLine("shit");
+                    //isLoadingWorld = true;
                     //LoadNextWorld();
+                    //Thread thread = new Thread(new ThreadStart(LoadNextWorld));
+                    //thread.IsBackground = true;
+                    //thread.Start();
+                }
+
+
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    Punch punchAnimation = new Punch(player.animationList, player);
+                    if (!player.animationList.has(punchAnimation))
+                        player.animationList.pushFront(punchAnimation);
                 }
             }
-            if (keyBoardState.IsKeyDown(Keys.G))
-            {
-                //gameUpdate = LoadWorldUpdate;
-                //gameDraw = LoadWorldDraw;
-                Console.WriteLine("shit");
-                //isLoadingWorld = true;
-                //LoadNextWorld();
-                //Thread thread = new Thread(new ThreadStart(LoadNextWorld));
-                //thread.IsBackground = true;
-                //thread.Start();
-            }
-
-
-            if (mouseState.LeftButton == ButtonState.Pressed)
-            {
-                Punch punchAnimation = new Punch(player.animationList, player);
-                if (!player.animationList.has(punchAnimation))
-                    player.animationList.pushFront(punchAnimation);
-            }
-            
-
         }
 
         /// <summary>
