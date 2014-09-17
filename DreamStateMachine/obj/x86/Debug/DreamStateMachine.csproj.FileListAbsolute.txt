@@ -1,0 +1,36 @@
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\obj\x86\Debug\DreamStateMachine.csprojResolveAssemblyReference.cache
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\Content\Actors.xml
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\Content\block.png
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\Content\debugSquare.png
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\Content\dreamManAnimations.png
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\Content\dungeonFloor.png
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\Content\protagonistBodyAnimations.png
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\Content\TempleFloor.png
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\Content\Worlds.xml
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\DreamStateMachine.exe
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\DreamStateMachine.pdb
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\Lidgren.Network.dll
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\MonoGame.Framework.dll
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\OpenTK.dll
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\bin\WindowsGL\Debug\Tao.Sdl.dll
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\obj\x86\Debug\DreamStateMachine.exe
+C:\Users\Connor\AppData\Local\Temporary Projects\DreamStateMachine\obj\x86\Debug\DreamStateMachine.pdb
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\obj\x86\Debug\DreamStateMachine.exe
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\obj\x86\Debug\DreamStateMachine.pdb
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Content\Actors.xml
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Content\block.png
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Content\debugSquare.png
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Content\dreamManAnimations.png
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Content\dungeonFloor.png
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Content\protagonistBodyAnimations.png
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Content\TempleFloor.png
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Content\Worlds.xml
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\DreamStateMachine.exe
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\DreamStateMachine.pdb
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Lidgren.Network.dll
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\MonoGame.Framework.dll
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\OpenTK.dll
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Tao.Sdl.dll
+C:\Users\Connor\documents\visual studio 2010\Projects\DreamStateMachine\DreamStateMachine\obj\x86\Debug\DreamStateMachine.csprojResolveAssemblyReference.cache
+C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Content\SpriteFont1.xnb
+C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\DreamStateMachine\bin\WindowsGL\Debug\Content\skeletonAnimations.png

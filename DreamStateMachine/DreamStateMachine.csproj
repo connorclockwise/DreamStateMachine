@@ -70,6 +70,8 @@
     <Compile Include="Animation.cs" />
     <Compile Include="AIController.cs" />
     <Compile Include="AttackEventArgs.cs" />
+    <Compile Include="ActorController.cs" />
+    <Compile Include="PhysicsController.cs" />
     <Compile Include="SpawnEventArgs.cs" />
     <Compile Include="DamageInfo.cs" />
     <Compile Include="game.cs" />

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using MonoGame.Framework;
+//using MonoGame.Framework;
 using DreamStateMachine.Actions;
 
 
@@ -16,6 +16,7 @@ namespace DreamStateMachine
         public static event EventHandler<AttackEventArgs> Attack;
         public static event EventHandler<EventArgs> Death;
         public static event EventHandler<AttackEventArgs> Hurt;
+        public static event EventHandler<EventArgs> Use;
         public static event EventHandler<SpawnEventArgs> Spawn;
         
 
@@ -116,17 +117,22 @@ namespace DreamStateMachine
             Death(this, EventArgs.Empty);
         }
 
-        virtual public void onHurt(DamageInfo damageInfo)
+        public void onHurt(DamageInfo damageInfo)
         {
             AttackEventArgs attackEventArgs = new AttackEventArgs(damageInfo);
             health -= damageInfo.damage;
             Hurt(this, attackEventArgs);
         }
 
-        virtual public void onSpawn( int spawnType )
+        public void onSpawn( Point spawnTile, int spawnType )
         {
-            SpawnEventArgs spawnEventArgs = new SpawnEventArgs(spawnType);
+            SpawnEventArgs spawnEventArgs = new SpawnEventArgs(spawnTile, spawnType);
             Spawn(this, spawnEventArgs);
+        }
+
+        public void onUse()
+        {
+            Use(this, EventArgs.Empty);
         }
 
         public void setAnimationFrame(int x, int y)
