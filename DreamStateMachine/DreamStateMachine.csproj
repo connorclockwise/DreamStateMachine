@@ -70,8 +70,16 @@
     <Compile Include="Animation.cs" />
     <Compile Include="AIController.cs" />
     <Compile Include="AttackEventArgs.cs" />
+<<<<<<< HEAD
     <Compile Include="ActorController.cs" />
     <Compile Include="PhysicsController.cs" />
+=======
+    <Compile Include="Input\GazeCommand.cs" />
+    <Compile Include="Input\MoveCommand.cs" />
+    <Compile Include="Input\PunchCommand.cs" />
+    <Compile Include="Input\Command.cs" />
+    <Compile Include="Input\InputHandler.cs" />
+>>>>>>> 0f6937a2ff3b53b438f47cff30630569de58e7ca
     <Compile Include="SpawnEventArgs.cs" />
     <Compile Include="DamageInfo.cs" />
     <Compile Include="game.cs" />
