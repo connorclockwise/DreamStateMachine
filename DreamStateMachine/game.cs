@@ -34,6 +34,7 @@ namespace DreamStateMachine
         Camera cam;
         SpriteBatch spriteBatch;
         SpriteFont arielBlackFont;
+        SoundManager soundManager;
         Texture2D debugSquare;
         Texture2D floorTiles;
         Texture2D playerTexture;
@@ -41,8 +42,10 @@ namespace DreamStateMachine
         bool isLoadingWorld;
         int curMousePosX;
         int curMousePosY;
+        int curRightStickX;
+        int curRightStickY;
 
-        public delegate void GameUpdate( GameTime gameTime);
+        public delegate void GameUpdate(GameTime gameTime);
         public delegate void GameDraw(GameTime gameTime);
 
         GameUpdate gameUpdate;
@@ -96,13 +99,17 @@ namespace DreamStateMachine
             worldManager = new WorldManager(random);
             worldManager.initWorldConfig(Content, "content/Worlds.xml");
             worldManager.initStartingWorld();
-            actorManager = new ActorManager(worldManager, random);
+            soundManager = new SoundManager(worldManager);
+            soundManager.initSoundConfig(Content, "content/sfx/Sounds.xml");
+            actorManager = new ActorManager(worldManager, soundManager, random);
             actorManager.initActorConfig(Content, "content/Actors.xml");
+            
+
             aiController = new AIController();
 
 
             //spawnTile = worldManager.curWorld.getSpawnTile();
-            tileRect = new Rectangle(0,0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            tileRect = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 
             cam = new Camera(spriteBatch, tileRect, worldManager, debugSquare);
             player = new Actor(playerTexture, 25, 25, 64, 64);
@@ -130,12 +137,13 @@ namespace DreamStateMachine
         protected override void Update(GameTime gameTime)
         {
             gameUpdate(gameTime);
+            base.Update(gameTime);
         }
 
         public void MainGameUpdate(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).IsConnected && GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
             float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
@@ -152,7 +160,7 @@ namespace DreamStateMachine
             while (isLoadingWorld)
             {
                 // Allows the game to exit
-                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                if (GamePad.GetState(PlayerIndex.One).IsConnected && GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                     this.Exit();
 
                 float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
@@ -170,6 +178,7 @@ namespace DreamStateMachine
         {
             keyBoardState = Keyboard.GetState();
             mouseState = Mouse.GetState();
+
             curMousePosX = mouseState.X;
             curMousePosY = mouseState.Y;
 
@@ -236,6 +245,7 @@ namespace DreamStateMachine
                 //gameUpdate = LoadWorldUpdate;
                 //gameDraw = LoadWorldDraw;
                 Console.WriteLine("shit");
+                soundManager.playSound(1);
                 //isLoadingWorld = true;
                 //LoadNextWorld();
                 //Thread thread = new Thread(new ThreadStart(LoadNextWorld));
@@ -250,7 +260,7 @@ namespace DreamStateMachine
                 if (!player.animationList.has(punchAnimation))
                     player.animationList.pushFront(punchAnimation);
             }
-            
+
 
         }
 
@@ -283,16 +293,16 @@ namespace DreamStateMachine
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone);
-                // Draw Hello World
-                string output = "Loading World";
-                
-                // Find the center of the string
-                Vector2 FontOrigin = arielBlackFont.MeasureString(output) / 2;
-                Vector2 screenorigin = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight/2);
-                // Draw the string
-                spriteBatch.DrawString(arielBlackFont, output, screenorigin, Color.White,
-                    0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
-                spriteBatch.End();
+            // Draw Hello World
+            string output = "Loading World";
+
+            // Find the center of the string
+            Vector2 FontOrigin = arielBlackFont.MeasureString(output) / 2;
+            Vector2 screenorigin = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+            // Draw the string
+            spriteBatch.DrawString(arielBlackFont, output, screenorigin, Color.White,
+                0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
+            spriteBatch.End();
 
             base.Draw(gameTime);
 
@@ -300,9 +310,9 @@ namespace DreamStateMachine
 
         public void LoadNextWorld()
         {
-            
+
         }
 
-        
+
     }
 }

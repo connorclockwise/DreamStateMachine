@@ -23,15 +23,17 @@ namespace DreamStateMachine.Behaviors
         Random random;
         Rectangle predictedMove;
         WorldManager worldManager;
+        SoundManager soundManager;
         int actorX;
         int actorY;
         int actorW;
         int actorH;
 
-        public ActorManager(WorldManager w, Random r)
+        public ActorManager(WorldManager w, SoundManager s, Random r)
         {
             worldManager = w;
-            
+            soundManager = s;
+
             random = r;
             actorPrototypes = new Dictionary<string,Actor>();
             behaviorLists = new List<ActionList>();
@@ -70,6 +72,8 @@ namespace DreamStateMachine.Behaviors
                     {
                         victim.onKill(damageInfo);
                         actors.Remove(victim);
+                        if (victim.isPlayer)
+                            soundManager.playSound(1);
                     }
                     return true;
                 }

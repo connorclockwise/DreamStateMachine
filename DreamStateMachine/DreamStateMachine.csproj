@@ -70,6 +70,8 @@
     <Compile Include="Animation.cs" />
     <Compile Include="AIController.cs" />
     <Compile Include="AttackEventArgs.cs" />
+    <Compile Include="Sound.cs" />
+    <Compile Include="SoundManager.cs" />
     <Compile Include="SpawnEventArgs.cs" />
     <Compile Include="DamageInfo.cs" />
     <Compile Include="game.cs" />
@@ -124,6 +126,24 @@
     <Content Include="Content\protagonistBodyAnimations.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\sfx\death.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\sfx\Explosion 1.wav" />
+    <Content Include="Content\sfx\Explosion 2.wav" />
+    <Content Include="Content\sfx\Explosion 3.wav" />
+    <Content Include="Content\sfx\fiery take off.wav" />
+    <Content Include="Content\sfx\Jump 2.wav" />
+    <Content Include="Content\sfx\Menu.wav" />
+    <Content Include="Content\sfx\pickUp.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\sfx\Sounds.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\sfx\Music.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\skeletonAnimations.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -165,6 +185,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
