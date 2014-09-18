@@ -75,6 +75,8 @@
     <Compile Include="Input\PunchCommand.cs" />
     <Compile Include="Input\Command.cs" />
     <Compile Include="Input\InputHandler.cs" />
+    <Compile Include="ActorController.cs" />
+    <Compile Include="PhysicsController.cs" />
     <Compile Include="SpawnEventArgs.cs" />
     <Compile Include="DamageInfo.cs" />
     <Compile Include="game.cs" />
