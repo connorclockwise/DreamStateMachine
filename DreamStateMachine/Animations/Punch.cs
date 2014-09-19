@@ -24,6 +24,8 @@ namespace DreamStateMachine.Actions
             duration = (5f / 12f);
             curFrame = 0;
             hitActor = false;
+
+            owner.HitActor += Actor_Hit;
         }
 
         override public void onStart()
@@ -71,6 +73,11 @@ namespace DreamStateMachine.Actions
                     owner.isAttacking = false;
                     break;
             }
+        }
+
+        private void Actor_Hit(object sender, EventArgs eventArgs)
+        {
+            hitActor = true;
         }
     }
 }

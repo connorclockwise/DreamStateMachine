@@ -12,7 +12,9 @@ namespace DreamStateMachine
 {
     class Actor:ICloneable
     {
-        
+
+        public event EventHandler<EventArgs> HitActor;
+
         public static event EventHandler<AttackEventArgs> Attack;
         public static event EventHandler<EventArgs> Death;
         public static event EventHandler<AttackEventArgs> Hurt;
@@ -82,6 +84,9 @@ namespace DreamStateMachine
             isAttacking = false;
             isPlayer = false;
             lockedMovement = false;
+
+            Actor.Attack += new EventHandler<AttackEventArgs>(Actor_Attack);
+
         }
 
         public Object Clone()
@@ -89,7 +94,7 @@ namespace DreamStateMachine
             Actor actorCopy = new Actor(texture, hitBox.Width, hitBox.Height, body.Width, body.Height);
             actorCopy.animations = animations;
             actorCopy.className = className;
-            actorCopy.color = color;
+            actorCopy.color = new Color(color.ToVector3());
             actorCopy.health = health;
             actorCopy.sight = sight;
             actorCopy.sightVector = new Vector2(sightVector.X, sightVector.Y) ;
@@ -107,10 +112,24 @@ namespace DreamStateMachine
             lockedMovement = true;
         }
 
+        public void Actor_Attack(Object sender, AttackEventArgs attackEventArgs)
+        {
+            Actor attacker = (Actor) sender;
+            if (sender.Equals(this))
+                return;
+            else
+                handleActorAttack(attackEventArgs.damageInfo);
+        }
+
         public void onAttack(DamageInfo damageInfo)
         {
             AttackEventArgs attackEventArgs = new AttackEventArgs(damageInfo);
             Attack(this, attackEventArgs);
+        }
+
+        public void onHitActor()
+        {
+            HitActor(this, EventArgs.Empty);
         }
 
         public void onKill(DamageInfo damageInfo)
@@ -183,17 +202,26 @@ namespace DreamStateMachine
             return texture;
         }
 
+        public void handleActorAttack(DamageInfo damageInfo)
+        {
+            if (this.hitBox.Intersects(damageInfo.attackRect))
+            {
+                    damageInfo.attacker.onHitActor();
+                    this.velocity += damageInfo.attacker.sightVector * 20;
+                    this.onHurt(damageInfo);
+                    if (this.health <= 0)
+                    {
+                        this.onKill(damageInfo);
+                    }
+            }
+        }
+
         virtual public void update(float dt)
         {
             if ((this.velocity.X != 0 || this.velocity.Y != 0) && this.isWalking && !this.animationList.has(walkAnimation))
             {
                 this.animationList.pushFront(walkAnimation);
             }
-            
-            //if (this.velocity.X == 0 && this.velocity.Y == 0)
-            //{
-            //    this.isWalking = false;
-            //}
 
             if (this.bodyRotation != this.targetRotation)
             {
