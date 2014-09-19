@@ -92,6 +92,7 @@ namespace DreamStateMachine
             actorCopy.color = color;
             actorCopy.health = health;
             actorCopy.sight = sight;
+            actorCopy.sightVector = new Vector2(sightVector.X, sightVector.Y) ;
             actorCopy.reach = reach;
             return actorCopy;
         }
