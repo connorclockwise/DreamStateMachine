@@ -19,18 +19,18 @@ namespace DreamStateMachine.Behaviors
         Actor victim;
         Actor protagonist;
         Random random;
-        
+        SoundManager soundManager;
 
-        public ActorController()
+        public ActorController(SoundManager s)
         {
             actionLists = new List<ActionList>();
             actors = new List<Actor>();
 
+            soundManager = s;
+
             Actor.Attack += new EventHandler<AttackEventArgs>(Actor_Attack);
             Actor.Death += new EventHandler<EventArgs>(Actor_Death);
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
-            
-
         }
 
         private void Actor_Attack(object sender, AttackEventArgs e)
@@ -70,6 +70,8 @@ namespace DreamStateMachine.Behaviors
                     {
                         victim.onKill(damageInfo);
                         actors.Remove(victim);
+                        if (victim.isPlayer)
+                            soundManager.playSound(1);
                     }
                     return true;
                 }

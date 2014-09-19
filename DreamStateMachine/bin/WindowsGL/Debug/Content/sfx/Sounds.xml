@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Sounds>
+  <Sound
+    className="death"
+    filePath="sfx/death.wav"
+    soundID="1">
+  </Sound>
+
+  <Sound
+    className="pickup"
+    filePath="sfx/pickUp.wav"
+    soundID="2">
+    >
+  </Sound>
+</Sounds>
