@@ -9,7 +9,7 @@ namespace DreamStateMachine.Input
 {
     class InputHandler
     {
-        bool controller = true;
+        bool controller = false;
         KeyboardState keyBoardState;
         MouseState mouseState;
         GamePadState padState;
