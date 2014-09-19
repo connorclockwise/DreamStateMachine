@@ -13,6 +13,7 @@ using DreamStateMachine.Behaviors;
 using System.Xml;
 using System.Threading;
 using DreamStateMachine;
+using DreamStateMachine.Input;
 
 namespace DreamStateMachine
 {
@@ -31,6 +32,8 @@ namespace DreamStateMachine
         GraphicsDevice device;
         KeyboardState keyBoardState;
         MouseState mouseState;
+        GamePadState gamePadState;
+        bool usingGamePad = true;
         Random random;
         Rectangle tileRect;
         Point origin;
@@ -42,6 +45,7 @@ namespace DreamStateMachine
         Texture2D floorTiles;
         Texture2D playerTexture;
         WorldManager worldManager;
+        InputHandler inputHandler;
         bool isLoadingWorld;
         int curMousePosX;
         int curMousePosY;
@@ -93,7 +97,7 @@ namespace DreamStateMachine
             spriteBatch = new SpriteBatch(GraphicsDevice);
             origin.X = graphics.PreferredBackBufferWidth / 2;
             origin.Y = graphics.PreferredBackBufferHeight / 2;
-
+            inputHandler = new InputHandler(origin);
             random = new Random();
 
             //actors = new List<Actor>();
@@ -257,6 +261,9 @@ namespace DreamStateMachine
             }
 
 
+            List<Command> commands = inputHandler.handleInput();
+            foreach (Command c in commands)
+                c.Execute(player);
         }
 
         /// <summary>
