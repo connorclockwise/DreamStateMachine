@@ -13,11 +13,9 @@ namespace DreamStateMachine
     class SoundManager
     {
         Dictionary<int, Sound> soundPrototypes;
-        WorldManager worldManager;
 
-        public SoundManager(WorldManager w)
+        public SoundManager()
         {
-            worldManager = w;
             soundPrototypes = new Dictionary<int, Sound>();
         }
 

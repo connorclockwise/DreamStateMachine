@@ -45,8 +45,6 @@ namespace DreamStateMachine
         bool isLoadingWorld;
         int curMousePosX;
         int curMousePosY;
-        int curRightStickX;
-        int curRightStickY;
 
         public delegate void GameUpdate(GameTime gameTime);
         public delegate void GameDraw(GameTime gameTime);
@@ -102,15 +100,14 @@ namespace DreamStateMachine
             worldManager = new WorldManager(random);
             worldManager.initWorldConfig(Content, "content/Worlds.xml");
             worldManager.initStartingWorld();
-            soundManager = new SoundManager(worldManager);
+            soundManager = new SoundManager();
             soundManager.initSoundConfig(Content, "content/sfx/Sounds.xml");
-            actorManager = new ActorManager(worldManager, soundManager, random);
             actorManager = new ActorManager();
             actorManager.initActorConfig(Content, "content/Actors.xml");
             
 
             aiController = new AIController();
-            actorController = new ActorController();
+            actorController = new ActorController(soundManager);
             physicsController = new PhysicsController(worldManager.curWorld);
 
             //spawnTile = worldManager.curWorld.getSpawnTile();
@@ -147,10 +144,6 @@ namespace DreamStateMachine
 
         public void MainGameUpdate(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).IsConnected && GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
             float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
             UpdateInput();
             actorController.update(dt);
@@ -165,10 +158,6 @@ namespace DreamStateMachine
         {
             while (isLoadingWorld)
             {
-                // Allows the game to exit
-                if (GamePad.GetState(PlayerIndex.One).IsConnected && GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                    this.Exit();
-
                 float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
                 //UpdateInput();
                 //actorManager.update(dt);

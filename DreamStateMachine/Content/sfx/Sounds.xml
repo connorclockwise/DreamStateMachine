@@ -3,13 +3,13 @@
   <Sound
     className="death"
     filePath="sfx/death.wav"
-    soundID="01">
+    soundID="1">
   </Sound>
 
   <Sound
     className="pickup"
     filePath="sfx/pickUp.wav"
-    soundID="02">
+    soundID="2">
     >
   </Sound>
 </Sounds>
