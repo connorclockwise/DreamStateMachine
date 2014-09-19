@@ -30,10 +30,6 @@ namespace DreamStateMachine
         Actor player;
         GraphicsDeviceManager graphics;
         GraphicsDevice device;
-        KeyboardState keyBoardState;
-        MouseState mouseState;
-        GamePadState gamePadState;
-        bool usingGamePad = true;
         Random random;
         Rectangle tileRect;
         Point origin;
@@ -46,9 +42,9 @@ namespace DreamStateMachine
         Texture2D playerTexture;
         WorldManager worldManager;
         InputHandler inputHandler;
+
         bool isLoadingWorld;
-        int curMousePosX;
-        int curMousePosY;
+        bool usingGamePad = false;
 
         public delegate void GameUpdate(GameTime gameTime);
         public delegate void GameDraw(GameTime gameTime);
@@ -175,92 +171,6 @@ namespace DreamStateMachine
 
         private void UpdateInput()
         {
-            keyBoardState = Keyboard.GetState();
-            mouseState = Mouse.GetState();
-
-            curMousePosX = mouseState.X;
-            curMousePosY = mouseState.Y;
-
-            Vector2 playerDirection = new Vector2(curMousePosX - origin.X, curMousePosY - origin.Y);
-            playerDirection.Normalize();
-            player.setGaze(playerDirection);
-
-            if (!player.lockedMovement)
-            {
-                if (keyBoardState.IsKeyDown(Keys.A))
-                {
-                    player.movementIntent.X = -.7f;
-                    player.isWalking = true;
-                }
-
-                if (keyBoardState.IsKeyDown(Keys.D))
-                {
-                    player.movementIntent.X = .7f;
-                    player.isWalking = true;
-                }
-                if (keyBoardState.IsKeyDown(Keys.W))
-                {
-                    player.movementIntent.Y = -.7f;
-                    player.isWalking = true;
-                }
-
-                if (keyBoardState.IsKeyDown(Keys.S))
-                {
-                    player.movementIntent.Y = .7f;
-                    player.isWalking = true;
-                }
-            }
-            if (keyBoardState.IsKeyUp(Keys.A) && keyBoardState.IsKeyUp(Keys.D))
-            {
-                player.movementIntent.X = 0;
-            }
-            if (keyBoardState.IsKeyUp(Keys.W) && keyBoardState.IsKeyUp(Keys.S))
-            {
-                player.movementIntent.Y = 0;
-            }
-            if (keyBoardState.IsKeyDown(Keys.F))
-            {
-                //Follow follow = new Follow(badGuy.behaviorList, badGuy, player, world);
-                //if (!badGuy.behaviorList.has(follow))
-                //    badGuy.behaviorList.pushFront(follow);
-            }
-            if (keyBoardState.IsKeyDown(Keys.E))
-            {
-                //Wander wander = new Wander(badGuy.behaviorList, badGuy, world, r);
-                //if (!badGuy.behaviorList.has(wander))
-                //    badGuy.behaviorList.pushFront(wander);
-                Point mouseWorldPoint = new Point(curMousePosX + cam.drawSpace.X, curMousePosY + cam.drawSpace.Y);
-                Vector2 playerToMouse = new Vector2(mouseWorldPoint.X - player.body.Center.X, mouseWorldPoint.Y - player.body.Center.Y);
-                float length = playerToMouse.Length();
-                if (length < worldManager.curWorld.tileSize)
-                {
-                    Point mouseTilePos = new Point(mouseWorldPoint.X / worldManager.curWorld.tileSize, mouseWorldPoint.Y / worldManager.curWorld.tileSize);
-                    player.onUse();
-                }
-            }
-            if (keyBoardState.IsKeyDown(Keys.G))
-            {
-                //gameUpdate = LoadWorldUpdate;
-                //gameDraw = LoadWorldDraw;
-                Console.WriteLine("shit");
-                soundManager.playSound(1);
-                //isLoadingWorld = true;
-                //LoadNextWorld();
-                //Thread thread = new Thread(new ThreadStart(LoadNextWorld));
-                //thread.IsBackground = true;
-                //thread.Start();
-                Console.WriteLine("Oh no!");
-            }
-
-
-            if (mouseState.LeftButton == ButtonState.Pressed)
-            {
-                Punch punchAnimation = new Punch(player.animationList, player);
-                if (!player.animationList.has(punchAnimation))
-                    player.animationList.pushFront(punchAnimation);
-            }
-
-
             List<Command> commands = inputHandler.handleInput();
             foreach (Command c in commands)
                 c.Execute(player);
