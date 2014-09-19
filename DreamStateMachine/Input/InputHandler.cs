@@ -81,6 +81,10 @@ namespace DreamStateMachine.Input
 
             if (keyBoardState.IsKeyDown(Keys.Space))
                 commands.Add(new PunchCommand());
+            if (keyBoardState.IsKeyDown(Keys.E))
+            {
+               //Move on to next world?
+            }
 
             float curMousePosX = mouseState.X;
             float curMousePosY = mouseState.Y;
