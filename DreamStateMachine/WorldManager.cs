@@ -12,6 +12,8 @@ namespace DreamStateMachine
 {
     class WorldManager
     {
+        public static event EventHandler<EventArgs> worldChange;
+
         public Node<World> curWorldNode;
         public World curWorld;
         public int curLevel;
@@ -30,6 +32,7 @@ namespace DreamStateMachine
             worldTree = new Tree<World>();
             curLevel = 1;
 
+            Actor.Use += new EventHandler<EventArgs>(Actor_Use);
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
         }
 
@@ -37,6 +40,28 @@ namespace DreamStateMachine
         {
             Actor spawnedActor = (Actor)sender;
             spawnedActor.world = curWorld;
+        }
+
+        private void Actor_Use(object sender, EventArgs e)
+        {
+            Actor spawnedActor = (Actor)sender;
+            int reach = spawnedActor.reach;
+            Vector2 sightVector = spawnedActor.sightVector;
+            Point usePoint = new Point((int)sightVector.X * reach, (int)sightVector.Y * reach);
+            int[,] tileMap = this.curWorld.getTileMap();
+            if (tileMap[usePoint.Y, usePoint.X] == 15)
+            {
+                //worldManager.curWorld.useTileAtPoint(usePoint);
+                //Console.Write(worldManager.curLevel);
+                if (this.getWorldChild(0) == null)
+                {
+                    this.createNextWorld(0);
+                    //this.spawnActor(protagonist, worldManager.curWorld.getSpawnPos(), 1);
+                    //this.spawnActors(worldManager.curWorld.getSpawns());
+                }
+                //isLoadingWorld = false;
+                //Console.Write(worldManager.curLevel);
+            }
         }
 
         public void initWorldConfig(ContentManager content, String actorConfigFile)
@@ -101,6 +126,11 @@ namespace DreamStateMachine
             curLevel++;
             return tempWorld;
         }
+
+        private void onWorldChange(){
+            worldChange(this, EventArgs.Empty);
+        }
+
     }
 
 }

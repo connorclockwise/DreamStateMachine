@@ -10,93 +10,52 @@ using System.Xml.Linq;
 
 namespace DreamStateMachine.Behaviors
 {
-    class ActorManager
+    class PhysicsController
     {
-        Dictionary<String, Actor> actorPrototypes;
+        List<Actor> actors;
+        World world;
         Random random;
         Rectangle predictedMove;
-        WorldManager worldManager;
-        SoundManager soundManager;
         int actorX;
         int actorY;
         int actorW;
         int actorH;
 
-        public ActorManager(WorldManager w, SoundManager s, Random r)
+        public PhysicsController(World world)
         {
-            worldManager = w;
-            soundManager = s;
 
-            random = r;
-            actorPrototypes = new Dictionary<string,Actor>();
-            behaviorLists = new List<ActionList>();
             actors = new List<Actor>();
+            this.world = world;
+            random = new Random();
 
+            Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
+            //Actor.Hurt += new EventHandler<AttackEventArgs>(Actor_Hurt);
             Actor.Death += new EventHandler<EventArgs>(Actor_Death);
-            Actor.Attack += new EventHandler<AttackEventArgs>(Actor_Attack);
-
         }
 
-        private void Actor_Attack(object sender, AttackEventArgs e)
+        private void Actor_Spawn(object sender, SpawnEventArgs e)
         {
-            handleActorAttack(e.damageInfo);
+            Actor spawnedActor = (Actor)sender;
+            Point spawnPoint = new Point(e.spawnTile.X * world.tileSize, e.spawnTile.Y * world.tileSize);
+            spawnedActor.setPos(spawnPoint);
+            actors.Add(spawnedActor);
+            
         }
 
         private void Actor_Death(object sender, EventArgs e)
         {
-            actors.Remove((Actor)sender);
+            Actor deadActor = (Actor)sender;
+            actors.Remove(deadActor);
         }
 
-        public bool handleActorAttack(DamageInfo damageInfo)
-        {
-            for (int i = 0; i < actors.Count; i++)
+        public void update(float dt){
+            foreach (Actor actor in actors)
             {
-                victim = actors.ElementAt(i);
-                if (victim.Equals(damageInfo.attacker))
-                    continue;
-                else if (victim.hitBox.Intersects(damageInfo.attackRect))
-                {
-                    victim.velocity += damageInfo.attacker.sightVector * 20;
-                    victim.onHurt(damageInfo);
-                    Recoil recoil = new Recoil(victim.animationList, victim);
-                    if (!victim.animationList.has(recoil))
-                        victim.animationList.pushFront(recoil);
-                    if (victim.health <= 0)
-                    {
-                        victim.onKill(damageInfo);
-                        actors.Remove(victim);
-                        if (victim.isPlayer)
-                            soundManager.playSound(1);
-                    }
-                    return true;
-                }
-            }
-
-            return false;
-            
-        }
-
-        public void handleActorUse(Actor actor, Point usePoint)
-        {
-            int[,] tileMap = worldManager.curWorld.getTileMap();
-            if (tileMap[usePoint.Y, usePoint.X] == 15)
-            {
-                //worldManager.curWorld.useTileAtPoint(usePoint);
-                //Console.Write(worldManager.curLevel);
-                if (worldManager.getWorldChild(0) == null)
-                {
-                    World newWorld = worldManager.createNextWorld(0);
-                    actors.Clear();
-                    //cam.world = newWorld;
-                    //actorManager.world = newWorld;
-                    //actorManager.spawnActor(player, newWorld.getSpawnPos());
-                    this.spawnActor(protagonist, worldManager.curWorld.getSpawnPos(), 1);
-                    this.spawnActors(worldManager.curWorld.getSpawns());
-                }
-                //isLoadingWorld = false;
-                //Console.Write(worldManager.curLevel);
+                this.handleMapCollision(actor);
+                this.handleMovement(actor);
             }
         }
+
 
         public void handleMapCollision(Actor actor)
         {
@@ -113,7 +72,7 @@ namespace DreamStateMachine.Behaviors
             predictedMove.Height = actorH;
 
             Point remainingMovement = new Point(0, 0);
-            if (worldManager.curWorld.isInBounds(predictedMove))
+            if (world.isInBounds(predictedMove))
             {
                 actor.setPos(predictedMove.X, predictedMove.Y);
             }
@@ -121,41 +80,41 @@ namespace DreamStateMachine.Behaviors
             {
                 if (actor.velocity.X < 0)
                 {
-                    if (worldManager.curWorld.isInBounds(predictedMove.X, actorY) && worldManager.curWorld.isInBounds(predictedMove.X, actorY + actorH - 1))
+                    if (world.isInBounds(predictedMove.X, actorY) && world.isInBounds(predictedMove.X, actorY + actorH - 1))
                         remainingMovement.X = (int)actor.velocity.X;
-                    else if (actorX % worldManager.curWorld.tileSize != 0)
+                    else if (actorX % world.tileSize != 0)
                     {
-                        remainingMovement.X = -(actorX % worldManager.curWorld.tileSize);
+                        remainingMovement.X = -(actorX % world.tileSize);
                     }
                 }
                 else if (actor.velocity.X > 0)
                 {
-                    if (worldManager.curWorld.isInBounds(predictedMove.X + actorW, actorY) && worldManager.curWorld.isInBounds(predictedMove.X + actorW, actorY + actorH - 1))
+                    if (world.isInBounds(predictedMove.X + actorW, actorY) && world.isInBounds(predictedMove.X + actorW, actorY + actorH - 1))
                         remainingMovement.X = (int)actor.velocity.X;
-                    else if ((actorX + actorW) % worldManager.curWorld.tileSize != 0)
-                        remainingMovement.X = worldManager.curWorld.tileSize - ((actorX + actorW) % worldManager.curWorld.tileSize);
+                    else if ((actorX + actorW) % world.tileSize != 0)
+                        remainingMovement.X = world.tileSize - ((actorX + actorW) % world.tileSize);
                 }
 
                 if (actor.velocity.Y < 0)
                 {
-                    if (worldManager.curWorld.isInBounds(actorX, predictedMove.Y) && worldManager.curWorld.isInBounds(actorX + actorW - 1, predictedMove.Y))
+                    if (world.isInBounds(actorX, predictedMove.Y) && world.isInBounds(actorX + actorW - 1, predictedMove.Y))
                         remainingMovement.Y = (int)actor.velocity.Y;
-                    else if (actorY % worldManager.curWorld.tileSize != 0)
-                        remainingMovement.Y = -(actorY % worldManager.curWorld.tileSize);
+                    else if (actorY % world.tileSize != 0)
+                        remainingMovement.Y = -(actorY % world.tileSize);
                 }
                 else if (actor.velocity.Y > 0)
                 {
-                    if (worldManager.curWorld.isInBounds(actorX, predictedMove.Y + actorH) && worldManager.curWorld.isInBounds(actorX + actorW - 1, predictedMove.Y + actorH - 1))
+                    if (world.isInBounds(actorX, predictedMove.Y + actorH) && world.isInBounds(actorX + actorW - 1, predictedMove.Y + actorH - 1))
                         remainingMovement.Y = (int)actor.velocity.Y;
-                    else if ((actorY + actorH) % worldManager.curWorld.tileSize != 0)
-                        remainingMovement.Y = worldManager.curWorld.tileSize - ((actorY + actorH) % worldManager.curWorld.tileSize);
+                    else if ((actorY + actorH) % world.tileSize != 0)
+                        remainingMovement.Y = world.tileSize - ((actorY + actorH) % world.tileSize);
                 }
                 predictedMove.X = actor.hitBox.X + remainingMovement.X;
                 predictedMove.Y = actor.hitBox.Y + remainingMovement.Y;
                 predictedMove.Width--;
                 predictedMove.Height--;
 
-                if (worldManager.curWorld.isInBounds(predictedMove))
+                if (world.isInBounds(predictedMove))
                     actor.setPos(actor.hitBox.X + remainingMovement.X, actor.hitBox.Y + remainingMovement.Y);
 
             }
@@ -295,71 +254,7 @@ namespace DreamStateMachine.Behaviors
             //    actor.acceleration.Y = -.3f;
             //    actor.velocity.Y = MathHelper.Clamp(actor.velocity.Y, -actor.maxSpeed * movementFactor, -actor.minSpeed);
             //}
-
-        public ActorManager()
-        {
-            actorPrototypes = new Dictionary<string,Actor>();
-            random = new Random();
         }
 
-        public void initActorConfig(ContentManager content, String actorConfigFile)
-        {
-            var doc = XDocument.Load(actorConfigFile);
-            var actors = doc.Element("Actors").Elements("Actor");
-            String actorClass;
-            Texture2D actorTexture;
-            int actorWidth;
-            int actorHeight;
-            int actorHealth;
-            int actorSight;
-            int actorReach;
-            int texWidth;
-            int texHeight;
-            foreach (XElement actor in actors)
-            {
-                actorClass = actor.Attribute("className").Value;
-                actorTexture = content.Load<Texture2D>(actor.Attribute("texture").Value);
-                actorWidth = int.Parse(actor.Attribute("width").Value);
-                actorHeight = int.Parse(actor.Attribute("height").Value);
-                texWidth = int.Parse(actor.Attribute("texWidth").Value);
-                texHeight = int.Parse(actor.Attribute("texHeight").Value);
-                actorHealth = int.Parse(actor.Attribute("health").Value);
-                actorSight = int.Parse(actor.Attribute("sight").Value);
-                actorReach = int.Parse(actor.Attribute("reach").Value);
-                this.actorPrototypes[actorClass] = new Actor(actorTexture, actorWidth, actorHeight, texWidth, texHeight);
-                this.actorPrototypes[actorClass].className = actorClass;
-                this.actorPrototypes[actorClass].health = actorHealth;
-                this.actorPrototypes[actorClass].sight = actorSight;
-                this.actorPrototypes[actorClass].reach = actorReach;
-            }
-       }
-
-        public void spawnActor(Actor actor, Point spawnTile, int spawnType)
-        {
-            actor.onSpawn(spawnTile, spawnType);
-            //actor.world = worldManager.curWorld;
-        }
-
-        public void spawnActors(List<SpawnFlag> spawns)
-        {
-            foreach (SpawnFlag spawn in spawns)
-            {
-                if (actorPrototypes.ContainsKey(spawn.className))
-                {
-                        Actor actorToCopy = (Actor)actorPrototypes[spawn.className].Clone();
-                        Point spawnTile = spawn.tilePosition;
-                        Vector2 newSightVector = new Vector2((float)random.NextDouble() * 2 - 1, (float)random.NextDouble() * 2 - 1);
-                        actorToCopy.sightVector = newSightVector;
-                        spawnActor(actorToCopy, spawnTile, spawn.spawnType);
-                }
-                else if (spawn.className == "player_spawn")
-                {
-                    //Actor protagonist = new Actor();
-
-                }
-
-                
-            }
-        }
     }
 }

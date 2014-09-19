@@ -72,6 +72,8 @@
     <Compile Include="AttackEventArgs.cs" />
     <Compile Include="Sound.cs" />
     <Compile Include="SoundManager.cs" />
+    <Compile Include="ActorController.cs" />
+    <Compile Include="PhysicsController.cs" />
     <Compile Include="SpawnEventArgs.cs" />
     <Compile Include="DamageInfo.cs" />
     <Compile Include="game.cs" />

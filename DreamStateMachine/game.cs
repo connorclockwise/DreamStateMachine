@@ -21,8 +21,11 @@ namespace DreamStateMachine
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        ActorController actorController;
         ActorManager actorManager;
         AIController aiController;
+        PhysicsController physicsController;
+
         Actor player;
         GraphicsDeviceManager graphics;
         GraphicsDevice device;
@@ -102,11 +105,13 @@ namespace DreamStateMachine
             soundManager = new SoundManager(worldManager);
             soundManager.initSoundConfig(Content, "content/sfx/Sounds.xml");
             actorManager = new ActorManager(worldManager, soundManager, random);
+            actorManager = new ActorManager();
             actorManager.initActorConfig(Content, "content/Actors.xml");
             
 
             aiController = new AIController();
-
+            actorController = new ActorController();
+            physicsController = new PhysicsController(worldManager.curWorld);
 
             //spawnTile = worldManager.curWorld.getSpawnTile();
             tileRect = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
@@ -115,7 +120,7 @@ namespace DreamStateMachine
             player = new Actor(playerTexture, 25, 25, 64, 64);
             player.isPlayer = true;
             //Point spawnPosition = new Point(spawnTile.X * tileSize + tileSize / 2, spawnTile.Y * tileSize + tileSize / 2);
-            actorManager.spawnActor(player, worldManager.curWorld.getSpawnPos(), 1);
+            actorManager.spawnActor(player, worldManager.curWorld.getSpawnTile(), 1);
             actorManager.spawnActors(worldManager.curWorld.getSpawns());
         }
 
@@ -148,8 +153,9 @@ namespace DreamStateMachine
 
             float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
             UpdateInput();
-            actorManager.update(dt);
+            actorController.update(dt);
             aiController.update(dt);
+            physicsController.update(dt);
             cam.update(cam, player);
 
             base.Update(gameTime);
@@ -236,8 +242,7 @@ namespace DreamStateMachine
                 if (length < worldManager.curWorld.tileSize)
                 {
                     Point mouseTilePos = new Point(mouseWorldPoint.X / worldManager.curWorld.tileSize, mouseWorldPoint.Y / worldManager.curWorld.tileSize);
-                    actorManager.handleActorUse(player, mouseTilePos);
-                    //LoadNextWorld();
+                    player.onUse();
                 }
             }
             if (keyBoardState.IsKeyDown(Keys.G))
@@ -251,6 +256,7 @@ namespace DreamStateMachine
                 //Thread thread = new Thread(new ThreadStart(LoadNextWorld));
                 //thread.IsBackground = true;
                 //thread.Start();
+                Console.WriteLine("Oh no!");
             }
 
 
