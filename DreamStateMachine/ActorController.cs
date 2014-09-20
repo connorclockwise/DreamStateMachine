@@ -12,20 +12,23 @@ namespace DreamStateMachine.Behaviors
 {
     class ActorController
     {
+        Dictionary<World, List<Actor>> actorLists;
         List<ActionList> actionLists;
         List<Actor> actors;
         Actor curActor;
-        SoundManager soundManager;
+        //SoundManager soundManager;
 
-        public ActorController(SoundManager s)
+        public ActorController()
         {
+            actorLists = new Dictionary<World,List<Actor>>();
             actionLists = new List<ActionList>();
             actors = new List<Actor>();
 
-            soundManager = s;
+            //soundManager = s;
 
             Actor.Death += new EventHandler<EventArgs>(Actor_Death);
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
+            WorldManager.worldChange += new EventHandler<EventArgs>(World_Change);
         }
 
         private void Actor_Death(object sender, EventArgs e)
@@ -52,8 +55,15 @@ namespace DreamStateMachine.Behaviors
             {
                 curActor = actors.ElementAt(i);
                 curActor.update(dt);
-                
             }
+        }
+
+        private void World_Change(object sender, EventArgs eventsArgs)
+        {
+            WorldManager worldManager = (WorldManager) sender;
+            World curWorld = worldManager.curWorld;
+            actors.RemoveAll(x => x.world.Equals(curWorld));
+            actionLists.Clear();
         }
 
     }

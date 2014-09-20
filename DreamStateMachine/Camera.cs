@@ -10,31 +10,33 @@ namespace DreamStateMachine
     class Camera
     {
         public Rectangle drawSpace;
-        public WorldManager worldManager;
         public List<Actor> actors;
+        Actor protagonist;
         SpriteBatch spriteBatch;
         bool debug; 
         Texture2D debugTex;
         World curWorld;
 
 
-        public Camera(SpriteBatch sB, Rectangle dS, WorldManager w, Texture2D debugSq)
+        public Camera(SpriteBatch sB, Rectangle dS, Texture2D debugSq)
         {
             spriteBatch = sB;
             drawSpace = dS;
-            worldManager = w;
             actors = new List<Actor>();
             //debug = true;
             debugTex = debugSq;
 
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
             Actor.Death += new EventHandler<EventArgs>(Actor_Death);
+            WorldManager.worldChange += new EventHandler<EventArgs>(World_Change);
         }
 
         private void Actor_Spawn(object sender, EventArgs e)
         {
             Actor spawnedActor = (Actor)sender;
             actors.Add(spawnedActor);
+            if (spawnedActor.className == "player")
+                protagonist = spawnedActor;
         }
 
         private void Actor_Death(object sender, EventArgs e)
@@ -118,7 +120,6 @@ namespace DreamStateMachine
 
         public void DrawFloor()
         {
-            curWorld = worldManager.getCurWorld();
             Texture2D floorTileTex = curWorld.getFloorTileTex();
             int[,] tileMap = curWorld.getTileMap();
             int tileSize = curWorld.getTileSize();
@@ -157,10 +158,10 @@ namespace DreamStateMachine
             drawSpace.Y = (int)MathHelper.Max((float)(y - (drawSpace.Height / 2)), 0);                         
         }
 
-        public void update(Camera cam, Actor Actor)
+        public void update(Camera cam)
         {
-            if (drawSpace.Center.X != Actor.hitBox.Center.X || drawSpace.Center.Y != Actor.hitBox.Center.Y)
-                setFocus(Actor.hitBox.Center.X, Actor.hitBox.Center.Y);
+            if (drawSpace.Center.X != protagonist.hitBox.Center.X || drawSpace.Center.Y != protagonist.hitBox.Center.Y)
+                setFocus(protagonist.hitBox.Center.X, protagonist.hitBox.Center.Y);
         }
 
         public bool isInView(Rectangle hitbox)
@@ -168,5 +169,12 @@ namespace DreamStateMachine
            return hitbox.Intersects(drawSpace);
         }
 
+        private void World_Change(Object sender, EventArgs eventArgs)
+        {
+
+            WorldManager worldManager = (WorldManager)sender;
+            this.curWorld = worldManager.curWorld;
+            actors.Clear();
+        }
     }
 }

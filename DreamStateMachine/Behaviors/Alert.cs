@@ -35,7 +35,7 @@ namespace DreamStateMachine.Actions
 
         override public void update(float dt)
         {
-            if (world.isInSight(owner, target.hitBox.Center))
+            if (owner.world.isInSight(owner, target.hitBox.Center))
             {
                 ownerList.endAll();
                 //Follow follow = new Follow(enemy.behaviorList, enemy, protagonist);

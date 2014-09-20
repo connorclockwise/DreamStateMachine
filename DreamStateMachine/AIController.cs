@@ -23,6 +23,8 @@ namespace DreamStateMachine.Behaviors
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
             Actor.Hurt += new EventHandler<AttackEventArgs>(Actor_Hurt);
             Actor.Death += new EventHandler<EventArgs>(Actor_Death);
+
+            WorldManager.worldChange += new EventHandler<EventArgs>(World_Change);
         }
 
         private void Actor_Spawn(object sender, SpawnEventArgs e)
@@ -71,6 +73,11 @@ namespace DreamStateMachine.Behaviors
             {
                 entry.Value.update(dt);
             }
+        }
+
+        private void World_Change(object sender, EventArgs eventsArgs)
+        {
+            behaviorLists.Clear();
         }
 
     }

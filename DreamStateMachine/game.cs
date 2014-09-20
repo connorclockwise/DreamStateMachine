@@ -62,6 +62,8 @@ namespace DreamStateMachine
             Content.RootDirectory = "Content";
             gameUpdate = MainGameUpdate;
             gameDraw = MainGameDraw;
+
+            Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
         }
 
         /// <summary>
@@ -96,7 +98,12 @@ namespace DreamStateMachine
             inputHandler = new InputHandler(origin);
             random = new Random();
 
+            tileRect = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            cam = new Camera(spriteBatch, tileRect, debugSquare);
             //actors = new List<Actor>();
+            aiController = new AIController();
+            actorController = new ActorController();
+            physicsController = new PhysicsController();
             worldManager = new WorldManager(random);
             worldManager.initWorldConfig(Content, "content/Worlds.xml");
             worldManager.initStartingWorld();
@@ -104,20 +111,6 @@ namespace DreamStateMachine
             soundManager.initSoundConfig(Content, "content/sfx/Sounds.xml");
             actorManager = new ActorManager();
             actorManager.initActorConfig(Content, "content/Actors.xml");
-            
-
-            aiController = new AIController();
-            actorController = new ActorController(soundManager);
-            physicsController = new PhysicsController(worldManager.curWorld);
-
-            //spawnTile = worldManager.curWorld.getSpawnTile();
-            tileRect = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-
-            cam = new Camera(spriteBatch, tileRect, worldManager, debugSquare);
-            player = new Actor(playerTexture, 25, 25, 64, 64);
-            player.isPlayer = true;
-            //Point spawnPosition = new Point(spawnTile.X * tileSize + tileSize / 2, spawnTile.Y * tileSize + tileSize / 2);
-            actorManager.spawnActor(player, worldManager.curWorld.getSpawnTile(), 1);
             actorManager.spawnActors(worldManager.curWorld.getSpawns());
         }
 
@@ -149,7 +142,7 @@ namespace DreamStateMachine
             actorController.update(dt);
             aiController.update(dt);
             physicsController.update(dt);
-            cam.update(cam, player);
+            cam.update(cam);
 
             base.Update(gameTime);
         }
@@ -171,9 +164,12 @@ namespace DreamStateMachine
 
         private void UpdateInput()
         {
-            List<Command> commands = inputHandler.handleInput();
-            foreach (Command c in commands)
-                c.Execute(player);
+            if (player != null)
+            {
+                List<Command> commands = inputHandler.handleInput();
+                foreach (Command c in commands)
+                    c.Execute(player);
+            }
         }
 
         /// <summary>
@@ -225,6 +221,11 @@ namespace DreamStateMachine
 
         }
 
-
+        private void Actor_Spawn(object sender, EventArgs eventArgs)
+        {
+            Actor actor = (Actor)sender;
+            if (actor.className == "player")
+                player = actor;
+        }
     }
 }

@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Actors>
   <Actor
+    className="player"
+    texture="dreamManAnimations"
+    width="25"
+    height="25"
+    texWidth="64"
+    texHeight="64"
+    health="200"
+    sight="200"
+    reach="30">
+  </Actor>
+  
+  <Actor
     className="thief"
     texture="dreamManAnimations"
     width="25"

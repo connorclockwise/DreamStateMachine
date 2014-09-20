@@ -12,6 +12,7 @@ namespace DreamStateMachine.Behaviors
 {
     class ActorManager
     {
+
         Dictionary<String, Actor> actorPrototypes;
         Random random;
 
@@ -19,6 +20,8 @@ namespace DreamStateMachine.Behaviors
         {
             actorPrototypes = new Dictionary<string,Actor>();
             random = new Random();
+
+            WorldManager.worldChange += new EventHandler<EventArgs>(World_Change);
         }
 
         public void initActorConfig(ContentManager content, String actorConfigFile)
@@ -68,17 +71,33 @@ namespace DreamStateMachine.Behaviors
                         Actor actorToCopy = (Actor)actorPrototypes[spawn.className].Clone();
                         Point spawnTile = spawn.tilePosition;
                         Vector2 newSightVector = new Vector2((float)random.NextDouble() * 2 - 1, (float)random.NextDouble() * 2 - 1);
-                        actorToCopy.sightVector = newSightVector;
+                        actorToCopy.setGaze(newSightVector);
                         spawnActor(actorToCopy, spawnTile, spawn.spawnType);
                 }
-                else if (spawn.className == "player_spawn")
-                {
-                    //Actor protagonist = new Actor();
-
-                }
-
-                
             }
+        }
+
+        public void respawnActors(List<SpawnFlag> spawns)
+        {
+            foreach (SpawnFlag spawn in spawns)
+            {
+                if (actorPrototypes.ContainsKey(spawn.className))
+                {
+                    Actor actorToCopy = (Actor)actorPrototypes[spawn.className].Clone();
+                    Point spawnTile = spawn.tilePosition;
+                    Vector2 newSightVector = new Vector2((float)random.NextDouble() * 2 - 1, (float)random.NextDouble() * 2 - 1);
+                    actorToCopy.setGaze(newSightVector);
+                    spawnActor(actorToCopy, spawnTile, spawn.spawnType);
+                }
+            }
+        }
+
+
+        private void World_Change(Object sender, EventArgs eventArgs)
+        {
+            WorldManager worldManager = (WorldManager)sender;
+            List<SpawnFlag> spawns = worldManager.curWorld.getSpawns();
+            spawnActors(spawns);
         }
     }
 }

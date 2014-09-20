@@ -21,16 +21,15 @@ namespace DreamStateMachine.Behaviors
         int actorW;
         int actorH;
 
-        public PhysicsController(World world)
+        public PhysicsController()
         {
 
             actors = new List<Actor>();
-            this.world = world;
             random = new Random();
 
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
-            //Actor.Hurt += new EventHandler<AttackEventArgs>(Actor_Hurt);
             Actor.Death += new EventHandler<EventArgs>(Actor_Death);
+            WorldManager.worldChange +=new EventHandler<EventArgs>(World_Change);
         }
 
         private void Actor_Spawn(object sender, SpawnEventArgs e)
@@ -256,5 +255,10 @@ namespace DreamStateMachine.Behaviors
             //}
         }
 
+        private void World_Change(Object sender, EventArgs eventArgs)
+        {
+            WorldManager worldManager = (WorldManager)sender;
+            world = worldManager.curWorld;
+        }
     }
 }

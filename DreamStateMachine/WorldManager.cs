@@ -44,10 +44,13 @@ namespace DreamStateMachine
 
         private void Actor_Use(object sender, EventArgs e)
         {
-            Actor spawnedActor = (Actor)sender;
-            int reach = spawnedActor.reach;
-            Vector2 sightVector = spawnedActor.sightVector;
-            Point usePoint = new Point((int)sightVector.X * reach, (int)sightVector.Y * reach);
+            
+            Actor usingActor = (Actor)sender;
+            int reach = usingActor.reach;
+            Vector2 sightVector = usingActor.sightVector;
+            Point usePoint = new Point();
+            usePoint.X = (int)((usingActor.hitBox.Center.X + (int)(sightVector.X * reach))  / this.curWorld.tileSize);
+            usePoint.Y = (int)((usingActor.hitBox.Center.Y + (int)(sightVector.Y * reach)) / this.curWorld.tileSize);
             int[,] tileMap = this.curWorld.getTileMap();
             if (tileMap[usePoint.Y, usePoint.X] == 15)
             {
@@ -56,6 +59,8 @@ namespace DreamStateMachine
                 if (this.getWorldChild(0) == null)
                 {
                     this.createNextWorld(0);
+                    onWorldChange();
+                    
                     //this.spawnActor(protagonist, worldManager.curWorld.getSpawnPos(), 1);
                     //this.spawnActors(worldManager.curWorld.getSpawns());
                 }
@@ -94,6 +99,7 @@ namespace DreamStateMachine
             curWorldNode = rootWorld;
             //Node<World> newWorldNode = Node<World>(curWorld);
             worldTree.setRoot(rootWorld);
+            onWorldChange();
         }
 
         public World getCurWorld()
