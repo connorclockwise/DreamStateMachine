@@ -89,6 +89,7 @@ namespace DreamStateMachine
             //playerTexture = Content.Load<Texture2D>("protagonistBodyAnimations");
             playerTexture = Content.Load<Texture2D>("dreamManAnimations.png");
             debugSquare = Content.Load<Texture2D>("debugSquare");
+            Texture2D healthBar = Content.Load<Texture2D>("debugSquare");
             arielBlackFont = Content.Load<SpriteFont>("SpriteFont1");
 
             device = graphics.GraphicsDevice;
@@ -99,7 +100,7 @@ namespace DreamStateMachine
             random = new Random();
 
             tileRect = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-            cam = new Camera(spriteBatch, tileRect, debugSquare);
+            cam = new Camera(spriteBatch, tileRect, debugSquare, healthBar);
             //actors = new List<Actor>();
             aiController = new AIController();
             actorController = new ActorController();
@@ -142,7 +143,7 @@ namespace DreamStateMachine
             actorController.update(dt);
             aiController.update(dt);
             physicsController.update(dt);
-            cam.update(cam);
+            cam.update();
 
             base.Update(gameTime);
         }
@@ -187,8 +188,9 @@ namespace DreamStateMachine
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone);
-            cam.DrawFloor();
-            cam.DrawActors();
+                cam.drawFloor();
+                cam.drawActors();
+                cam.drawGUI();
             spriteBatch.End();
 
             base.Draw(gameTime);

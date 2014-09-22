@@ -21,27 +21,17 @@ namespace DreamStateMachine.Actions
 
         override public void onStart()
         {
-            //duration = (5f/12f);
-            //owner.lockMovement();
-            owner.animationList.endAll();
+            //owner.animationList.endAll();
         }
 
         override public void onEnd()
         {
-            //if (owner.isWalking)
-            //    elapsed = 0;
-            //else
-            //    owner.setFeetAnimationFrame(0, 0);
-
-            //owner.setBodyAnimationFrame(0, 0);
             ownerList.remove(this);
-            //owner.unlockMovement();
         }
 
         override public void update(float dt)
         {
             elapsed += dt;
-            //owner.color = Color.Crimson;
         }
     }
 }

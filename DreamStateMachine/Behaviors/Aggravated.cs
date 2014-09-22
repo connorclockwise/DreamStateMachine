@@ -11,6 +11,9 @@ namespace DreamStateMachine.Actions
     {
         Actor owner;
         Actor target;
+        Point attackPos;
+        Vector2 attackVector;
+        Vector2 movement;
 
         public Aggravated(ActionList ownerList, Actor owner, Actor toFollow)
         {
@@ -22,6 +25,12 @@ namespace DreamStateMachine.Actions
             elapsed = 0;
             duration = -1;
             isBlocking = true;
+            //toFollow.onHurt += new EventHandler<AttackEventArgs>(Actor_Hurt);
+        }
+
+        //dummy constructor
+        public Aggravated(Action ownerList, Actor owner)
+        {
         }
 
         override public void onStart()
@@ -37,17 +46,17 @@ namespace DreamStateMachine.Actions
         {
             //Console.WriteLine(path.Count);
             double distance = Math.Sqrt(Math.Pow(target.hitBox.Center.X - owner.hitBox.Center.X, 2) + Math.Pow(target.hitBox.Center.Y - owner.hitBox.Center.Y, 2));
-            if (distance > 50)
+            if (distance > owner.reach)
             {
-                Vector2 attackVector = new Vector2(owner.hitBox.Center.X - target.hitBox.Center.X, owner.hitBox.Center.Y - target.hitBox.Center.Y);
+                attackVector = new Vector2(owner.hitBox.Center.X - target.hitBox.Center.X, owner.hitBox.Center.Y - target.hitBox.Center.Y);
                 attackVector.Normalize();
-                attackVector *= 50;
+                attackVector *= owner.reach;
                 attackVector.X += target.hitBox.Center.X;
                 attackVector.Y += target.hitBox.Center.Y;
-                Point attackPos = new Point((int)attackVector.X, (int)attackVector.Y);
-                Vector2 movement = new Vector2(attackPos.X - owner.hitBox.Center.X, attackPos.Y - owner.hitBox.Center.Y);
+                attackPos = new Point((int)attackVector.X, (int)attackVector.Y);
+                movement = new Vector2((float)(attackPos.X - owner.hitBox.Center.X), (float)(attackPos.Y - owner.hitBox.Center.Y));
                 movement.Normalize();
-                movement *= 5;
+                movement *= owner.maxSpeed;
                 //owner.movementIntent /= 3f;
                 owner.velocity.X = movement.X;
                 owner.velocity.Y = movement.Y;
@@ -58,11 +67,17 @@ namespace DreamStateMachine.Actions
             {
                 owner.setGaze(target.hitBox.Center);
                 Punch punch = new Punch(owner.animationList, owner);
-                if (!owner.animationList.has(punch))
+                Recoil recoil = new Recoil(owner.animationList, owner);
+                if (!owner.animationList.has(punch) && !owner.animationList.has(recoil))
                 {
                     owner.animationList.pushFront(punch);
                 }
             }
+        }
+
+        void Actor_Hurt(Object sender, AttackEventArgs attackEventArgs)
+        {
+            this.onEnd();
         }
     }
 }

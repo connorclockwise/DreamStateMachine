@@ -10,7 +10,7 @@ using DreamStateMachine.Actions;
 
 namespace DreamStateMachine
 {
-    class Actor:ICloneable
+    class Actor:ICloneable, IDrawable
     {
 
         public event EventHandler<EventArgs> HitActor;
@@ -40,6 +40,7 @@ namespace DreamStateMachine
         public Walk walkAnimation;
         public World world;
         //public Weapon activeWeapon;
+        public int maxHealth;
         public int maxSpeed;
         public int minSpeed;
         public int health;
@@ -48,7 +49,6 @@ namespace DreamStateMachine
         public float rotationVelocity;
         public float maxRotationVelocity;
         
-        public bool isPlayer;
         public bool isWalking; 
         public bool isAttacking;
         public bool lockedMovement;
@@ -79,14 +79,80 @@ namespace DreamStateMachine
             bodyRotation = 0;
             targetRotation = 0;
             rotationVelocity = 0;
-            health = 100;
+            maxHealth = 100;
+            health = maxHealth;
+            
             maxRotationVelocity = MathHelper.Pi / 16f;
             isAttacking = false;
-            isPlayer = false;
             lockedMovement = false;
 
             Actor.Attack += new EventHandler<AttackEventArgs>(Actor_Attack);
 
+        }
+
+        public void draw(SpriteBatch spriteBatch, Rectangle drawSpace, bool debugging=false)
+        {
+            Rectangle normalizedPosition;
+            Rectangle sourceRectangle;
+            Texture2D tex;
+            tex = this.getTexture();
+            normalizedPosition = new Rectangle(this.body.X - drawSpace.X,
+                                               this.body.Y - drawSpace.Y,
+                                               this.body.Width,
+                                               this.body.Height);
+
+
+            sourceRectangle = new Rectangle(this.curAnimFrame.X * this.body.Width,
+                                            this.curAnimFrame.Y * this.body.Height,
+                                            this.body.Width,
+                                            this.body.Height);
+
+            spriteBatch.Draw(
+                tex,
+                new Vector2(normalizedPosition.X + this.body.Width / 2, normalizedPosition.Y + this.body.Height / 2),
+                sourceRectangle,
+                this.color,
+                this.bodyRotation,
+                new Vector2(normalizedPosition.Width / 2.0f, normalizedPosition.Height / 2.0f),
+                1,
+                SpriteEffects.None,
+                0
+            );
+
+            //if (debugging)
+            //{
+            //    spriteBatch.Draw(
+            //        debugTex,
+            //        new Vector2(this.hitBox.X - this.drawSpace.X + normalizedPosition.Width / 2.0f, this.hitBox.Y - this.drawSpace.Y + normalizedPosition.Height / 2.0f),
+            //        new Rectangle(0, 0, this.hitBox.Width, this.hitBox.Height),
+            //        new Color(.5f, .5f, .5f, .5f),
+            //        0,
+            //        new Vector2(normalizedPosition.Width / 2.0f, normalizedPosition.Height / 2.0f),
+            //        1,
+            //        SpriteEffects.None,
+            //        0
+            //    );
+            //}
+
+            //if (debug && this.isAttacking)
+            //{
+            //    spriteBatch.Draw(
+            //        debugTex,
+            //        new Vector2(this.attackBox.X - this.drawSpace.X, this.attackBox.Y - this.drawSpace.Y),
+            //        new Rectangle(0, 0, this.attackBox.Width, this.attackBox.Height),
+            //        new Color(.5f, .5f, .5f, .5f),
+            //        0,
+            //        new Vector2(this.attackBox.Width / 2.0f, this.attackBox.Height / 2.0f),
+            //        1,
+            //        SpriteEffects.None,
+            //        0
+            //    );
+            //}
+        }
+
+        public bool isInDrawSpace(Rectangle drawSpace)
+        {
+            return this.hitBox.Intersects(drawSpace);
         }
 
         public Object Clone()

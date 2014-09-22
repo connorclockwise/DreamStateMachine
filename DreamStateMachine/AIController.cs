@@ -65,7 +65,27 @@ namespace DreamStateMachine.Behaviors
 
         private void Actor_Death(object sender, EventArgs e)
         {
-            behaviorLists.Remove((Actor)sender);
+            Actor victim = (Actor)sender;
+            if (behaviorLists.ContainsKey(victim))
+            {
+                behaviorLists.Remove(victim);
+            }
+            else if(victim.className == "player")
+            {
+                Aggravated aggravated = new Aggravated(null, null);
+                Alert alert = new Alert(null, null);
+                foreach(KeyValuePair<Actor, ActionList> entry in behaviorLists)
+                {
+                    if (entry.Value.has(aggravated))
+                    {
+                        entry.Value.remove(aggravated);
+                    }
+                    if (entry.Value.has(alert))
+                    {
+                        entry.Value.remove(alert);
+                    }
+                }
+            }
         }
 
         public void update(float dt){

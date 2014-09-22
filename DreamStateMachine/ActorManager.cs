@@ -50,7 +50,7 @@ namespace DreamStateMachine.Behaviors
                 actorReach = int.Parse(actor.Attribute("reach").Value);
                 this.actorPrototypes[actorClass] = new Actor(actorTexture, actorWidth, actorHeight, texWidth, texHeight);
                 this.actorPrototypes[actorClass].className = actorClass;
-                this.actorPrototypes[actorClass].health = actorHealth;
+                this.actorPrototypes[actorClass].maxHealth = actorHealth;
                 this.actorPrototypes[actorClass].sight = actorSight;
                 this.actorPrototypes[actorClass].reach = actorReach;
             }

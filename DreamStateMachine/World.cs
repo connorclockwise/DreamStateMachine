@@ -8,7 +8,7 @@ using DreamStateMachine.Actions;
 
 namespace DreamStateMachine
 {
-    class World
+    class World:IDrawable
     {
         List<Room> roomList;
         List<SpawnFlag> spawns;
@@ -27,6 +27,35 @@ namespace DreamStateMachine
             floorTiles = floorTex;
             tileSize = ts;
             roomList = new List<Room>();
+        }
+
+        public void draw(SpriteBatch spriteBatch, Rectangle drawSpace, bool debuging = false)
+        {
+            Texture2D floorTileTex = this.getFloorTileTex();
+            int[,] tileMap = this.getTileMap();
+            int tileSize = this.getTileSize();
+            Rectangle screenRectangle;
+            Rectangle sourceRectangle;
+
+
+
+            for (int i = 0; i <= drawSpace.Height / tileSize + 1; i++)
+            {
+                for (int k = 0; k <= drawSpace.Width / tileSize + 1; k++)
+                {
+                    screenRectangle = new Rectangle((int)(k * tileSize - drawSpace.X % tileSize), (int)(i * tileSize - drawSpace.Y % tileSize), (int)(tileSize), (int)(tileSize));
+
+                    if (i + (drawSpace.Y / tileSize) >= 0 && k + (drawSpace.X / tileSize) >= 0 && i + (drawSpace.Y / tileSize) < tileMap.GetLength(1) && k + (drawSpace.X / tileSize) < tileMap.GetLength(0))
+                    //if (world.isInBounds(drawSpace.X + k * tileSize, drawSpace.Y + i * tileSize))
+                    {
+                        sourceRectangle = new Rectangle(tileMap[i + drawSpace.Y / tileSize, k + drawSpace.X / tileSize] * tileSize,
+                                                        0,
+                                                        tileSize,
+                                                        tileSize);
+                        spriteBatch.Draw(floorTileTex, screenRectangle, sourceRectangle, Color.White);
+                    }
+                }
+            }
         }
 
         public List<Point> findPath(Point origin, Point target)
@@ -214,6 +243,11 @@ namespace DreamStateMachine
                     return true;
             else
                     return false;
+        }
+
+        public bool isInDrawSpace(Rectangle drawSpace)
+        {
+            return false;
         }
 
         public bool isTileDrawable(int x, int y)

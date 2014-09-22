@@ -13,16 +13,14 @@ namespace DreamStateMachine.Actions
         Actor owner;
         Color originalColor;
         //double dotProduct;
-        
 
         public Recoil(ActionList ownerList, Actor owner)
         {
             this.ownerList = ownerList;
             this.owner = owner;
             duration = 2/12F;
-            originalColor = owner.color;
+            originalColor = new Color(owner.color.ToVector3());
             isBlocking = true;
-            
         }
 
         override public void onStart()
@@ -40,12 +38,10 @@ namespace DreamStateMachine.Actions
         override public void update(float dt)
         {
             elapsed += dt;
-            //owner.color.R = (byte)(255 - ((elapsed / duration) * (255 - originalColor.R)));
-            //owner.color.G = (byte)(255 - ((elapsed / duration) * (255 - originalColor.G)));
-            //owner.color.B = (byte)(255 - ((elapsed / duration) * (255 - originalColor.B)));
-            //owner.color.A = (byte)(255 - ((elapsed / duration) * (255 - originalColor.A)));
-            
-            
+            //owner.color.R = (byte)(originalColor.R - ((elapsed / duration) * (originalColor.R - owner.color.R)));
+            //owner.color.G = (byte)(originalColor.G - ((elapsed / duration) * (originalColor.G - owner.color.G)));
+            //owner.color.B = (byte)(originalColor.B - ((elapsed / duration) * (originalColor.B - owner.color.B)));
+            //owner.color.A = (byte)(originalColor.A - ((elapsed / duration) * (originalColor.A - owner.color.A)));
         }
     }
 }

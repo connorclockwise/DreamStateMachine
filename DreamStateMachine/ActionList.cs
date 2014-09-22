@@ -67,7 +67,8 @@ namespace DreamStateMachine
         public Action remove(Action action)
         {
             Action toRemove = action;
-            actions.Remove(action);
+            //actions.Remove(action);
+            actions.RemoveAll(x => x.GetType() == action.GetType());
             return toRemove;
         }
 

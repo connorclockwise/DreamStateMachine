@@ -9,7 +9,7 @@ namespace DreamStateMachine.Input
 {
     class InputHandler
     {
-        bool controller = false;
+        bool controller = true;
         KeyboardState keyBoardState;
         MouseState mouseState;
         GamePadState padState;
@@ -85,6 +85,10 @@ namespace DreamStateMachine.Input
             {
 
                 commands.Add(new UseCommand());
+            }
+            if (keyBoardState.IsKeyDown(Keys.G))
+            {
+                Console.Write("Debug time!");
             }
 
             float curMousePosX = mouseState.X;

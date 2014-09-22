@@ -70,7 +70,9 @@
     <Compile Include="Animation.cs" />
     <Compile Include="AIController.cs" />
     <Compile Include="AttackEventArgs.cs" />
+    <Compile Include="HealthBar.cs" />
     <Compile Include="Input\UseCommand.cs" />
+    <Compile Include="IDrawable.cs" />
     <Compile Include="Sound.cs" />
     <Compile Include="SoundManager.cs" />
     <Compile Include="Input\GazeCommand.cs" />
@@ -120,6 +122,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\block.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Animations.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\debugSquare.png">

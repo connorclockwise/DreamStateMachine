@@ -23,6 +23,11 @@ namespace DreamStateMachine.Actions
             duration = -1;
         }
 
+        //dummy constructor
+        public Alert(ActionList ownerList, Actor owner)
+        {
+        }
+
         override public void onStart()
         {
             

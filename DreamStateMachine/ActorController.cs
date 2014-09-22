@@ -12,7 +12,7 @@ namespace DreamStateMachine.Behaviors
 {
     class ActorController
     {
-        Dictionary<World, List<Actor>> actorLists;
+        //Dictionary<World, List<Actor>> actorLists;
         List<ActionList> actionLists;
         List<Actor> actors;
         Actor curActor;
@@ -20,23 +20,32 @@ namespace DreamStateMachine.Behaviors
 
         public ActorController()
         {
-            actorLists = new Dictionary<World,List<Actor>>();
+            //actorLists = new Dictionary<World,List<Actor>>();
             actionLists = new List<ActionList>();
             actors = new List<Actor>();
 
             //soundManager = s;
 
             Actor.Death += new EventHandler<EventArgs>(Actor_Death);
+            Actor.Hurt += new EventHandler<AttackEventArgs>(Actor_Hurt);
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
             WorldManager.worldChange += new EventHandler<EventArgs>(World_Change);
         }
 
-        private void Actor_Death(object sender, EventArgs e)
+        private void Actor_Death(Object sender, EventArgs e)
         {
             actors.Remove((Actor)sender);
         }
 
-        private void Actor_Spawn(object sender, SpawnEventArgs e)
+        private void Actor_Hurt(Object sender, EventArgs e){
+            Actor hurtActor = (Actor)sender;
+            Recoil recoil = new Recoil(hurtActor.animationList, hurtActor);
+            if (!hurtActor.animationList.has(recoil))
+                hurtActor.animationList.pushFront(recoil);
+
+        }
+
+        private void Actor_Spawn(Object sender, SpawnEventArgs e)
         {
             Actor spawnedActor = (Actor)sender;
             ActionList actionList = new ActionList(spawnedActor);

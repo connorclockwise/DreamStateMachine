@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Animations>
+  <Animation
+    name="punch"
+    class="straight_attack"
+    damage="10"
+    frames="10"
+    fps="12"
+    columnIndex="0"
+    rowIndex="0">
+  </Animation>
+</Animations>
