@@ -106,12 +106,12 @@ namespace DreamStateMachine
             actorController = new ActorController();
             physicsController = new PhysicsController();
             worldManager = new WorldManager(random);
-            worldManager.initWorldConfig(Content, "content/Worlds.xml");
+            worldManager.initWorldConfig(Content, "Content/Worlds.xml");
             worldManager.initStartingWorld();
             soundManager = new SoundManager();
-            soundManager.initSoundConfig(Content, "content/sfx/Sounds.xml");
+            soundManager.initSoundConfig(Content, "Content/sfx/Sounds.xml");
             actorManager = new ActorManager();
-            actorManager.initActorConfig(Content, "content/Actors.xml");
+            actorManager.initActorConfig(Content, "Content/Actors.xml");
             actorManager.spawnActors(worldManager.curWorld.getSpawns());
         }
 
