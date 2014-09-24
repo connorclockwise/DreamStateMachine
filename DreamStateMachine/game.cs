@@ -97,19 +97,21 @@ namespace DreamStateMachine
             origin.X = graphics.PreferredBackBufferWidth / 2;
             origin.Y = graphics.PreferredBackBufferHeight / 2;
             inputHandler = new InputHandler(origin);
+            //inputHandler.controller = usingGamePad;
             random = new Random();
 
             tileRect = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             cam = new Camera(spriteBatch, tileRect, debugSquare, healthBar);
             //actors = new List<Actor>();
             aiController = new AIController();
-            actorController = new ActorController();
             physicsController = new PhysicsController();
             worldManager = new WorldManager(random);
             worldManager.initWorldConfig(Content, "Content/Worlds.xml");
             worldManager.initStartingWorld();
             soundManager = new SoundManager();
             soundManager.initSoundConfig(Content, "Content/sfx/Sounds.xml");
+            actorController = new ActorController();
+            actorController.soundManager = soundManager;
             actorManager = new ActorManager();
             actorManager.initActorConfig(Content, "Content/Actors.xml");
             actorManager.spawnActors(worldManager.curWorld.getSpawns());
@@ -144,7 +146,7 @@ namespace DreamStateMachine
             aiController.update(dt);
             physicsController.update(dt);
             cam.update();
-
+           
             base.Update(gameTime);
         }
 
@@ -165,6 +167,7 @@ namespace DreamStateMachine
 
         private void UpdateInput()
         {
+            
             if (player != null)
             {
                 List<Command> commands = inputHandler.handleInput();

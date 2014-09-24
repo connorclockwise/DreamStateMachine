@@ -10,6 +10,11 @@
     className="pickup"
     filePath="sfx/pickUp.wav"
     soundID="2">
-    >
+  </Sound>
+
+  <Sound
+    className="hurt1"
+    filePath="sfx/hurt1.wav"
+    soundID="3">
   </Sound>
 </Sounds>
