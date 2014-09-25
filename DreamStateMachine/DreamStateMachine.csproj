@@ -11,6 +11,7 @@
     <RootNamespace>DreamStateMachine</RootNamespace>
     <AssemblyName>DreamStateMachine</AssemblyName>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -23,7 +24,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -102,17 +102,17 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MSBuild\..\MonoGame\v3.0\Assemblies\WindowsGL\OpenTK.dll</HintPath>
+      <HintPath>ThirdParty\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MSBuild\..\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll</HintPath>
+      <HintPath>ThirdParty\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Lidgren.Network">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MSBuild\..\MonoGame\v3.0\Assemblies\WindowsGL\Lidgren.Network.dll</HintPath>
+      <HintPath>ThirdParty\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Tao.Sdl">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MSBuild\..\MonoGame\v3.0\Assemblies\WindowsGL\Tao.Sdl.dll</HintPath>
+      <HintPath>ThirdParty\Tao.Sdl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -143,9 +143,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\sfx\Explosion 1.wav" />
-    <Content Include="Content\sfx\Explosion 2.wav" />
     <Content Include="Content\sfx\Explosion 3.wav" />
     <Content Include="Content\sfx\fiery take off.wav" />
+    <Content Include="Content\sfx\hurt1.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\sfx\Jump 2.wav" />
     <Content Include="Content\sfx\Menu.wav" />
     <Content Include="Content\sfx\pickUp.wav">
@@ -161,6 +163,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\TempleFloor.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\TundraFloor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Worlds.xml">

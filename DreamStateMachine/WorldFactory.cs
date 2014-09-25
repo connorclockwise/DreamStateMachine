@@ -267,7 +267,6 @@ namespace DreamStateMachine
         //Generates an World object with the given bounds using constraints outlined
         //at the top of the class.
         //Returns an array of enumerated tiles.
-
         public World generateWorld(WorldConfig worldConfig, int numEnemies)
         {
             return generateWorld(worldConfig.texture, worldConfig.width, worldConfig.height, worldConfig.tileSize, numEnemies);

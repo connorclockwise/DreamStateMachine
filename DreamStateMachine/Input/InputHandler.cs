@@ -9,7 +9,7 @@ namespace DreamStateMachine.Input
 {
     class InputHandler
     {
-        bool controller = true;
+        public bool controller;
         KeyboardState keyBoardState;
         MouseState mouseState;
         GamePadState padState;
@@ -23,12 +23,11 @@ namespace DreamStateMachine.Input
         public List<Command> handleInput() 
         {
             List<Command> c;
-
             if (controller)
                 c = handleController();
             else
                 c = handleKeyBoardMouse();
-
+            Console.WriteLine(controller);
             return c;
         }
 
@@ -55,7 +54,6 @@ namespace DreamStateMachine.Input
 
             if (padState.IsButtonDown(Buttons.RightShoulder))
                 commands.Add(new PunchCommand());
-
             return commands;
         }
 
@@ -100,7 +98,7 @@ namespace DreamStateMachine.Input
 
             if (mouseState.LeftButton == ButtonState.Pressed)
                 commands.Add(new PunchCommand());
-
+            
             return commands;
         }
     }
