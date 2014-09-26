@@ -113,7 +113,7 @@ namespace DreamStateMachine
             actorController = new ActorController();
             actorController.soundManager = soundManager;
             actorManager = new ActorManager();
-            actorManager.initActorConfig(Content, "Content/Actors.xml");
+            actorManager.initActorConfig(Content, "Content/Actors.xml", "Content/Animations.xml");
             actorManager.spawnActors(worldManager.curWorld.getSpawns());
         }
 

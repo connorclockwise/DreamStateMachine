@@ -2,11 +2,19 @@
 <Animations>
   <Animation
     name="punch"
-    class="straight_attack"
-    damage="10"
+    type="single_point_attack"
     frames="10"
     fps="12"
     columnIndex="0"
     rowIndex="0">
+    <AttackFrame
+    frame="3"
+    damage="10">
+      <AttackBox viewOffsetX="0"
+      viewOffsetY="40"
+      attackWidth="9"
+      attackHeight="9">
+      </AttackBox>
+    </AttackFrame>
   </Animation>
 </Animations>

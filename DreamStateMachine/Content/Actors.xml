@@ -10,6 +10,9 @@
     health="200"
     sight="200"
     reach="30">
+    <Animatation>
+      punch
+    </Animatation>
   </Actor>
   
   <Actor

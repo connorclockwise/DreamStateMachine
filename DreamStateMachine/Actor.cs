@@ -15,16 +15,14 @@ namespace DreamStateMachine
 
         public event EventHandler<EventArgs> HitActor;
 
-        public static event EventHandler<AttackEventArgs> Attack;
+        public static event EventHandler<EventArgs> LightAttack;
+        public static event EventHandler<AttackEventArgs> DamagedPoint;
         public static event EventHandler<EventArgs> Death;
         public static event EventHandler<AttackEventArgs> Hurt;
         public static event EventHandler<EventArgs> Use;
         public static event EventHandler<SpawnEventArgs> Spawn;
         
-
-        public ActionList animationList;
         public Dictionary<String, AnimationInfo> animations;
-        //public Attributes attributes;
         public Color color;
         public Point curAnimFrame;
         public Texture2D texture;
@@ -37,7 +35,6 @@ namespace DreamStateMachine
         public Vector2 movementIntent;
         public Vector2 sightVector;
         public Vector2 velocity;
-        public Walk walkAnimation;
         public World world;
         //public Weapon activeWeapon;
         public int maxHealth;
@@ -61,9 +58,7 @@ namespace DreamStateMachine
         public Actor(Texture2D tex, int width, int height, int texWidth, int texHeight)
         {
             texture = tex;
-            animationList = new ActionList(this);
             animations = new Dictionary<String, AnimationInfo>();
-            walkAnimation = new Walk(this.animationList, this);
             color = new Color(255, 255, 255, 255);
             attackBox = new Rectangle(0, 0, 0, 0);
             hitBox = new Rectangle(0, 0, width, height);
@@ -86,7 +81,7 @@ namespace DreamStateMachine
             isAttacking = false;
             lockedMovement = false;
 
-            Actor.Attack += new EventHandler<AttackEventArgs>(Actor_Attack);
+            Actor.DamagedPoint += new EventHandler<AttackEventArgs>(Actor_Attacked);
 
         }
 
@@ -168,6 +163,11 @@ namespace DreamStateMachine
             return actorCopy;
         }
 
+        public void Light_Attack()
+        {
+            LightAttack(this, EventArgs.Empty);
+        }
+
         public void unlockMovement()
         {
             lockedMovement = false;
@@ -178,7 +178,7 @@ namespace DreamStateMachine
             lockedMovement = true;
         }
 
-        public void Actor_Attack(Object sender, AttackEventArgs attackEventArgs)
+        public void Actor_Attacked(Object sender, AttackEventArgs attackEventArgs)
         {
             Actor attacker = (Actor) sender;
             if (sender.Equals(this))
@@ -190,7 +190,7 @@ namespace DreamStateMachine
         public void onAttack(DamageInfo damageInfo)
         {
             AttackEventArgs attackEventArgs = new AttackEventArgs(damageInfo);
-            Attack(this, attackEventArgs);
+            DamagedPoint(this, attackEventArgs);
         }
 
         public void onHitActor()
@@ -284,10 +284,6 @@ namespace DreamStateMachine
 
         virtual public void update(float dt)
         {
-            if ((this.velocity.X != 0 || this.velocity.Y != 0) && this.isWalking && !this.animationList.has(walkAnimation))
-            {
-                this.animationList.pushFront(walkAnimation);
-            }
 
             if (this.bodyRotation != this.targetRotation)
             {
@@ -315,7 +311,7 @@ namespace DreamStateMachine
                 this.sightVector.X = (float)Math.Cos(this.bodyRotation + MathHelper.PiOver2);
                 this.sightVector.Y = (float)Math.Sin(this.bodyRotation + MathHelper.PiOver2);
             }
-            animationList.update(dt);
+            //animationList.update(dt);
         }
     }
 }

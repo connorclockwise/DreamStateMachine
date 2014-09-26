@@ -53,9 +53,9 @@ namespace DreamStateMachine.Behaviors
             {
                 ActionList victimBehaviorList = behaviorLists[victim];
                 Aggravated aggravated = new Aggravated(victimBehaviorList, victim, attackArgs.damageInfo.attacker);
-                if (!victimBehaviorList.has(aggravated))
-                    victimBehaviorList.pushFront(aggravated);
                 Stunned stunned = new Stunned(victimBehaviorList, victim);
+                if (!victimBehaviorList.has(aggravated) && !victimBehaviorList.has(stunned))
+                    victimBehaviorList.pushFront(aggravated);
                 if (!victimBehaviorList.has(stunned))
                     victimBehaviorList.pushFront(stunned);
                 

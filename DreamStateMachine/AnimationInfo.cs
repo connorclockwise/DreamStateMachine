@@ -8,21 +8,33 @@ namespace DreamStateMachine
 {
     class AnimationInfo
     {
-        public List<List<Point>> hitPoints;
+        public Dictionary<int, int> attackDamage;
+        public Dictionary<int, List<Rectangle>> attackPoints;
         public String name;
+        public String type;
         public int frames;
-        public float fps;
-        public int hitDamage;
-        public int textureColumn;
-        public int textureRow;
+        public int fps;
+        public int texColumn;
+        public int texRow;
 
-        public AnimationInfo(String name, int frames, float speed, int column, int row)
+        public AnimationInfo(String name, int frames, int fps, int column, int row)
         {
             this.name = name;
             this.frames = frames;
-            fps = speed;
-            textureColumn = column;
-            textureRow = row;
+            this.fps = fps;
+            texColumn = column;
+            texRow = row;
+        }
+
+        public AnimationInfo(String name, int frames, int fps, int column, int row, Dictionary<int, int> damage, Dictionary<int, List<Rectangle>> damagePoints)
+        {
+            attackDamage = damage;
+            attackPoints = damagePoints;
+            this.name = name;
+            this.frames = frames;
+            this.fps = fps;
+            texColumn = column;
+            texRow = row;
         }
 
     };

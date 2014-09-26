@@ -9,7 +9,6 @@ namespace DreamStateMachine.Actions
 {
     class Walk:Animation
     {
-        ActionList ownerList;
         AnimationInfo animationInfo;
         Actor owner;
         Vector2 walkDirection;
@@ -23,7 +22,12 @@ namespace DreamStateMachine.Actions
                 animationInfo = owner.animations["walk"];
             else
                 animationInfo = new AnimationInfo("default_walk", 10, 12, 0, 0);
-            duration = animationInfo.frames / animationInfo.fps;
+            duration = (float)animationInfo.frames / animationInfo.fps;
+        }
+
+        //dummy constructor
+        public Walk()
+        {
         }
 
         override public void onStart()

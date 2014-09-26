@@ -54,6 +54,7 @@
     <Compile Include="ActionList.cs" />
     <Compile Include="Actor.cs" />
     <Compile Include="ActorManager.cs" />
+    <Compile Include="Animations\Attack.cs" />
     <Compile Include="Animations\Punch.cs" />
     <Compile Include="Animations\Recoil.cs" />
     <Compile Include="Animations\Walk.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Animation.cs" />
     <Compile Include="AIController.cs" />
     <Compile Include="AttackEventArgs.cs" />
+    <Compile Include="InputEventArgs.cs" />
     <Compile Include="HealthBar.cs" />
     <Compile Include="Input\UseCommand.cs" />
     <Compile Include="IDrawable.cs" />
@@ -134,6 +136,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\dungeonFloor.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\GrassFloor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\protagonistBodyAnimations.png">

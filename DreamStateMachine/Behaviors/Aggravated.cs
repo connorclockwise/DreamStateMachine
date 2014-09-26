@@ -66,12 +66,13 @@ namespace DreamStateMachine.Actions
             else
             {
                 owner.setGaze(target.hitBox.Center);
-                Punch punch = new Punch(owner.animationList, owner);
-                Recoil recoil = new Recoil(owner.animationList, owner);
-                if (!owner.animationList.has(punch) && !owner.animationList.has(recoil))
-                {
-                    owner.animationList.pushFront(punch);
-                }
+                owner.Light_Attack();
+                //Punch punch = new Punch(owner.animationList, owner);
+                //Recoil recoil = new Recoil(owner.animationList, owner);
+                //if (!owner.animationList.has(punch) && !owner.animationList.has(recoil))
+                //{
+                //    owner.animationList.pushFront(punch);
+                //}
             }
         }
 

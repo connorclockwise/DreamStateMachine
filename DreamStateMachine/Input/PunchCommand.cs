@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DreamStateMachine.Actions;
+using Microsoft.Xna.Framework;
 
 namespace DreamStateMachine.Input
 {
@@ -10,9 +11,7 @@ namespace DreamStateMachine.Input
     {
         public override void Execute(Actor player)
         {
-            Punch punchAnimation = new Punch(player.animationList, player);
-            if (!player.animationList.has(punchAnimation))
-                player.animationList.pushFront(punchAnimation);
+            player.Light_Attack();
         }
     }
 }
