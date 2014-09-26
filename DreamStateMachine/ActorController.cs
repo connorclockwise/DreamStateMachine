@@ -16,7 +16,6 @@ namespace DreamStateMachine.Behaviors
         List<ActionList> actionLists;
         List<Actor> actors;
         Actor curActor;
-        public SoundManager soundManager;
 
         public ActorController()
         {
@@ -32,13 +31,13 @@ namespace DreamStateMachine.Behaviors
 
         private void Actor_Death(Object sender, EventArgs e)
         {
-            soundManager.playSound(1);
+            SoundManager.Instance.playSound(1);
             actors.Remove((Actor)sender);
         }
 
         private void Actor_Hurt(Object sender, EventArgs e)
         {
-            soundManager.playSound(3);
+            SoundManager.Instance.playSound(3);
             Actor hurtActor = (Actor)sender;
             Recoil recoil = new Recoil(hurtActor.animationList, hurtActor);
             if (!hurtActor.animationList.has(recoil))

@@ -10,17 +10,36 @@ using System.Xml.Linq;
 
 namespace DreamStateMachine
 {
-    class SoundManager
+    public sealed class SoundManager
     {
-        Dictionary<int, Sound> soundPrototypes;
+        private static volatile SoundManager instance;
+        private static object syncRoot = new object();
+        static Dictionary<int, Sound> soundPrototypes;
 
-        public SoundManager()
+        private SoundManager()
         {
-            soundPrototypes = new Dictionary<int, Sound>();
+           
+        }
+
+        public static SoundManager Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (instance == null)
+                            instance = new SoundManager();
+                    }
+                }
+                return instance;
+            }
         }
 
         public void initSoundConfig(ContentManager content, String soundConfigFile)
         {
+            soundPrototypes = new Dictionary<int, Sound>();
             var doc = XDocument.Load(soundConfigFile);
             var sounds = doc.Element("Sounds").Elements("Sound");
             String soundClass;
@@ -31,20 +50,15 @@ namespace DreamStateMachine
                 soundClass = sound.Attribute("className").Value;
                 effect = content.Load<SoundEffect>(sound.Attribute("filePath").Value);
                 soundID = int.Parse(sound.Attribute("soundID").Value);
-                this.soundPrototypes[soundID] = new Sound(effect);
-                this.soundPrototypes[soundID].className = soundClass;
-                this.soundPrototypes[soundID].soundID = soundID;
+                soundPrototypes[soundID] = new Sound(effect);
+                soundPrototypes[soundID].className = soundClass;
+                soundPrototypes[soundID].soundID = soundID;
             }
         }
 
         public void playSound(int soundID)
         {
             soundPrototypes[soundID].playSound();
-        }
-
-        public void update(float dt)
-        {
-
         }
     }
 }

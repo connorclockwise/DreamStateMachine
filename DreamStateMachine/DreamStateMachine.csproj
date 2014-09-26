@@ -110,6 +110,8 @@
     <Reference Include="Lidgren.Network">
       <HintPath>ThirdParty\Lidgren.Network.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Tao.Sdl">
       <HintPath>ThirdParty\Tao.Sdl.dll</HintPath>

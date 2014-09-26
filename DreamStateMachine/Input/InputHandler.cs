@@ -27,7 +27,6 @@ namespace DreamStateMachine.Input
                 c = handleController();
             else
                 c = handleKeyBoardMouse();
-            Console.WriteLine(controller);
             return c;
         }
 

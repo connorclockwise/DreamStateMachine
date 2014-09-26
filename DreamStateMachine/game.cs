@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -76,6 +77,7 @@ namespace DreamStateMachine
         {
             base.Initialize();
             Window.Title = "Dream State Machine";
+            Window.IsBorderless = false;
             this.IsMouseVisible = true;
         }
 
@@ -99,7 +101,6 @@ namespace DreamStateMachine
             inputHandler = new InputHandler(origin);
             //inputHandler.controller = usingGamePad;
             random = new Random();
-
             tileRect = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             cam = new Camera(spriteBatch, tileRect, debugSquare, healthBar);
             //actors = new List<Actor>();
@@ -108,10 +109,8 @@ namespace DreamStateMachine
             worldManager = new WorldManager(random);
             worldManager.initWorldConfig(Content, "Content/Worlds.xml");
             worldManager.initStartingWorld();
-            soundManager = new SoundManager();
-            soundManager.initSoundConfig(Content, "Content/sfx/Sounds.xml");
+            SoundManager.Instance.initSoundConfig(Content, "Content/sfx/Sounds.xml");
             actorController = new ActorController();
-            actorController.soundManager = soundManager;
             actorManager = new ActorManager();
             actorManager.initActorConfig(Content, "Content/Actors.xml");
             actorManager.spawnActors(worldManager.curWorld.getSpawns());
