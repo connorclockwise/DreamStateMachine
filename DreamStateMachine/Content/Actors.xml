@@ -3,6 +3,7 @@
   <Actor
     className="player"
     texture="dreamManAnimations"
+    maxSpeed="6"
     width="25"
     height="25"
     texWidth="64"
@@ -15,6 +16,7 @@
   <Actor
     className="thief"
     texture="dreamManAnimations"
+    maxSpeed="7"
     width="25"
     height="25"
     texWidth="64"
@@ -27,6 +29,7 @@
   <Actor
     className="skeleton"
     texture="skeletonAnimations"
+    maxSpeed="4"
     width="25"
     height="25"
     texWidth="64"

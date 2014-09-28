@@ -162,6 +162,7 @@ namespace DreamStateMachine
             actorCopy.className = className;
             actorCopy.color = new Color(color.ToVector3());
             actorCopy.health = health;
+            actorCopy.maxSpeed = maxSpeed;
             actorCopy.sight = sight;
             actorCopy.sightVector = new Vector2(sightVector.X, sightVector.Y) ;
             actorCopy.reach = reach;

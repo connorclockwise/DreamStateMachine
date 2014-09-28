@@ -30,6 +30,7 @@ namespace DreamStateMachine.Behaviors
             var actors = doc.Element("Actors").Elements("Actor");
             String actorClass;
             Texture2D actorTexture;
+            int actorMaxSpeed;
             int actorWidth;
             int actorHeight;
             int actorHealth;
@@ -41,6 +42,7 @@ namespace DreamStateMachine.Behaviors
             {
                 actorClass = actor.Attribute("className").Value;
                 actorTexture = content.Load<Texture2D>(actor.Attribute("texture").Value);
+                actorMaxSpeed = int.Parse(actor.Attribute("maxSpeed").Value);
                 actorWidth = int.Parse(actor.Attribute("width").Value);
                 actorHeight = int.Parse(actor.Attribute("height").Value);
                 texWidth = int.Parse(actor.Attribute("texWidth").Value);
@@ -51,6 +53,7 @@ namespace DreamStateMachine.Behaviors
                 this.actorPrototypes[actorClass] = new Actor(actorTexture, actorWidth, actorHeight, texWidth, texHeight);
                 this.actorPrototypes[actorClass].className = actorClass;
                 this.actorPrototypes[actorClass].maxHealth = actorHealth;
+                this.actorPrototypes[actorClass].maxSpeed = actorMaxSpeed;
                 this.actorPrototypes[actorClass].sight = actorSight;
                 this.actorPrototypes[actorClass].reach = actorReach;
             }

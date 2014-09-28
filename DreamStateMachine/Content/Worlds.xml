@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Worlds>
   <World
+    worldName="grass"
+    worldTexture="GrassFloor"
+    width="50"
+    height="50"
+    tileSize="64">
+  </World>
+
+  <World
     worldName="tundra"
     worldTexture="TundraFloor"
     width="50"

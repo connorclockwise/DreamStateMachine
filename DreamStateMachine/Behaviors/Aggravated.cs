@@ -14,6 +14,7 @@ namespace DreamStateMachine.Actions
         Point attackPos;
         Vector2 attackVector;
         Vector2 movement;
+        float coolDownTimer;
 
         public Aggravated(ActionList ownerList, Actor owner, Actor toFollow)
         {
@@ -24,6 +25,7 @@ namespace DreamStateMachine.Actions
             nextPathPoint = new Point(0,0);
             elapsed = 0;
             duration = -1;
+            coolDownTimer = 0;
             isBlocking = true;
             //toFollow.onHurt += new EventHandler<AttackEventArgs>(Actor_Hurt);
         }
@@ -62,15 +64,21 @@ namespace DreamStateMachine.Actions
                 owner.velocity.Y = movement.Y;
                 owner.isWalking = true;
                 owner.setGaze(attackPos);
-            }
-            else
-            {
-                owner.setGaze(target.hitBox.Center);
-                Punch punch = new Punch(owner.animationList, owner);
-                Recoil recoil = new Recoil(owner.animationList, owner);
-                if (!owner.animationList.has(punch) && !owner.animationList.has(recoil))
+            }else{
+                if (coolDownTimer <= 0)
                 {
-                    owner.animationList.pushFront(punch);
+                    owner.setGaze(target.hitBox.Center);
+                    Punch punch = new Punch(owner.animationList, owner);
+                    Recoil recoil = new Recoil(owner.animationList, owner);
+                    if (!owner.animationList.has(punch) && !owner.animationList.has(recoil))
+                    {
+                        owner.animationList.pushFront(punch);
+                    }
+                    coolDownTimer = (float)(6 / 12f);
+                }
+                else
+                {
+                    coolDownTimer -= dt;
                 }
             }
         }
