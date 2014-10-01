@@ -70,7 +70,6 @@ namespace DreamStateMachine.Actions
                     break;
                 default:
                     owner.setAnimationFrame(curFrame, 1);
-                    owner.isAttacking = false;
                     break;
             }
         }

@@ -36,6 +36,7 @@ namespace DreamStateMachine.Behaviors
         {
             Actor inputtingActor = (Actor)sender;
             Punch punch = new Punch(actionLists[inputtingActor], inputtingActor);
+            //Attack attack = new Attack(actionLists[inputtingActor], inputtingActor);
             Recoil recoil = new Recoil(actionLists[inputtingActor], inputtingActor);
             if (!actionLists[inputtingActor].has(punch) && !actionLists[inputtingActor].has(recoil))
             {

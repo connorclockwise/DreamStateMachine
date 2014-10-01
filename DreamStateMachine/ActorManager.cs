@@ -36,7 +36,7 @@ namespace DreamStateMachine.Behaviors
             List<XElement> attackFrames;
             List<XElement> attackBoxes;
             String animationName;
-            String animationType;
+            String animationAttackType;
             int animationFrames;
             int animationFPS;
             int texColumnIndex;
@@ -56,23 +56,22 @@ namespace DreamStateMachine.Behaviors
             foreach (XElement animation in animations)
             {
                 animationName = animation.Attribute("name").Value;
-                animationType = animation.Attribute("type").Value;
+                animationAttackType = animation.Attribute("attackType").Value;
                 animationFrames = int.Parse(animation.Attribute("frames").Value);
                 animationFPS = int.Parse(animation.Attribute("fps").Value);
                 texColumnIndex = int.Parse(animation.Attribute("columnIndex").Value);
                 texRowIndex = int.Parse(animation.Attribute("rowIndex").Value);
-                if (attackTypes.Contains(animationType))
+                if (attackTypes.Contains(animationAttackType))
                 {
                     attackDamage = new Dictionary<int, int>();
                     attackPoints = new Dictionary<int, List<Rectangle>>();
-                    attackFrames = animation.Elements("attackFrame").ToList();
+                    attackFrames = animation.Elements("AttackFrame").ToList();
                     foreach (XElement attackFrame in attackFrames)
                     {
-                        
                         attackRects = new List<Rectangle>();
                         currentAttackFrame = int.Parse(attackFrame.Attribute("frame").Value);
                         attackDamage[currentAttackFrame] = int.Parse(attackFrame.Attribute("damage").Value);
-                        attackBoxes = attackFrame.Elements("attackBox").ToList();
+                        attackBoxes = attackFrame.Elements("AttackBox").ToList();
                         foreach (XElement attackBox in attackBoxes)
                         {
                             attackOffsetX = int.Parse(attackBox.Attribute("viewOffsetX").Value);
@@ -92,8 +91,6 @@ namespace DreamStateMachine.Behaviors
                                                             texRowIndex,
                                                             attackDamage,
                                                             attackPoints);
-                    
-
                 }
                 else
                 {
@@ -102,7 +99,7 @@ namespace DreamStateMachine.Behaviors
                                                             animationFPS,
                                                             texColumnIndex,
                                                             texRowIndex);
-                }   
+                }
             }
 
 
@@ -110,8 +107,9 @@ namespace DreamStateMachine.Behaviors
 
             XDocument actorDoc = XDocument.Load(actorConfigFile);
             List<XElement> actors = actorDoc.Element("Actors").Elements("Actor").ToList();
-            List<XElement> actorAnimations = actors.Elements("Animation").ToList();
+            List<XElement> actorAnimations; 
             String actorClass;
+            String animationType;
             Texture2D actorTexture;
             int actorWidth;
             int actorHeight;
@@ -138,11 +136,15 @@ namespace DreamStateMachine.Behaviors
                 actorPrototypes[actorClass].sight = actorSight;
                 actorPrototypes[actorClass].reach = actorReach;
                 actorPrototypes[actorClass].animations = new Dictionary<string, AnimationInfo>();
-
-                foreach(XElement actorAnimation in actorAnimations){
-                    if(this.animationPrototypes.ContainsKey(actorAnimation.Value)){
-                        animationType = actorAnimation.Value;
-                        actorPrototypes[actorClass].animations[animationType] = animationPrototypes[animationType];
+                actorAnimations = actor.Elements("Animation").ToList();
+                
+                foreach (XElement actorAnimation in actorAnimations)
+                {
+                    if (this.animationPrototypes.ContainsKey(actorAnimation.Attribute("name").Value))
+                    {
+                        animationName = actorAnimation.Attribute("name").Value;
+                        animationType = actorAnimation.Attribute("type").Value;
+                        actorPrototypes[actorClass].animations[animationType] = animationPrototypes[animationName];
                     }
                 }
             }

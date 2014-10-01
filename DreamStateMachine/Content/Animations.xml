@@ -2,11 +2,11 @@
 <Animations>
   <Animation
     name="punch"
-    type="single_point_attack"
-    frames="10"
+    attackType="single_box_attack"
+    frames="5"
     fps="12"
     columnIndex="0"
-    rowIndex="0">
+    rowIndex="1">
     <AttackFrame
     frame="3"
     damage="10">
@@ -17,4 +17,32 @@
       </AttackBox>
     </AttackFrame>
   </Animation>
+  
+  <Animation
+    name="over_head_smash"
+    attackType="single_box_attack"
+    frames="8"
+    fps="12"
+    columnIndex="0"
+    rowIndex="1">
+    <AttackFrame
+    frame="5"
+    damage="10">
+      <AttackBox viewOffsetX="0"
+      viewOffsetY="40"
+      attackWidth="9"
+      attackHeight="9">
+      </AttackBox>
+    </AttackFrame>
+    <AttackFrame
+    frame="6"
+    damage="10">
+      <AttackBox viewOffsetX="0"
+      viewOffsetY="40"
+      attackWidth="9"
+      attackHeight="9">
+      </AttackBox>
+    </AttackFrame>
+  </Animation>
+  
 </Animations>

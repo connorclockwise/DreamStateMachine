@@ -29,7 +29,7 @@ namespace DreamStateMachine
             //actors = new List<Actor>();
             actors = new List<IDrawable>();
             healthBars = new Dictionary<IDrawable, IDrawable>();
-            //debug = true;
+            debug = true;
             debugTex = debugSq;
             this.healthBarTexture = healthBarTexture;
 
@@ -120,16 +120,12 @@ namespace DreamStateMachine
                 setFocus(protagonist.hitBox.Center.X, protagonist.hitBox.Center.Y);
         }
 
-        //public bool isInView(Rectangle hitbox)
-        //{
-        //   return ;
-        //}
-
         private void World_Change(Object sender, EventArgs eventArgs)
         {
 
             WorldManager worldManager = (WorldManager)sender;
             this.curWorld = worldManager.curWorld;
+            healthBars.Clear();
             actors.Clear();
         }
     }

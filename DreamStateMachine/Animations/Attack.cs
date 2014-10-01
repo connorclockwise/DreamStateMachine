@@ -18,16 +18,22 @@ namespace DreamStateMachine.Actions
         int curFrame;
         int lastFrame;
 
-        public Attack(ActionList ownerList, Actor owner, AnimationInfo animationInfo)
+        public Attack(ActionList ownerList, Actor owner)
         {
             this.ownerList = ownerList;
             this.owner = owner;
-            this.animationInfo = animationInfo;
             isBlocking = true;
             frameIndex = new Point(0, 0);
             damageRect = new Rectangle(0, 0, 0, 0);
             attackBox = new Rectangle(0, 0, 0, 0);
-            duration = ((float)animationInfo.frames )/ animationInfo.fps;
+            if(owner.activeWeapon != null && owner.animations.ContainsKey(owner.activeWeapon.lightAttackAnimation)){
+                this.animationInfo = owner.animations[owner.activeWeapon.lightAttackAnimation];
+            }
+            else if (owner.animations.ContainsKey("unnarmed_light_attack"))
+            {
+                this.animationInfo = owner.animations["unnarmed_light_attack"];
+            }
+            duration = ((float)animationInfo.frames)/ animationInfo.fps;
             curFrame = 0;
             lastFrame = -1;
 
@@ -55,11 +61,13 @@ namespace DreamStateMachine.Actions
             {
                 damageRect.Width = animationInfo.attackPoints[curFrame][0].Width;
                 damageRect.Height = animationInfo.attackPoints[curFrame][0].Height;
-                damageRect.X = (int)Math.Cos(owner.bodyRotation) * animationInfo.attackPoints[curFrame][0].X;
-                damageRect.Y = (int)Math.Sin(owner.bodyRotation) * animationInfo.attackPoints[curFrame][0].Y;
-                damageRect.X -= damageRect.Width / 2;
-                damageRect.Y -= damageRect.Height / 2;
-                DamageInfo damageInfo = new DamageInfo(owner, animationInfo.attackDamage[curFrame], damageRect);
+                damageRect.X = (int)(Math.Cos(owner.bodyRotation) * animationInfo.attackPoints[curFrame][0].X);
+                damageRect.Y = (int)(Math.Sin(owner.bodyRotation) * animationInfo.attackPoints[curFrame][0].Y);
+                //damageRect.X += owner.hitBox.Center.X - damageRect.Width / 2;
+                //damageRect.Y += owner.hitBox.Center.Y - damageRect.Height / 2;
+                damageRect.X += owner.hitBox.Center.X;
+                damageRect.Y += owner.hitBox.Center.Y;
+                DamageInfo damageInfo = new DamageInfo(owner, animationInfo.attackDamage[curFrame], this.damageRect);
                 owner.onAttack(damageInfo);
             }
         }

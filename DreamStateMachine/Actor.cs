@@ -36,7 +36,7 @@ namespace DreamStateMachine
         public Vector2 sightVector;
         public Vector2 velocity;
         public World world;
-        //public Weapon activeWeapon;
+        public Weapon activeWeapon;
         public int maxHealth;
         public int maxSpeed;
         public int minSpeed;
@@ -47,7 +47,6 @@ namespace DreamStateMachine
         public float maxRotationVelocity;
         
         public bool isWalking; 
-        public bool isAttacking;
         public bool lockedMovement;
         
         public float bodyRotation;
@@ -78,7 +77,6 @@ namespace DreamStateMachine
             health = maxHealth;
             
             maxRotationVelocity = MathHelper.Pi / 16f;
-            isAttacking = false;
             lockedMovement = false;
 
             Actor.DamagedPoint += new EventHandler<AttackEventArgs>(Actor_Attacked);
@@ -128,21 +126,6 @@ namespace DreamStateMachine
             //        0
             //    );
             //}
-
-            //if (debug && this.isAttacking)
-            //{
-            //    spriteBatch.Draw(
-            //        debugTex,
-            //        new Vector2(this.attackBox.X - this.drawSpace.X, this.attackBox.Y - this.drawSpace.Y),
-            //        new Rectangle(0, 0, this.attackBox.Width, this.attackBox.Height),
-            //        new Color(.5f, .5f, .5f, .5f),
-            //        0,
-            //        new Vector2(this.attackBox.Width / 2.0f, this.attackBox.Height / 2.0f),
-            //        1,
-            //        SpriteEffects.None,
-            //        0
-            //    );
-            //}
         }
 
         public bool isInDrawSpace(Rectangle drawSpace)
@@ -180,10 +163,22 @@ namespace DreamStateMachine
 
         public void Actor_Attacked(Object sender, AttackEventArgs attackEventArgs)
         {
+            DamageInfo damageInfo = attackEventArgs.damageInfo;
             Actor attacker = (Actor) sender;
-            if (sender.Equals(this))
-                return;
-            else
+            //Console.WriteLine("Checking things");
+            //Console.WriteLine(sender == this);
+            //Console.WriteLine(attacker == this);
+            //Console.WriteLine(sender == attacker);
+            //Console.WriteLine(damageInfo.attacker == this);
+            //Console.WriteLine(sender == damageInfo.attacker);
+            //Console.WriteLine(attacker == damageInfo.attacker);
+            //Console.WriteLine(sender.Equals(this));
+            //Console.WriteLine(attacker.Equals(this));
+            //Console.WriteLine(sender.Equals(attacker));
+            //Console.WriteLine(damageInfo.attacker.Equals(this));
+            //Console.WriteLine(sender.Equals(damageInfo.attacker));
+            //Console.WriteLine(attacker.Equals(damageInfo.attacker));
+            if (sender != damageInfo.attacker)
                 handleActorAttack(attackEventArgs.damageInfo);
         }
 
@@ -200,6 +195,7 @@ namespace DreamStateMachine
 
         public void onKill(DamageInfo damageInfo)
         {
+            Actor.DamagedPoint -= new EventHandler<AttackEventArgs>(Actor_Attacked);
             Death(this, EventArgs.Empty);
         }
 
