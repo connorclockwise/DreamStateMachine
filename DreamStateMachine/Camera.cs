@@ -85,20 +85,20 @@ namespace DreamStateMachine
                 curActor = actors.ElementAt(i);
                 if (curActor.isInDrawSpace(drawSpace))
                 {
-                    curActor.draw(spriteBatch, drawSpace);
+                    curActor.draw(spriteBatch, drawSpace, debugTex, debug);
                 }
             }
         }
 
         public void drawFloor()
         {
-            curWorld.draw(spriteBatch, drawSpace);
+            curWorld.draw(spriteBatch, drawSpace, debugTex, debug);
         }
 
         public void drawGUI()
         {
             foreach( KeyValuePair<IDrawable,  IDrawable> entry in healthBars){
-                entry.Value.draw(spriteBatch, drawSpace);
+                entry.Value.draw(spriteBatch, drawSpace, debugTex, debug);
             }
             //healthBar.draw();
         }

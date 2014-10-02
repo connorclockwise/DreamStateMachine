@@ -11,9 +11,9 @@
     frame="3"
     damage="10">
       <AttackBox viewOffsetX="0"
-      viewOffsetY="40"
-      attackWidth="9"
-      attackHeight="9">
+      viewOffsetY="30"
+      attackWidth="30"
+      attackHeight="30">
       </AttackBox>
     </AttackFrame>
   </Animation>
@@ -30,17 +30,8 @@
     damage="10">
       <AttackBox viewOffsetX="0"
       viewOffsetY="40"
-      attackWidth="9"
-      attackHeight="9">
-      </AttackBox>
-    </AttackFrame>
-    <AttackFrame
-    frame="6"
-    damage="10">
-      <AttackBox viewOffsetX="0"
-      viewOffsetY="40"
-      attackWidth="9"
-      attackHeight="9">
+      attackWidth="20"
+      attackHeight="20">
       </AttackBox>
     </AttackFrame>
   </Animation>

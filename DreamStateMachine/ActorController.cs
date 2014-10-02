@@ -35,12 +35,12 @@ namespace DreamStateMachine.Behaviors
         private void Actor_Light_Attack(Object sender, EventArgs e)
         {
             Actor inputtingActor = (Actor)sender;
-            Punch punch = new Punch(actionLists[inputtingActor], inputtingActor);
-            //Attack attack = new Attack(actionLists[inputtingActor], inputtingActor);
+            //Punch punch = new Punch(actionLists[inputtingActor], inputtingActor);
+            Attack attack = new Attack(actionLists[inputtingActor], inputtingActor);
             Recoil recoil = new Recoil(actionLists[inputtingActor], inputtingActor);
-            if (!actionLists[inputtingActor].has(punch) && !actionLists[inputtingActor].has(recoil))
+            if (!actionLists[inputtingActor].has(attack) && !actionLists[inputtingActor].has(recoil))
             {
-                actionLists[inputtingActor].pushFront(punch);
+                actionLists[inputtingActor].pushFront(attack);
             }
         }
 
@@ -66,6 +66,7 @@ namespace DreamStateMachine.Behaviors
             ActionList actionList = new ActionList(spawnedActor);
             actionLists[spawnedActor] = actionList;
             actors.Add(spawnedActor);
+            spawnedActor.id = actors.IndexOf(spawnedActor);
         }
 
         public void handleActorUse(Actor actor, Point usePoint)
@@ -96,8 +97,8 @@ namespace DreamStateMachine.Behaviors
         {
             WorldManager worldManager = (WorldManager) sender;
             World curWorld = worldManager.curWorld;
-            actors.RemoveAll(x => x.world.Equals(curWorld));
-            //actionLists.RemoveAll();
+            //actors.RemoveAll(x => x.world.Equals(curWorld));
+            actors.Clear();
             actionLists.Clear();
         }
 

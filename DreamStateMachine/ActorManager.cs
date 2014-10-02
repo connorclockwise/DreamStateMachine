@@ -133,6 +133,7 @@ namespace DreamStateMachine.Behaviors
                 actorPrototypes[actorClass] = new Actor(actorTexture, actorWidth, actorHeight, texWidth, texHeight);
                 actorPrototypes[actorClass].className = actorClass;
                 actorPrototypes[actorClass].maxHealth = actorHealth;
+                actorPrototypes[actorClass].health = actorHealth;
                 actorPrototypes[actorClass].sight = actorSight;
                 actorPrototypes[actorClass].reach = actorReach;
                 actorPrototypes[actorClass].animations = new Dictionary<string, AnimationInfo>();

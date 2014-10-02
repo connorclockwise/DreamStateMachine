@@ -29,7 +29,7 @@ namespace DreamStateMachine
             roomList = new List<Room>();
         }
 
-        public void draw(SpriteBatch spriteBatch, Rectangle drawSpace, bool debuging = false)
+        public void draw(SpriteBatch spriteBatch, Rectangle drawSpace, Texture2D debugTex, bool debuging = false)
         {
             Texture2D floorTileTex = this.getFloorTileTex();
             int[,] tileMap = this.getTileMap();

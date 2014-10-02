@@ -52,21 +52,17 @@ namespace DreamStateMachine.Actions
 
         public void onEnterFrame(int frame)
         {
-
-            frameIndex.X = animationInfo.texColumn + frame;
-            frameIndex.Y = animationInfo.texRow;
-            owner.setAnimationFrame(frameIndex.X, frameIndex.Y);
-
             if (animationInfo.attackPoints.ContainsKey(frame))
             {
                 damageRect.Width = animationInfo.attackPoints[curFrame][0].Width;
                 damageRect.Height = animationInfo.attackPoints[curFrame][0].Height;
-                damageRect.X = (int)(Math.Cos(owner.bodyRotation) * animationInfo.attackPoints[curFrame][0].X);
-                damageRect.Y = (int)(Math.Sin(owner.bodyRotation) * animationInfo.attackPoints[curFrame][0].Y);
-                //damageRect.X += owner.hitBox.Center.X - damageRect.Width / 2;
-                //damageRect.Y += owner.hitBox.Center.Y - damageRect.Height / 2;
-                damageRect.X += owner.hitBox.Center.X;
-                damageRect.Y += owner.hitBox.Center.Y;
+
+                Point offset = new Point(animationInfo.attackPoints[curFrame][0].X, animationInfo.attackPoints[curFrame][0].Y);
+                float s = (float)(Math.Sin(owner.bodyRotation));
+                float c = (float)(Math.Cos(owner.bodyRotation));
+                Point newOffset = new Point((int)(offset.X * c - offset.Y * s), (int)(offset.X * s + offset.Y * c));
+                damageRect.X = owner.hitBox.Center.X + newOffset.X - damageRect.Width/2;
+                damageRect.Y = owner.hitBox.Center.Y + newOffset.Y - damageRect.Height/2;
                 DamageInfo damageInfo = new DamageInfo(owner, animationInfo.attackDamage[curFrame], this.damageRect);
                 owner.onAttack(damageInfo);
             }
@@ -76,6 +72,9 @@ namespace DreamStateMachine.Actions
         {
             elapsed += dt;
             curFrame = (int)(elapsed * animationInfo.fps);
+            frameIndex.X = animationInfo.texColumn + curFrame;
+            frameIndex.Y = animationInfo.texRow;
+            owner.setAnimationFrame(frameIndex.X, frameIndex.Y);
             if (curFrame != lastFrame)
             {
                 onEnterFrame(curFrame);

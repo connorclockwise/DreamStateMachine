@@ -23,6 +23,7 @@ namespace DreamStateMachine
         public static event EventHandler<SpawnEventArgs> Spawn;
         
         public Dictionary<String, AnimationInfo> animations;
+        public List<Rectangle> debugSquares;
         public Color color;
         public Point curAnimFrame;
         public Texture2D texture;
@@ -37,6 +38,7 @@ namespace DreamStateMachine
         public Vector2 velocity;
         public World world;
         public Weapon activeWeapon;
+        public int id;
         public int maxHealth;
         public int maxSpeed;
         public int minSpeed;
@@ -58,6 +60,7 @@ namespace DreamStateMachine
         {
             texture = tex;
             animations = new Dictionary<String, AnimationInfo>();
+            debugSquares = new List<Rectangle>();
             color = new Color(255, 255, 255, 255);
             attackBox = new Rectangle(0, 0, 0, 0);
             hitBox = new Rectangle(0, 0, width, height);
@@ -83,7 +86,7 @@ namespace DreamStateMachine
 
         }
 
-        public void draw(SpriteBatch spriteBatch, Rectangle drawSpace, bool debugging=false)
+        public void draw(SpriteBatch spriteBatch, Rectangle drawSpace, Texture2D debugTex, bool debugging=false )
         {
             Rectangle normalizedPosition;
             Rectangle sourceRectangle;
@@ -112,20 +115,39 @@ namespace DreamStateMachine
                 0
             );
 
-            //if (debugging)
-            //{
-            //    spriteBatch.Draw(
-            //        debugTex,
-            //        new Vector2(this.hitBox.X - this.drawSpace.X + normalizedPosition.Width / 2.0f, this.hitBox.Y - this.drawSpace.Y + normalizedPosition.Height / 2.0f),
-            //        new Rectangle(0, 0, this.hitBox.Width, this.hitBox.Height),
-            //        new Color(.5f, .5f, .5f, .5f),
-            //        0,
-            //        new Vector2(normalizedPosition.Width / 2.0f, normalizedPosition.Height / 2.0f),
-            //        1,
-            //        SpriteEffects.None,
-            //        0
-            //    );
-            //}
+            if (debugging)
+            {
+                spriteBatch.Draw(
+                    debugTex,
+                    new Vector2(this.hitBox.X - drawSpace.X + normalizedPosition.Width / 2.0f, this.hitBox.Y - drawSpace.Y + normalizedPosition.Height / 2.0f),
+                    new Rectangle(0, 0, this.hitBox.Width, this.hitBox.Height),
+                    new Color(.5f, .5f, .5f, .5f),
+                    0,
+                    new Vector2(normalizedPosition.Width / 2.0f, normalizedPosition.Height / 2.0f),
+                    1,
+                    SpriteEffects.None,
+                    0
+                );
+
+                foreach (Rectangle debugSquare in debugSquares)
+                {
+                    spriteBatch.Draw(
+                    debugTex,
+                    new Vector2(debugSquare.X - drawSpace.X + normalizedPosition.Width / 2.0f, debugSquare.Y - drawSpace.Y + normalizedPosition.Height / 2.0f),
+                    new Rectangle(0, 0, debugSquare.Width, debugSquare.Height),
+                    new Color(.5f, .5f, .5f, .5f),
+                    0,
+                    new Vector2(normalizedPosition.Width / 2.0f, normalizedPosition.Height / 2.0f),
+                    1,
+                    SpriteEffects.None,
+                    0
+                    );
+
+                }
+
+                debugSquares.Clear();
+
+            }
         }
 
         public bool isInDrawSpace(Rectangle drawSpace)
@@ -139,9 +161,10 @@ namespace DreamStateMachine
             actorCopy.animations = animations;
             actorCopy.className = className;
             actorCopy.color = new Color(color.ToVector3());
+            actorCopy.maxHealth = maxHealth;
             actorCopy.health = health;
             actorCopy.sight = sight;
-            actorCopy.sightVector = new Vector2(sightVector.X, sightVector.Y) ;
+            actorCopy.sightVector = new Vector2(sightVector.X, sightVector.Y);
             actorCopy.reach = reach;
             return actorCopy;
         }
@@ -165,26 +188,14 @@ namespace DreamStateMachine
         {
             DamageInfo damageInfo = attackEventArgs.damageInfo;
             Actor attacker = (Actor) sender;
-            //Console.WriteLine("Checking things");
-            //Console.WriteLine(sender == this);
-            //Console.WriteLine(attacker == this);
-            //Console.WriteLine(sender == attacker);
-            //Console.WriteLine(damageInfo.attacker == this);
-            //Console.WriteLine(sender == damageInfo.attacker);
-            //Console.WriteLine(attacker == damageInfo.attacker);
-            //Console.WriteLine(sender.Equals(this));
-            //Console.WriteLine(attacker.Equals(this));
-            //Console.WriteLine(sender.Equals(attacker));
-            //Console.WriteLine(damageInfo.attacker.Equals(this));
-            //Console.WriteLine(sender.Equals(damageInfo.attacker));
-            //Console.WriteLine(attacker.Equals(damageInfo.attacker));
-            if (sender != damageInfo.attacker)
+            if (this.id != attacker.id)
                 handleActorAttack(attackEventArgs.damageInfo);
         }
 
         public void onAttack(DamageInfo damageInfo)
         {
             AttackEventArgs attackEventArgs = new AttackEventArgs(damageInfo);
+            debugSquares.Add(attackEventArgs.damageInfo.attackRect);
             DamagedPoint(this, attackEventArgs);
         }
 
