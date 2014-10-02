@@ -8,6 +8,9 @@ namespace DreamStateMachine
 {
     class Weapon
     {
+
+        public String lightAttackAnimation;
+
         public Weapon(Texture2D tex, int texWidth, int texHeight)
         {
         }

@@ -26,7 +26,7 @@ namespace DreamStateMachine
             barTexture = barTex;
         }
 
-        public void draw(SpriteBatch spriteBatch, Rectangle drawSpace, bool debugging = false)
+        public void draw(SpriteBatch spriteBatch, Rectangle drawSpace, Texture2D debugTex, bool debugging = false)
         {
             float healthPercentage = ((float)actor.health / actor.maxHealth);
             barContainer.X = actor.hitBox.Center.X - (barContainer.Width / 2) - drawSpace.X + displaceX;

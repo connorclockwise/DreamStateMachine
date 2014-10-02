@@ -15,16 +15,15 @@ namespace DreamStateMachine
 
         public event EventHandler<EventArgs> HitActor;
 
-        public static event EventHandler<AttackEventArgs> Attack;
+        public static event EventHandler<EventArgs> LightAttack;
+        public static event EventHandler<AttackEventArgs> DamagedPoint;
         public static event EventHandler<EventArgs> Death;
         public static event EventHandler<AttackEventArgs> Hurt;
         public static event EventHandler<EventArgs> Use;
         public static event EventHandler<SpawnEventArgs> Spawn;
         
-
-        public ActionList animationList;
         public Dictionary<String, AnimationInfo> animations;
-        //public Attributes attributes;
+        public List<Rectangle> debugSquares;
         public Color color;
         public Point curAnimFrame;
         public Texture2D texture;
@@ -37,9 +36,9 @@ namespace DreamStateMachine
         public Vector2 movementIntent;
         public Vector2 sightVector;
         public Vector2 velocity;
-        public Walk walkAnimation;
         public World world;
-        //public Weapon activeWeapon;
+        public Weapon activeWeapon;
+        public int id;
         public int maxHealth;
         public int maxSpeed;
         public int minSpeed;
@@ -50,7 +49,6 @@ namespace DreamStateMachine
         public float maxRotationVelocity;
         
         public bool isWalking; 
-        public bool isAttacking;
         public bool lockedMovement;
         
         public float bodyRotation;
@@ -61,9 +59,8 @@ namespace DreamStateMachine
         public Actor(Texture2D tex, int width, int height, int texWidth, int texHeight)
         {
             texture = tex;
-            animationList = new ActionList(this);
             animations = new Dictionary<String, AnimationInfo>();
-            walkAnimation = new Walk(this.animationList, this);
+            debugSquares = new List<Rectangle>();
             color = new Color(255, 255, 255, 255);
             attackBox = new Rectangle(0, 0, 0, 0);
             hitBox = new Rectangle(0, 0, width, height);
@@ -83,14 +80,13 @@ namespace DreamStateMachine
             health = maxHealth;
             
             maxRotationVelocity = MathHelper.Pi / 16f;
-            isAttacking = false;
             lockedMovement = false;
 
-            Actor.Attack += new EventHandler<AttackEventArgs>(Actor_Attack);
+            Actor.DamagedPoint += new EventHandler<AttackEventArgs>(Actor_Attacked);
 
         }
 
-        public void draw(SpriteBatch spriteBatch, Rectangle drawSpace, bool debugging=false)
+        public void draw(SpriteBatch spriteBatch, Rectangle drawSpace, Texture2D debugTex, bool debugging=false )
         {
             Rectangle normalizedPosition;
             Rectangle sourceRectangle;
@@ -119,35 +115,39 @@ namespace DreamStateMachine
                 0
             );
 
-            //if (debugging)
-            //{
-            //    spriteBatch.Draw(
-            //        debugTex,
-            //        new Vector2(this.hitBox.X - this.drawSpace.X + normalizedPosition.Width / 2.0f, this.hitBox.Y - this.drawSpace.Y + normalizedPosition.Height / 2.0f),
-            //        new Rectangle(0, 0, this.hitBox.Width, this.hitBox.Height),
-            //        new Color(.5f, .5f, .5f, .5f),
-            //        0,
-            //        new Vector2(normalizedPosition.Width / 2.0f, normalizedPosition.Height / 2.0f),
-            //        1,
-            //        SpriteEffects.None,
-            //        0
-            //    );
-            //}
+            if (debugging)
+            {
+                spriteBatch.Draw(
+                    debugTex,
+                    new Vector2(this.hitBox.X - drawSpace.X + normalizedPosition.Width / 2.0f, this.hitBox.Y - drawSpace.Y + normalizedPosition.Height / 2.0f),
+                    new Rectangle(0, 0, this.hitBox.Width, this.hitBox.Height),
+                    new Color(.5f, .5f, .5f, .5f),
+                    0,
+                    new Vector2(normalizedPosition.Width / 2.0f, normalizedPosition.Height / 2.0f),
+                    1,
+                    SpriteEffects.None,
+                    0
+                );
 
-            //if (debug && this.isAttacking)
-            //{
-            //    spriteBatch.Draw(
-            //        debugTex,
-            //        new Vector2(this.attackBox.X - this.drawSpace.X, this.attackBox.Y - this.drawSpace.Y),
-            //        new Rectangle(0, 0, this.attackBox.Width, this.attackBox.Height),
-            //        new Color(.5f, .5f, .5f, .5f),
-            //        0,
-            //        new Vector2(this.attackBox.Width / 2.0f, this.attackBox.Height / 2.0f),
-            //        1,
-            //        SpriteEffects.None,
-            //        0
-            //    );
-            //}
+                foreach (Rectangle debugSquare in debugSquares)
+                {
+                    spriteBatch.Draw(
+                    debugTex,
+                    new Vector2(debugSquare.X - drawSpace.X + normalizedPosition.Width / 2.0f, debugSquare.Y - drawSpace.Y + normalizedPosition.Height / 2.0f),
+                    new Rectangle(0, 0, debugSquare.Width, debugSquare.Height),
+                    new Color(.5f, .5f, .5f, .5f),
+                    0,
+                    new Vector2(normalizedPosition.Width / 2.0f, normalizedPosition.Height / 2.0f),
+                    1,
+                    SpriteEffects.None,
+                    0
+                    );
+
+                }
+
+                debugSquares.Clear();
+
+            }
         }
 
         public bool isInDrawSpace(Rectangle drawSpace)
@@ -161,12 +161,18 @@ namespace DreamStateMachine
             actorCopy.animations = animations;
             actorCopy.className = className;
             actorCopy.color = new Color(color.ToVector3());
+            actorCopy.maxHealth = maxHealth;
             actorCopy.health = health;
             actorCopy.maxSpeed = maxSpeed;
             actorCopy.sight = sight;
-            actorCopy.sightVector = new Vector2(sightVector.X, sightVector.Y) ;
+            actorCopy.sightVector = new Vector2(sightVector.X, sightVector.Y);
             actorCopy.reach = reach;
             return actorCopy;
+        }
+
+        public void Light_Attack()
+        {
+            LightAttack(this, EventArgs.Empty);
         }
 
         public void unlockMovement()
@@ -179,19 +185,19 @@ namespace DreamStateMachine
             lockedMovement = true;
         }
 
-        public void Actor_Attack(Object sender, AttackEventArgs attackEventArgs)
+        public void Actor_Attacked(Object sender, AttackEventArgs attackEventArgs)
         {
+            DamageInfo damageInfo = attackEventArgs.damageInfo;
             Actor attacker = (Actor) sender;
-            if (sender.Equals(this))
-                return;
-            else
+            if (this.id != attacker.id)
                 handleActorAttack(attackEventArgs.damageInfo);
         }
 
         public void onAttack(DamageInfo damageInfo)
         {
             AttackEventArgs attackEventArgs = new AttackEventArgs(damageInfo);
-            Attack(this, attackEventArgs);
+            debugSquares.Add(attackEventArgs.damageInfo.attackRect);
+            DamagedPoint(this, attackEventArgs);
         }
 
         public void onHitActor()
@@ -201,6 +207,7 @@ namespace DreamStateMachine
 
         public void onKill(DamageInfo damageInfo)
         {
+            Actor.DamagedPoint -= new EventHandler<AttackEventArgs>(Actor_Attacked);
             Death(this, EventArgs.Empty);
         }
 
@@ -285,10 +292,6 @@ namespace DreamStateMachine
 
         virtual public void update(float dt)
         {
-            if ((this.velocity.X != 0 || this.velocity.Y != 0) && this.isWalking && !this.animationList.has(walkAnimation))
-            {
-                this.animationList.pushFront(walkAnimation);
-            }
 
             if (this.bodyRotation != this.targetRotation)
             {
@@ -316,7 +319,7 @@ namespace DreamStateMachine
                 this.sightVector.X = (float)Math.Cos(this.bodyRotation + MathHelper.PiOver2);
                 this.sightVector.Y = (float)Math.Sin(this.bodyRotation + MathHelper.PiOver2);
             }
-            animationList.update(dt);
+            //animationList.update(dt);
         }
     }
 }

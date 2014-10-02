@@ -11,6 +11,7 @@
     health="200"
     sight="200"
     reach="30">
+    <Animation name="punch" type="unnarmed_light_attack"/>
   </Actor>
   
   <Actor
@@ -37,5 +38,6 @@
     health="25"
     sight="400"
     reach="50">
+    <Animation name="over_head_smash" type="unnarmed_light_attack"/>
   </Actor>
 </Actors>

@@ -112,7 +112,7 @@ namespace DreamStateMachine
             SoundManager.Instance.initSoundConfig(Content, "Content/sfx/Sounds.xml");
             actorController = new ActorController();
             actorManager = new ActorManager();
-            actorManager.initActorConfig(Content, "Content/Actors.xml");
+            actorManager.initActorConfig(Content, "Content/Actors.xml", "Content/Animations.xml");
             actorManager.spawnActors(worldManager.curWorld.getSpawns());
         }
 

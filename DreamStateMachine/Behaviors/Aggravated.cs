@@ -68,12 +68,13 @@ namespace DreamStateMachine.Actions
                 if (coolDownTimer <= 0)
                 {
                     owner.setGaze(target.hitBox.Center);
-                    Punch punch = new Punch(owner.animationList, owner);
-                    Recoil recoil = new Recoil(owner.animationList, owner);
-                    if (!owner.animationList.has(punch) && !owner.animationList.has(recoil))
-                    {
-                        owner.animationList.pushFront(punch);
-                    }
+                owner.Light_Attack();
+                //Punch punch = new Punch(owner.animationList, owner);
+                //Recoil recoil = new Recoil(owner.animationList, owner);
+                //if (!owner.animationList.has(punch) && !owner.animationList.has(recoil))
+                //{
+                //    owner.animationList.pushFront(punch);
+                //}
                     coolDownTimer = (float)(6 / 12f);
                 }
                 else

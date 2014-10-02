@@ -9,7 +9,7 @@ namespace DreamStateMachine
 {
     interface IDrawable
     {
-        void draw(SpriteBatch spriteBatch, Rectangle drawSpace, bool debuging = false);
+        void draw(SpriteBatch spriteBatch, Rectangle drawSpace, Texture2D debugTex, bool debuging = false);
         bool isInDrawSpace(Rectangle drawSpace);
     }
 }

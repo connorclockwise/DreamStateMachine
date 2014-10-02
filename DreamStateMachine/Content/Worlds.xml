@@ -1,13 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Worlds>
   <World
-    worldName="grass"
+    worldName="forest"
     worldTexture="GrassFloor"
     width="50"
     height="50"
     tileSize="64">
   </World>
-
+  <World
+    worldName="temple"
+    worldTexture="TempleFloor"
+    width="50"
+    height="50"
+    tileSize="64">
+  </World>
   <World
     worldName="tundra"
     worldTexture="TundraFloor"
@@ -16,11 +22,5 @@
     tileSize="64">
   </World>
   
-  <World
-    worldName="temple"
-    worldTexture="TempleFloor"
-    width="50"
-    height="50"
-    tileSize="64">
-  </World>
+  
 </Worlds>

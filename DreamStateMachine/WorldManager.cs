@@ -94,7 +94,7 @@ namespace DreamStateMachine
         public void initStartingWorld()
         {
             curLevel = 1;
-            curWorld = this.worldFactory.generateWorld(worldPrototypes["temple"], 5);
+            curWorld = this.worldFactory.generateWorld(worldPrototypes["forest"], 5);
             Node<World> rootWorld = new Node<World>(curWorld);
             curWorldNode = rootWorld;
             //Node<World> newWorldNode = Node<World>(curWorld);

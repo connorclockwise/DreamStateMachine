@@ -29,7 +29,7 @@ namespace DreamStateMachine
             //actors = new List<Actor>();
             actors = new List<IDrawable>();
             healthBars = new Dictionary<IDrawable, IDrawable>();
-            //debug = true;
+            debug = true;
             debugTex = debugSq;
             this.healthBarTexture = healthBarTexture;
 
@@ -85,20 +85,20 @@ namespace DreamStateMachine
                 curActor = actors.ElementAt(i);
                 if (curActor.isInDrawSpace(drawSpace))
                 {
-                    curActor.draw(spriteBatch, drawSpace);
+                    curActor.draw(spriteBatch, drawSpace, debugTex, debug);
                 }
             }
         }
 
         public void drawFloor()
         {
-            curWorld.draw(spriteBatch, drawSpace);
+            curWorld.draw(spriteBatch, drawSpace, debugTex, debug);
         }
 
         public void drawGUI()
         {
             foreach( KeyValuePair<IDrawable,  IDrawable> entry in healthBars){
-                entry.Value.draw(spriteBatch, drawSpace);
+                entry.Value.draw(spriteBatch, drawSpace, debugTex, debug);
             }
             //healthBar.draw();
         }
@@ -120,16 +120,12 @@ namespace DreamStateMachine
                 setFocus(protagonist.hitBox.Center.X, protagonist.hitBox.Center.Y);
         }
 
-        //public bool isInView(Rectangle hitbox)
-        //{
-        //   return ;
-        //}
-
         private void World_Change(Object sender, EventArgs eventArgs)
         {
 
             WorldManager worldManager = (WorldManager)sender;
             this.curWorld = worldManager.curWorld;
+            healthBars.Clear();
             actors.Clear();
         }
     }
