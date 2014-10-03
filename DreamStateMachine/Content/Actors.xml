@@ -12,6 +12,7 @@
     sight="200"
     reach="30">
     <Animation name="punch" type="unnarmed_light_attack"/>
+    <Animation name="walk" type="walk"/>
   </Actor>
   
   <Actor
@@ -39,5 +40,6 @@
     sight="400"
     reach="50">
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
+    <Animation name="walk" type="walk"/>
   </Actor>
 </Actors>

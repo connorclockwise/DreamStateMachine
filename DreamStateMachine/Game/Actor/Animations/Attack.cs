@@ -26,8 +26,8 @@ namespace DreamStateMachine.Actions
             frameIndex = new Point(0, 0);
             damageRect = new Rectangle(0, 0, 0, 0);
             attackBox = new Rectangle(0, 0, 0, 0);
-            if(owner.activeWeapon != null && owner.animations.ContainsKey(owner.activeWeapon.lightAttackAnimation)){
-                this.animationInfo = owner.animations[owner.activeWeapon.lightAttackAnimation];
+            if(owner.activeWeapon != null && owner.animations.ContainsKey(owner.activeWeapon.animations["light_attack"])){
+                this.animationInfo = owner.animations[owner.activeWeapon.animations["light_attack"]];
             }
             else if (owner.animations.ContainsKey("unnarmed_light_attack"))
             {
