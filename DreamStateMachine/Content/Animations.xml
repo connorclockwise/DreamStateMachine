@@ -35,5 +35,72 @@
       </AttackBox>
     </AttackFrame>
   </Animation>
+
+  <Animation
+    name="walk"
+    frames="10"
+    fps="12"
+    columnIndex="0"
+    rowIndex="0">
+  </Animation>
+
+  <WeaponAnimation
+    name="player_holding_weapon_walk"
+    type="holding_weapon_walk"
+    frames="10"
+    fps="12"
+    columnIndex="0"
+    rowIndex="3">
+    <GripFrame
+      frame="0"
+      gripX="47"
+      gripY="37">
+    </GripFrame>
+    <GripFrame
+      frame="1"
+      gripX="47"
+      gripY="38">
+    </GripFrame>
+    <GripFrame
+      frame="2"
+      gripX="46"
+      gripY="39">
+    </GripFrame>
+    <GripFrame
+      frame="3"
+      gripX="45"
+      gripY="40">
+    </GripFrame>
+    <GripFrame
+      frame="4"
+      gripX="46"
+      gripY="39">
+    </GripFrame>
+    <GripFrame
+      frame="5"
+      gripX="47"
+      gripY="37">
+    </GripFrame>
+    <GripFrame
+      frame="6"
+      gripX="47"
+      gripY="37">
+    </GripFrame>
+    <GripFrame
+      frame="7"
+      gripX="48"
+      gripY="35">
+    </GripFrame>
+    <GripFrame
+      frame="8"
+      gripX="47"
+      gripY="34">
+    </GripFrame>
+    <GripFrame
+      frame="9"
+      gripX="35"
+      gripY="47">
+    </GripFrame>
+  </WeaponAnimation>
   
 </Animations>

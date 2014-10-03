@@ -26,7 +26,10 @@ namespace DreamStateMachine
         ActorController actorController;
         ActorManager actorManager;
         AIController aiController;
+        ItemManager itemManager;
         PhysicsController physicsController;
+        SoundManager soundManager;
+        WorldManager worldManager;
 
         Actor player;
         GraphicsDeviceManager graphics;
@@ -37,11 +40,10 @@ namespace DreamStateMachine
         Camera cam;
         SpriteBatch spriteBatch;
         SpriteFont arielBlackFont;
-        SoundManager soundManager;
         Texture2D debugSquare;
         Texture2D floorTiles;
         Texture2D playerTexture;
-        WorldManager worldManager;
+        
         InputHandler inputHandler;
 
         bool isLoadingWorld;
@@ -99,11 +101,10 @@ namespace DreamStateMachine
             origin.X = graphics.PreferredBackBufferWidth / 2;
             origin.Y = graphics.PreferredBackBufferHeight / 2;
             inputHandler = new InputHandler(origin);
-            //inputHandler.controller = usingGamePad;
             random = new Random();
             tileRect = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             cam = new Camera(spriteBatch, tileRect, debugSquare, healthBar);
-            //actors = new List<Actor>();
+
             aiController = new AIController();
             physicsController = new PhysicsController();
             worldManager = new WorldManager(random);
@@ -112,8 +113,11 @@ namespace DreamStateMachine
             SoundManager.Instance.initSoundConfig(Content, "Content/sfx/Sounds.xml");
             actorController = new ActorController();
             actorManager = new ActorManager();
-            actorManager.initActorConfig(Content, "Content/Actors.xml", "Content/Animations.xml");
+            actorManager.initAnimationConfig(Content, "Content/Animations.xml");
+            actorManager.initActorConfig(Content, "Content/Actors.xml");
             actorManager.spawnActors(worldManager.curWorld.getSpawns());
+            itemManager = new ItemManager();
+            itemManager.initWeaponConfig(Content, "Content/Weapons.xml");
         }
 
         /// <summary>

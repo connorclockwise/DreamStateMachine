@@ -18,11 +18,18 @@ namespace DreamStateMachine.Actions
         {
             this.ownerList = ownerList;
             this.owner = owner;
-            if(owner.animations.ContainsKey("walk"))
-                animationInfo = owner.animations["walk"];
+            if (owner.activeWeapon != null)
+            {
+                animationInfo = owner.animations[owner.activeWeapon.animations["walk"]];
+            }
             else
-                animationInfo = new AnimationInfo("default_walk", 10, 12, 0, 0);
-            duration = (float)animationInfo.frames / animationInfo.fps;
+            {
+                if (owner.animations.ContainsKey("walk"))
+                    animationInfo = owner.animations["walk"];
+                else
+                    animationInfo = new AnimationInfo("default_walk", 10, 12, 0, 0);
+                duration = (float)animationInfo.frames / animationInfo.fps;
+            }
         }
 
         //dummy constructor
