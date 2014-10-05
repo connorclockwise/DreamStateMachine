@@ -19,6 +19,7 @@ namespace DreamStateMachine
         public static event EventHandler<AttackEventArgs> DamagedPoint;
         public static event EventHandler<EventArgs> Death;
         public static event EventHandler<AttackEventArgs> Hurt;
+        public static event EventHandler<PickupEventArgs> OnPickUp;
         public static event EventHandler<EventArgs> Use;
         public static event EventHandler<SpawnEventArgs> Spawn;
         
@@ -26,7 +27,9 @@ namespace DreamStateMachine
         public List<Rectangle> debugSquares;
         public Color color;
         public Point curAnimFrame;
+        public Point posOffset;
         public Texture2D texture;
+        public Point gripPoint;
         public Rectangle attackBox;
         public Rectangle hitBox;
         public Rectangle body;
@@ -62,9 +65,10 @@ namespace DreamStateMachine
             animations = new Dictionary<String, AnimationInfo>();
             debugSquares = new List<Rectangle>();
             color = new Color(255, 255, 255, 255);
+            gripPoint = new Point();
             attackBox = new Rectangle(0, 0, 0, 0);
-            hitBox = new Rectangle(0, 0, width, height);
             body = new Rectangle(0, 0, texWidth, texHeight);
+            hitBox = new Rectangle(texWidth / 2 - width / 2, texHeight / 2 - height / 2, width, height);
             acceleration = new Vector2(0, 0);
             friction = new Vector2(0, 0);
             movementIntent = new Vector2(0, 0);
@@ -145,6 +149,11 @@ namespace DreamStateMachine
 
                 }
 
+                if (activeWeapon != null)
+                {
+                    activeWeapon.draw(spriteBatch, drawSpace, debugTex, debugging);
+                }
+
                 debugSquares.Clear();
 
             }
@@ -161,6 +170,7 @@ namespace DreamStateMachine
             actorCopy.animations = animations;
             actorCopy.className = className;
             actorCopy.color = new Color(color.ToVector3());
+            actorCopy.gripPoint = new Point(gripPoint.X, gripPoint.Y);
             actorCopy.maxHealth = maxHealth;
             actorCopy.health = health;
             actorCopy.maxSpeed = maxSpeed;
@@ -173,6 +183,11 @@ namespace DreamStateMachine
         public void Light_Attack()
         {
             LightAttack(this, EventArgs.Empty);
+        }
+
+        public void giveWeapon(Weapon weapon)
+        {
+            activeWeapon = weapon;
         }
 
         public void unlockMovement()
@@ -196,7 +211,7 @@ namespace DreamStateMachine
         public void onAttack(DamageInfo damageInfo)
         {
             AttackEventArgs attackEventArgs = new AttackEventArgs(damageInfo);
-            debugSquares.Add(attackEventArgs.damageInfo.attackRect);
+            debugSquares.AddRange(attackEventArgs.damageInfo.attackRects);
             DamagedPoint(this, attackEventArgs);
         }
 
@@ -216,6 +231,12 @@ namespace DreamStateMachine
             AttackEventArgs attackEventArgs = new AttackEventArgs(damageInfo);
             health -= damageInfo.damage;
             Hurt(this, attackEventArgs);
+        }
+
+        public void onPickup(String itemClassName)
+        {
+            PickupEventArgs pickupEventArgs = new PickupEventArgs(itemClassName);
+            OnPickUp(this, pickupEventArgs);
         }
 
         public void onSpawn( Point spawnTile, int spawnType )
@@ -247,18 +268,31 @@ namespace DreamStateMachine
 
         public void setPos(int x, int y)
         {
-            hitBox.X = x;
-            hitBox.Y = y;
-            body.X = hitBox.Center.X - (int)(body.Width / 2.0);
-            body.Y = hitBox.Center.Y - (int)(body.Height / 2.0);
+            //posOffset = new Point();
+            posOffset.X = x - hitBox.X;
+            posOffset.Y = y - hitBox.Y;
+            hitBox.X += posOffset.X;
+            hitBox.Y += posOffset.Y;
+            body.X += posOffset.X;
+            body.Y += posOffset.Y;
+            if (this.activeWeapon != null)
+            {
+                this.activeWeapon.calcWeaponPos(this);
+            }
         }
 
         public void setPos(Point point)
         {
-            hitBox.X = point.X;
-            hitBox.Y = point.Y;
-            body.X = hitBox.Center.X - (int)(body.Width / 2.0);
-            body.Y = hitBox.Center.Y - (int)(body.Height / 2.0);
+            posOffset.X = point.X - hitBox.X;
+            posOffset.Y = point.Y - hitBox.Y;
+            hitBox.X += posOffset.X;
+            hitBox.Y += posOffset.Y;
+            body.X += posOffset.X;
+            body.Y += posOffset.Y;
+            if (this.activeWeapon != null)
+            {
+                this.activeWeapon.calcWeaponPos(this);
+            }
         }
 
         public Rectangle getHitBox()
@@ -278,8 +312,10 @@ namespace DreamStateMachine
 
         public void handleActorAttack(DamageInfo damageInfo)
         {
-            if (this.hitBox.Intersects(damageInfo.attackRect))
+            foreach (Rectangle attackRect in damageInfo.attackRects)
             {
+                if (this.hitBox.Intersects(attackRect))
+                {
                     damageInfo.attacker.onHitActor();
                     this.velocity += damageInfo.attacker.sightVector * 20;
                     this.onHurt(damageInfo);
@@ -287,6 +323,7 @@ namespace DreamStateMachine
                     {
                         this.onKill(damageInfo);
                     }
+                }
             }
         }
 
@@ -318,7 +355,12 @@ namespace DreamStateMachine
 
                 this.sightVector.X = (float)Math.Cos(this.bodyRotation + MathHelper.PiOver2);
                 this.sightVector.Y = (float)Math.Sin(this.bodyRotation + MathHelper.PiOver2);
+                if (this.activeWeapon != null)
+                {
+                    this.activeWeapon.calcWeaponPos(this);
+                }
             }
+            
             //animationList.update(dt);
         }
     }

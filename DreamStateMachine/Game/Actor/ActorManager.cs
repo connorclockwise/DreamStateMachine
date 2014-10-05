@@ -80,81 +80,101 @@ namespace DreamStateMachine.Behaviors
 
         public void initAnimationConfig(ContentManager content, String animationConfigFile)
         {
-            List<String> attackTypes = new List<String> { "single_box_attack", "multi_box_attack" };
+            List<String> meleeAttackTypes = new List<String> { "single_box_attack", "multi_box_attack" };
             List<String> projectileAttackTypes = new List<String> { "projectile_attack" };
 
             XDocument animationDoc = XDocument.Load(animationConfigFile);
             List<XElement> animations = animationDoc.Element("Animations").Elements("Animation").ToList();
-            List<XElement> attackFrames;
+            List<XElement> frames;
             List<XElement> attackBoxes;
             String animationName;
+            String animationType;
             String animationAttackType;
+            bool animationHoldingWeapon;
             int animationFrames;
             int animationFPS;
             int texColumnIndex;
             int texRowIndex;
 
-            int currentAttackFrame;
+            int frameIndex;
+            String weaponStance;
+            float weaponRotation;
             int attackOffsetX;
             int attackOffsetY;
             int attackWidth;
             int attackHeight;
             Rectangle attackRect;
             List<Rectangle> attackRects;
-            Dictionary<int, int> attackDamage;
-            Dictionary<int, List<Rectangle>> attackPoints;
+            FrameInfo[] frameInfos;
+            FrameInfo frameInfo;
+            int attackDamage;
+            List<Rectangle> attackPoints;
+            Point gripPoint;
 
 
             foreach (XElement animation in animations)
             {
                 animationName = animation.Attribute("name").Value;
-                if (animation.Attribute("attackType") != null)
-                    animationAttackType = animation.Attribute("attackType").Value;
-                else
-                    animationAttackType = "";
+                animationAttackType = animation.Attribute("attackType").Value;
+                animationHoldingWeapon = bool.Parse(animation.Attribute("holdingWeapon").Value);
                 animationFrames = int.Parse(animation.Attribute("frames").Value);
                 animationFPS = int.Parse(animation.Attribute("fps").Value);
                 texColumnIndex = int.Parse(animation.Attribute("columnIndex").Value);
                 texRowIndex = int.Parse(animation.Attribute("rowIndex").Value);
-                if (attackTypes.Contains(animationAttackType))
+                
+                frames = animation.Elements("Frame").ToList();
+                frameInfos = new FrameInfo[animationFrames];
+                if (meleeAttackTypes.Contains(animationAttackType) || animationHoldingWeapon)
                 {
-                    attackDamage = new Dictionary<int, int>();
-                    attackPoints = new Dictionary<int, List<Rectangle>>();
-                    attackFrames = animation.Elements("AttackFrame").ToList();
-                    foreach (XElement attackFrame in attackFrames)
+                    
+                    foreach (XElement frame in frames)
                     {
+                        frameIndex = int.Parse(frame.Attribute("frameIndex").Value);
+                        frameInfo = new FrameInfo();
                         attackRects = new List<Rectangle>();
-                        currentAttackFrame = int.Parse(attackFrame.Attribute("frame").Value);
-                        attackDamage[currentAttackFrame] = int.Parse(attackFrame.Attribute("damage").Value);
-                        attackBoxes = attackFrame.Elements("AttackBox").ToList();
-                        foreach (XElement attackBox in attackBoxes)
-                        {
-                            attackOffsetX = int.Parse(attackBox.Attribute("viewOffsetX").Value);
-                            attackOffsetY = int.Parse(attackBox.Attribute("viewOffsetY").Value);
-                            attackWidth = int.Parse(attackBox.Attribute("attackWidth").Value);
-                            attackHeight = int.Parse(attackBox.Attribute("attackHeight").Value);
-                            attackRect = new Rectangle(attackOffsetX, attackOffsetY, attackWidth, attackHeight);
-                            attackRects.Add(attackRect);
-                        }
-                        attackPoints[currentAttackFrame] = attackRects;
+                        if(animationHoldingWeapon){
+                            gripPoint = new Point();
+                            gripPoint.X = int.Parse(frame.Attribute("gripX").Value);
+                            gripPoint.Y = int.Parse(frame.Attribute("gripY").Value);
+                            weaponStance = frame.Attribute("stance").Value;
+                            weaponRotation = float.Parse(frame.Attribute("rotation").Value);
+                            frameInfo.gripPoint = gripPoint;
+                            frameInfo.stance = weaponStance;
+                            frameInfo.rotation = weaponRotation;
 
+                        }
+                        if (meleeAttackTypes.Contains(animationAttackType))
+                        {
+                            attackPoints = new List<Rectangle>();
+                            attackDamage = int.Parse(frame.Attribute("damage").Value);
+                            frameInfo.attackDamage = attackDamage;
+                            attackBoxes = frame.Elements("AttackBox").ToList();
+                            foreach (XElement attackBox in attackBoxes)
+                            {
+                                attackOffsetX = int.Parse(attackBox.Attribute("viewOffsetX").Value);
+                                attackOffsetY = int.Parse(attackBox.Attribute("viewOffsetY").Value);
+                                attackWidth = int.Parse(attackBox.Attribute("attackWidth").Value);
+                                attackHeight = int.Parse(attackBox.Attribute("attackHeight").Value);
+                                attackRect = new Rectangle(attackOffsetX, attackOffsetY, attackWidth, attackHeight);
+                                attackPoints.Add(attackRect);
+                            }
+                            frameInfo.attackPoints = attackPoints;
+                        }
+                        frameInfos[frameIndex] = frameInfo;
                     }
-                    animationPrototypes[animationName] = new AnimationInfo(animationName,
-                                                            animationFrames,
-                                                            animationFPS,
-                                                            texColumnIndex,
-                                                            texRowIndex,
-                                                            attackDamage,
-                                                            attackPoints);
+
                 }
-                else
+
+                animationPrototypes[animationName] = new AnimationInfo
                 {
-                    animationPrototypes[animationName] = new AnimationInfo(animationName,
-                                                            animationFrames,
-                                                            animationFPS,
-                                                            texColumnIndex,
-                                                            texRowIndex);
-                }
+                    frames = frameInfos,
+                    name = animationName,
+                    frameCount = animationFrames,
+                    type = animationAttackType,
+                    fps = animationFPS,
+                    texColumn = texColumnIndex,
+                    texRow = texRowIndex
+                };
             }
         }
 
@@ -193,7 +213,6 @@ namespace DreamStateMachine.Behaviors
                 }
             }
         }
-
 
         private void World_Change(Object sender, EventArgs eventArgs)
         {

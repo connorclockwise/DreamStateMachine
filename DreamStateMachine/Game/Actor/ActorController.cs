@@ -12,12 +12,10 @@ namespace DreamStateMachine.Behaviors
 {
     class ActorController
     {
-        //Dictionary<World, List<Actor>> actorLists;
         Dictionary<Actor, ActionList> actionLists;
         List<Actor> actors;
         Actor curActor;
         Walk walk = new Walk();
-        public SoundManager soundManager;
 
         public ActorController()
         {
@@ -66,6 +64,8 @@ namespace DreamStateMachine.Behaviors
             ActionList actionList = new ActionList(spawnedActor);
             actionLists[spawnedActor] = actionList;
             actors.Add(spawnedActor);
+            Idle idle = new Idle(actionLists[spawnedActor], spawnedActor);
+            actionLists[spawnedActor].pushFront(idle);
             spawnedActor.id = actors.IndexOf(spawnedActor);
         }
 
@@ -83,11 +83,11 @@ namespace DreamStateMachine.Behaviors
                 if ((curActor.velocity.X != 0 || curActor.velocity.Y != 0) && curActor.isWalking && !actionLists[curActor].has(walk))
                 {
                     walk = new Walk(actionLists[curActor], curActor);
-                    actionLists[curActor].pushFront(walk);
+                    if (actionLists[curActor].getSize() == 0 || (actionLists[curActor].getSize() > 0 && !actionLists[curActor].begin().isBlocking))
+                        actionLists[curActor].pushFront(walk);
                 }
                 curActor.update(dt);
                 actionLists[curActor].update(dt);
-
             }
 
 
@@ -97,7 +97,6 @@ namespace DreamStateMachine.Behaviors
         {
             WorldManager worldManager = (WorldManager) sender;
             World curWorld = worldManager.curWorld;
-            //actors.RemoveAll(x => x.world.Equals(curWorld));
             actors.Clear();
             actionLists.Clear();
         }

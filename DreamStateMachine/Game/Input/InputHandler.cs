@@ -85,7 +85,7 @@ namespace DreamStateMachine.Input
             }
             if (keyBoardState.IsKeyDown(Keys.G))
             {
-                Console.Write("Debug time!");
+                commands.Add(new DebugCommand());
             }
 
             float curMousePosX = mouseState.X;
