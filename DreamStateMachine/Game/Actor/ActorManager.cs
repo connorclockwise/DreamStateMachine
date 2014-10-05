@@ -26,9 +26,61 @@ namespace DreamStateMachine.Behaviors
             WorldManager.worldChange += new EventHandler<EventArgs>(World_Change);
         }
 
-        public void initActorConfig(ContentManager content, String actorConfigFile, String animationConfigFile)
+        public void initActorConfig(ContentManager content, String actorConfigFile)
         {
-            List<String> attackTypes = new List<String> { "single_box_attack", "multi_box_attack"};
+            XDocument actorDoc = XDocument.Load(actorConfigFile);
+            List<XElement> actors = actorDoc.Element("Actors").Elements("Actor").ToList();
+            List<XElement> actorAnimations; 
+            String actorClass;
+            String animationName;
+            String animationType;
+            Texture2D actorTexture;
+            int actorMaxSpeed;
+            int actorWidth;
+            int actorHeight;
+            int actorHealth;
+            int actorSight;
+            int actorReach;
+            int texWidth;
+            int texHeight;
+
+            foreach (XElement actor in actors)
+            {
+                actorClass = actor.Attribute("className").Value;
+                actorTexture = content.Load<Texture2D>(actor.Attribute("texture").Value);
+                actorMaxSpeed = int.Parse(actor.Attribute("maxSpeed").Value);
+                actorWidth = int.Parse(actor.Attribute("width").Value);
+                actorHeight = int.Parse(actor.Attribute("height").Value);
+                texWidth = int.Parse(actor.Attribute("texWidth").Value);
+                texHeight = int.Parse(actor.Attribute("texHeight").Value);
+                actorHealth = int.Parse(actor.Attribute("health").Value);
+                actorSight = int.Parse(actor.Attribute("sight").Value);
+                actorReach = int.Parse(actor.Attribute("reach").Value);
+                actorPrototypes[actorClass] = new Actor(actorTexture, actorWidth, actorHeight, texWidth, texHeight);
+                actorPrototypes[actorClass].className = actorClass;
+                actorPrototypes[actorClass].maxHealth = actorHealth;
+                actorPrototypes[actorClass].health = actorHealth;
+                actorPrototypes[actorClass].maxSpeed = actorMaxSpeed;
+                actorPrototypes[actorClass].sight = actorSight;
+                actorPrototypes[actorClass].reach = actorReach;
+                actorPrototypes[actorClass].animations = new Dictionary<string, AnimationInfo>();
+                actorAnimations = actor.Elements("Animation").ToList();
+                
+                foreach (XElement actorAnimation in actorAnimations)
+                {
+                    if (this.animationPrototypes.ContainsKey(actorAnimation.Attribute("name").Value))
+                    {
+                        animationName = actorAnimation.Attribute("name").Value;
+                        animationType = actorAnimation.Attribute("type").Value;
+                        actorPrototypes[actorClass].animations[animationType] = animationPrototypes[animationName];
+                    }   
+                }
+            }
+        }
+
+        public void initAnimationConfig(ContentManager content, String animationConfigFile)
+        {
+            List<String> attackTypes = new List<String> { "single_box_attack", "multi_box_attack" };
             List<String> projectileAttackTypes = new List<String> { "projectile_attack" };
 
             XDocument animationDoc = XDocument.Load(animationConfigFile);
@@ -51,12 +103,15 @@ namespace DreamStateMachine.Behaviors
             List<Rectangle> attackRects;
             Dictionary<int, int> attackDamage;
             Dictionary<int, List<Rectangle>> attackPoints;
-            
+
 
             foreach (XElement animation in animations)
             {
                 animationName = animation.Attribute("name").Value;
-                animationAttackType = animation.Attribute("attackType").Value;
+                if (animation.Attribute("attackType") != null)
+                    animationAttackType = animation.Attribute("attackType").Value;
+                else
+                    animationAttackType = "";
                 animationFrames = int.Parse(animation.Attribute("frames").Value);
                 animationFPS = int.Parse(animation.Attribute("fps").Value);
                 texColumnIndex = int.Parse(animation.Attribute("columnIndex").Value);
@@ -101,58 +156,7 @@ namespace DreamStateMachine.Behaviors
                                                             texRowIndex);
                 }
             }
-
-
-
-
-            XDocument actorDoc = XDocument.Load(actorConfigFile);
-            List<XElement> actors = actorDoc.Element("Actors").Elements("Actor").ToList();
-            List<XElement> actorAnimations; 
-            String actorClass;
-            String animationType;
-            Texture2D actorTexture;
-            int actorMaxSpeed;
-            int actorWidth;
-            int actorHeight;
-            int actorHealth;
-            int actorSight;
-            int actorReach;
-            int texWidth;
-            int texHeight;
-
-            foreach (XElement actor in actors)
-            {
-                actorClass = actor.Attribute("className").Value;
-                actorTexture = content.Load<Texture2D>(actor.Attribute("texture").Value);
-                actorMaxSpeed = int.Parse(actor.Attribute("maxSpeed").Value);
-                actorWidth = int.Parse(actor.Attribute("width").Value);
-                actorHeight = int.Parse(actor.Attribute("height").Value);
-                texWidth = int.Parse(actor.Attribute("texWidth").Value);
-                texHeight = int.Parse(actor.Attribute("texHeight").Value);
-                actorHealth = int.Parse(actor.Attribute("health").Value);
-                actorSight = int.Parse(actor.Attribute("sight").Value);
-                actorReach = int.Parse(actor.Attribute("reach").Value);
-                actorPrototypes[actorClass] = new Actor(actorTexture, actorWidth, actorHeight, texWidth, texHeight);
-                actorPrototypes[actorClass].className = actorClass;
-                actorPrototypes[actorClass].maxHealth = actorHealth;
-                actorPrototypes[actorClass].health = actorHealth;
-                actorPrototypes[actorClass].maxSpeed = actorMaxSpeed;
-                actorPrototypes[actorClass].sight = actorSight;
-                actorPrototypes[actorClass].reach = actorReach;
-                actorPrototypes[actorClass].animations = new Dictionary<string, AnimationInfo>();
-                actorAnimations = actor.Elements("Animation").ToList();
-                
-                foreach (XElement actorAnimation in actorAnimations)
-                {
-                    if (this.animationPrototypes.ContainsKey(actorAnimation.Attribute("name").Value))
-                    {
-                        animationName = actorAnimation.Attribute("name").Value;
-                        animationType = actorAnimation.Attribute("type").Value;
-                        actorPrototypes[actorClass].animations[animationType] = animationPrototypes[animationName];
-            }
-       }
-            }
-       }
+        }
 
         public void spawnActor(Actor actor, Point spawnTile, int spawnType)
         {
