@@ -20,6 +20,8 @@ namespace DreamStateMachine.Behaviors
         {
             //itemPrototypes = new Dictionary<string, Actor>();
             weaponPrototypes = new Dictionary<string, Weapon>();
+
+            Actor.OnPickUp += new EventHandler<PickupEventArgs>(Actor_Pickup_Item);
         }
 
         public void initWeaponConfig(ContentManager content, String weaponConfigFile)
@@ -45,7 +47,7 @@ namespace DreamStateMachine.Behaviors
                 weaponStances = new Dictionary<string,Stance>();
                 
                 weaponName = weapon.Attribute("name").Value;
-                weaponTex = content.Load<Texture2D>(weapon.Attribute("textur").Value);
+                weaponTex = content.Load<Texture2D>(weapon.Attribute("texture").Value);
 
                 animations = weapon.Elements("Animation").ToList();
 
@@ -67,12 +69,23 @@ namespace DreamStateMachine.Behaviors
                     drawBox.Y = int.Parse(stance.Attribute("texY").Value);
                     drawBox.Width = int.Parse(stance.Attribute("texWidth").Value);
                     drawBox.Height = int.Parse(stance.Attribute("texHeight").Value);
-                    weaponStances[stanceName] = new Stance(stanceName, gripPoint, drawBox);
+                    weaponStances[stanceName] = new Stance
+                    {
+                        name = stanceName,
+                        gripPoint = gripPoint,
+                        drawBox = drawBox
+                    };
                 }
 
                 weaponPrototypes[weaponName] = new Weapon(weaponName, weaponTex, weaponAnimations, weaponStances);
 
             }
+        }
+
+        private void Actor_Pickup_Item(Object sender, PickupEventArgs pickupEventArgs)
+        {
+            Actor pickingUpActor = (Actor)sender;
+            pickingUpActor.activeWeapon = (Weapon)weaponPrototypes[pickupEventArgs.itemClassName].Clone();
         }
 
     }

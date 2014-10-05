@@ -10,13 +10,13 @@ namespace DreamStateMachine
     {
         public Actor attacker;
         public int damage;
-        public Rectangle attackRect;
+        public List<Rectangle> attackRects;
 
-        public DamageInfo(Actor a, int d, Rectangle aR)
+        public DamageInfo(Actor a, int d, List<Rectangle> aR)
         {
             attacker = a;
             damage = d;
-            attackRect = aR;
+            attackRects = aR;
         }
 
     }

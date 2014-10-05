@@ -7,14 +7,14 @@ using DreamStateMachine.Behaviors;
 
 namespace DreamStateMachine.Actions
 {
-    class Idle:Behavior
+    class Neutral:Behavior
     {
         Actor owner;
         float nextWander;
         Random random;
         World world;
 
-        public Idle(ActionList ownerList, Actor owner)
+        public Neutral(ActionList ownerList, Actor owner)
         {
             this.ownerList = ownerList;
             this.owner = owner;

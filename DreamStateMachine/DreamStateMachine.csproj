@@ -50,19 +50,21 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Game\Actor\Animations\Idle.cs" />
+    <Compile Include="Game\Events\PickupEventArgs.cs" />
+    <Compile Include="Game\Input\DebugCommand.cs" />
     <Compile Include="Libs\ActionList\Action.cs" />
     <Compile Include="Libs\ActionList\ActionList.cs" />
     <Compile Include="Game\Actor\Actor.cs" />
     <Compile Include="Game\Actor\ActorManager.cs" />
     <Compile Include="Game\Actor\Animations\Attack.cs" />
-    <Compile Include="Game\Actor\Animations\Punch.cs" />
     <Compile Include="Game\Actor\Animations\Recoil.cs" />
     <Compile Include="Game\Actor\Animations\Walk.cs" />
     <Compile Include="Game\AI\Behavior.cs" />
     <Compile Include="Game\AI\Behaviors\Aggravated.cs" />
     <Compile Include="Game\AI\Behaviors\Alert.cs" />
     <Compile Include="Game\AI\Behaviors\Follow.cs" />
-    <Compile Include="Game\AI\Behaviors\Idle.cs" />
+    <Compile Include="Game\AI\Behaviors\Neutral.cs" />
     <Compile Include="Game\AI\Behaviors\Stunned.cs" />
     <Compile Include="Game\AI\Behaviors\Wander.cs" />
     <Compile Include="Game\Rendering\Camera.cs" />

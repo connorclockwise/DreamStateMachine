@@ -98,7 +98,7 @@ namespace DreamStateMachine
 
         public Action begin()
         {
-            return actions.ElementAt(0);
+            return actions.ElementAtOrDefault(0);
         }
 
         public Action end()
