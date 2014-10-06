@@ -11,30 +11,53 @@ namespace DreamStateMachine.Actions
     {
         AnimationInfo animationInfo;
         Actor owner;
+        Stance curStance;
         Vector2 walkDirection;
+        FrameInfo frameInfo;
         double dotProduct;
 
         public Walk(ActionList ownerList, Actor owner)
         {
             this.ownerList = ownerList;
             this.owner = owner;
-            if (owner.activeWeapon != null)
-            {
-                animationInfo = owner.animations[owner.activeWeapon.animations["walk"]];
-            }
-            else
-            {
-                if (owner.animations.ContainsKey("walk"))
-                    animationInfo = owner.animations["walk"];
-                else
-                    animationInfo = new AnimationInfo("default_walk", 10, 12, 0, 0);
-                duration = (float)animationInfo.frames / animationInfo.fps;
-            }
+            setAnimationInfo();
+            isBlocking = true;
+            duration = ((float)animationInfo.frameCount) / animationInfo.fps;
+            curFrame = 0;
+            lastFrame = -1;
         }
 
         //dummy constructor
         public Walk()
         {
+        }
+
+        private void setAnimationInfo()
+        {
+            if (owner.activeWeapon != null)
+            {
+                animationInfo = owner.animations[owner.activeWeapon.animations["holding_weapon_walk"]];
+            }
+            else
+            {
+                animationInfo = owner.animations["unarmed_walk"];
+            }
+        }
+
+        public override void onEnterFrame(int frame)
+        {
+            setAnimationInfo();
+            owner.setAnimationFrame(frame, animationInfo.texRow);
+            if (frame < animationInfo.frames.Length)
+            {
+                frameInfo = animationInfo.frames[frame];
+                if (owner.activeWeapon != null)
+                {
+                    owner.gripPoint = frameInfo.gripPoint;
+                    owner.activeWeapon.setStance(frameInfo.stance);
+                    owner.activeWeapon.frameRotation = frameInfo.rotation;
+                }
+            }
         }
 
         override public void onStart()
@@ -49,38 +72,46 @@ namespace DreamStateMachine.Actions
             else
                 ownerList.remove(this);
 
-            owner.setAnimationFrame(0, 0);
+            //owner.setAnimationFrame(0, animationInfo.texRow);
             
 
         }
 
         override public void update(float dt)
         {
-            walkDirection.X = owner.velocity.X;
-            walkDirection.Y = owner.velocity.Y;
-            walkDirection.Normalize();
-            dotProduct = Vector2.Dot(walkDirection, owner.sightVector);
-            if (owner.isWalking && dotProduct > .5)
-            {
-                elapsed += dt;
-                currentFrame = (int)(elapsed * animationInfo.fps);
-                owner.setAnimationFrame(currentFrame, 0);
-            }
-            else if (owner.isWalking && dotProduct < -.5)
-            {
-                elapsed -= dt;
-                if(elapsed <= 0)
+            
+            if (owner.isWalking){
+
+                curFrame = (int)(elapsed * animationInfo.fps);
+                if (curFrame >= animationInfo.frameCount)
+                    curFrame = 0;
+
+                if (curFrame != lastFrame)
                 {
-                    elapsed = (duration - .0001f);
+                    onEnterFrame(curFrame);
+                    lastFrame = curFrame;
                 }
-                currentFrame = (int)(elapsed * animationInfo.fps);
-                owner.setAnimationFrame(currentFrame, 0);
-            }
-            else
-            {
+
+                walkDirection.X = owner.velocity.X;
+                walkDirection.Y = owner.velocity.Y;
+                walkDirection.Normalize();
+                dotProduct = Vector2.Dot(walkDirection, owner.sightVector);
+
+                if (dotProduct > .5)
+                {
+                    elapsed += dt;           
+                }
+                else if (dotProduct < -.5)
+                {
+                    elapsed -= dt;
+                    if (elapsed <= 0)
+                    {
+                        elapsed = (duration - .0001f);
+                    }
+                }
+            }else{
                 this.onEnd();
             }
-
         }
     }
 }
