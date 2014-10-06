@@ -37,8 +37,8 @@ namespace DreamStateMachine.Behaviors
             else if (e.spawnType == 2)
             {
                 ActionList behaviorList = new ActionList(spawnedActor);
-                Idle idle = new Idle(behaviorList, spawnedActor);
-                behaviorList.pushFront(idle);
+                Neutral neutral = new Neutral(behaviorList, spawnedActor);
+                behaviorList.pushFront(neutral);
                 Alert alert = new Alert(behaviorList, spawnedActor, protagonist);
                 behaviorList.pushFront(alert);
                 behaviorLists[spawnedActor] = behaviorList;

@@ -8,7 +8,8 @@ namespace DreamStateMachine
 {
     abstract class Animation:Action
     {
-        public delegate void onEnterFrame();
-        public int currentFrame;
+        public abstract void onEnterFrame(int frame);
+        public int curFrame;
+        public int lastFrame;
     };
 }
