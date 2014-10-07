@@ -75,6 +75,7 @@ namespace DreamStateMachine
             var worlds = doc.Element("Worlds").Elements("World");
 
             String worldName;
+            String enemyType;
             Texture2D texture;
             int width;
             int height;
@@ -83,11 +84,12 @@ namespace DreamStateMachine
             foreach (XElement world in worlds)
             {
                 worldName = world.Attribute("worldName").Value;
+                enemyType = world.Attribute("enemyType").Value;
                 texture = content.Load<Texture2D>(world.Attribute("worldTexture").Value);
                 width = int.Parse(world.Attribute("width").Value);
                 height = int.Parse(world.Attribute("height").Value);
                 tileSize = int.Parse(world.Attribute("tileSize").Value);
-                worldPrototypes[worldName] = new WorldConfig(worldName, texture, width, height, tileSize);
+                worldPrototypes[worldName] = new WorldConfig(worldName, enemyType, texture, width, height, tileSize);
             }
         }
 
