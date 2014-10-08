@@ -11,10 +11,9 @@ namespace DreamStateMachine.Actions
     {
         Actor owner;
         List<Point> searchPath;
-        World world;
         Random random;
         Point ownerTilePos;
-        Point pathTilePos;
+        Rectangle pathTileRectangle;
        
 
 
@@ -27,8 +26,8 @@ namespace DreamStateMachine.Actions
             searchPath = new List<Point>();
             nextPathPoint = new Point(0, 0);
             isBlocking = true;
-            world = owner.world;
             random = new Random();
+            pathTileRectangle = new Rectangle(0, 0, owner.world.tileSize / 4, owner.world.tileSize / 4);
         }
 
         override public void onStart()
@@ -36,12 +35,12 @@ namespace DreamStateMachine.Actions
             Point randomPos;
             randomPos = new Point(owner.hitBox.Center.X + random.Next(-200, 200), owner.hitBox.Center.Y + random.Next(-200, 200));
 
-            while (!world.isInBounds(randomPos))
+            while (!owner.world.isInBounds(randomPos))
             {
                 randomPos = new Point(owner.hitBox.Center.X + random.Next(-120, 120), owner.hitBox.Center.Y + random.Next(-120, 120));
             }
 
-            path = world.findPath(owner.hitBox.Center, randomPos);
+            path = owner.world.findPath(owner.hitBox.Center, randomPos);
 
             if (path.Count > 0)
                 nextPathPoint = path[0];
@@ -57,9 +56,10 @@ namespace DreamStateMachine.Actions
 
         override public void update(float dt)
         {
-            ownerTilePos = new Point(owner.hitBox.Center.X / world.tileSize, owner.hitBox.Center.Y / world.tileSize);
-            pathTilePos = new Point(nextPathPoint.X / world.tileSize, nextPathPoint.Y / world.tileSize);
-            if (ownerTilePos.X == pathTilePos.X && ownerTilePos.Y == pathTilePos.Y)
+            //ownerTilePos = new Point(owner.hitBox.Center.X / world.tileSize, owner.hitBox.Center.Y / world.tileSize);
+            pathTileRectangle.X = nextPathPoint.X - pathTileRectangle.Width / 2;
+            pathTileRectangle.Y = nextPathPoint.Y - pathTileRectangle.Height / 2;
+            if (owner.hitBox.Intersects(pathTileRectangle))
             {
                 if (path.Count > 0)
                 {
@@ -75,7 +75,7 @@ namespace DreamStateMachine.Actions
             {
                 Vector2 movement = new Vector2(nextPathPoint.X - owner.hitBox.Center.X, nextPathPoint.Y - owner.hitBox.Center.Y);
                 movement.Normalize();
-                movement *= 2;
+                movement *= owner.maxSpeed / 2;
                 owner.velocity.X = movement.X;
                 owner.velocity.Y = movement.Y;
                 owner.isWalking = true;

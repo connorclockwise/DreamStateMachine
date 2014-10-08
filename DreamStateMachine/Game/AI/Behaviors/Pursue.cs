@@ -7,32 +7,31 @@ using DreamStateMachine.Behaviors;
 
 namespace DreamStateMachine.Actions
 {
-    class Follow:Behavior
+    class Pursue:Behavior
     {
         ActionList ownerList;
-        ActorManager actorManager;
         Actor owner;
         Actor target;
-        World world;
         Point ownerTilePos;
         Point pathTilePos;
+        TraceInfo traceInfo;
+        Rectangle pathTileRectangle;
 
-        public Follow(ActionList ownerList, Actor actor, Actor toFollow, World w, ActorManager aC)
+        public Pursue(ActionList ownerList, Actor owner, Actor toFollow)
         {
-            actorManager = aC;
             this.ownerList = ownerList;
             this.owner = owner;
             target = toFollow;
-            world = w;
             nextPathPoint = new Point(0,0);
             elapsed = 0;
             duration = -1;
             isBlocking = true;
+            pathTileRectangle = new Rectangle(0, 0, owner.world.tileSize / 4, owner.world.tileSize / 4);
         }
 
         override public void onStart()
         {
-            path = world.findPath(owner.hitBox.Center, target.hitBox.Center);
+            path = owner.world.findPath(owner.hitBox.Center, target.hitBox.Center);
             if (path.Count > 0)
                 nextPathPoint = path[0];
             else
@@ -46,10 +45,17 @@ namespace DreamStateMachine.Actions
 
         override public void update(float dt)
         {
-            ownerTilePos = new Point(owner.hitBox.Center.X / world.tileSize, owner.hitBox.Center.Y / world.tileSize);
-            pathTilePos = new Point(nextPathPoint.X / world.tileSize, nextPathPoint.Y / world.tileSize);
-            if (ownerTilePos.X == pathTilePos.X && ownerTilePos.Y == pathTilePos.Y)
+            //traceInfo = owner.world.traceWorld(owner.hitBox.Center, target.hitBox.Center);
+            
+
+            pathTileRectangle.X = nextPathPoint.X - pathTileRectangle.Width / 2;
+            pathTileRectangle.Y = nextPathPoint.Y - pathTileRectangle.Height / 2;
+            if (owner.hitBox.Intersects(pathTileRectangle))
             {
+                if (owner.world.isInSight(owner, target.hitBox.Center))
+                {
+                    onEnd();
+                }
                 if (path.Count > 0)
                 {
                     nextPathPoint = path.ElementAt(0);
@@ -60,12 +66,11 @@ namespace DreamStateMachine.Actions
                     onEnd();
                 }
             }
-            else 
+            else
             {
                 Vector2 movement = new Vector2(nextPathPoint.X - owner.hitBox.Center.X, nextPathPoint.Y - owner.hitBox.Center.Y);
                 movement.Normalize();
-                movement *= 5;
-                //owner.movementIntent /= 3f;
+                movement *= owner.maxSpeed;
                 owner.velocity.X = movement.X;
                 owner.velocity.Y = movement.Y;
                 owner.isWalking = true;

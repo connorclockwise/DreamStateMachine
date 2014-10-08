@@ -27,7 +27,7 @@ namespace DreamStateMachine.Actions
         override public void onStart()
         {
             //owner.setBodyAnimationFrame(0, 0);
-            nextWander = random.Next(6, 15);
+            nextWander = random.Next(4, 9);
         }
 
         override public void onEnd()
@@ -41,7 +41,7 @@ namespace DreamStateMachine.Actions
             if (elapsed > nextWander)
             {
                 elapsed = 0;
-                nextWander = random.Next(3, 10);
+                nextWander = random.Next(4, 9);
                 Wander wander = new Wander(ownerList, owner);
                 if (!ownerList.has(wander))
                 {

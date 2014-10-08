@@ -14,7 +14,13 @@ namespace DreamStateMachine.Actions
         Point attackPos;
         Vector2 attackVector;
         Vector2 movement;
-        float coolDownTimer;
+        float attackCoolDown;
+        float aggroCoolDown;
+        float pursueCountDown;
+        int curTick;
+        int lastTick;
+        float thinkRate;
+        TraceInfo traceInfo;
 
         public Aggravated(ActionList ownerList, Actor owner, Actor toFollow)
         {
@@ -25,9 +31,9 @@ namespace DreamStateMachine.Actions
             nextPathPoint = new Point(0,0);
             elapsed = 0;
             duration = -1;
-            coolDownTimer = 0;
+            attackCoolDown = 0;
+            pursueCountDown = 2.5f;
             isBlocking = true;
-            //toFollow.onHurt += new EventHandler<AttackEventArgs>(Actor_Hurt);
         }
 
         //dummy constructor
@@ -46,47 +52,60 @@ namespace DreamStateMachine.Actions
 
         override public void update(float dt)
         {
-            //Console.WriteLine(path.Count);
-            double distance = Math.Sqrt(Math.Pow(target.hitBox.Center.X - owner.hitBox.Center.X, 2) + Math.Pow(target.hitBox.Center.Y - owner.hitBox.Center.Y, 2));
-            if (distance > owner.reach)
+            if (pursueCountDown >= 0)
             {
+                pursueCountDown -= dt;
+
                 attackVector = new Vector2(owner.hitBox.Center.X - target.hitBox.Center.X, owner.hitBox.Center.Y - target.hitBox.Center.Y);
                 attackVector.Normalize();
                 attackVector *= owner.reach;
                 attackVector.X += target.hitBox.Center.X;
                 attackVector.Y += target.hitBox.Center.Y;
-                attackPos = new Point((int)attackVector.X, (int)attackVector.Y);
-                movement = new Vector2((float)(attackPos.X - owner.hitBox.Center.X), (float)(attackPos.Y - owner.hitBox.Center.Y));
-                movement.Normalize();
-                movement *= owner.maxSpeed;
-                //owner.movementIntent /= 3f;
-                owner.velocity.X = movement.X;
-                owner.velocity.Y = movement.Y;
-                owner.isWalking = true;
-                owner.setGaze(attackPos);
-            }else{
-                if (coolDownTimer <= 0)
+                double distance = Math.Sqrt(Math.Pow(attackVector.X - owner.hitBox.Center.X, 2) + Math.Pow(attackVector.Y - owner.hitBox.Center.Y, 2));
+                if (distance > owner.reach)
                 {
-                    owner.setGaze(target.hitBox.Center);
-                owner.Light_Attack();
-                //Punch punch = new Punch(owner.animationList, owner);
-                //Recoil recoil = new Recoil(owner.animationList, owner);
-                //if (!owner.animationList.has(punch) && !owner.animationList.has(recoil))
-                //{
-                //    owner.animationList.pushFront(punch);
-                //}
-                    coolDownTimer = (float)(6 / 12f);
+                    attackPos = new Point((int)attackVector.X, (int)attackVector.Y);
+                    movement = new Vector2((float)(attackPos.X - owner.hitBox.Center.X), (float)(attackPos.Y - owner.hitBox.Center.Y));
+                    movement.Normalize();
+                    movement *= owner.maxSpeed;
+                    owner.velocity.X = movement.X;
+                    owner.velocity.Y = movement.Y;
+                    owner.isWalking = true;
+                    owner.setGaze(attackPos);
                 }
                 else
                 {
-                    coolDownTimer -= dt;
+                    if (attackCoolDown <= 0)
+                    {
+                        owner.setGaze(target.hitBox.Center);
+                        owner.Light_Attack();
+                        attackCoolDown = (float)(8 / 12f);
+                    }
+                    else
+                    {
+                        attackCoolDown -= dt;
+                    }
                 }
+                
+            }
+            else
+            {
+                elapsed = 0;
+                traceInfo = owner.world.traceWorld(owner.hitBox.Center, target.hitBox.Center);
+                if (traceInfo.hitWorld)
+                {
+                    Pursue pursue = new Pursue(ownerList, owner, target);
+                    ownerList.pushFront(pursue);
+                    //onEnd();
+                }
+                else
+                    pursueCountDown = 2.5f;
             }
         }
 
-        void Actor_Hurt(Object sender, AttackEventArgs attackEventArgs)
-        {
-            this.onEnd();
-        }
+        //void Actor_Hurt(Object sender, AttackEventArgs attackEventArgs)
+        //{
+        //    this.onEnd();
+        //}
     }
 }

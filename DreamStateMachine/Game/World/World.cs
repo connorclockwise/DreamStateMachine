@@ -31,9 +31,9 @@ namespace DreamStateMachine
 
         public void draw(SpriteBatch spriteBatch, Rectangle drawSpace, Texture2D debugTex, bool debuging = false)
         {
-            Texture2D floorTileTex = this.getFloorTileTex();
-            int[,] tileMap = this.getTileMap();
-            int tileSize = this.getTileSize();
+            Texture2D floorTileTex = this.floorTiles;
+            int[,] tileMap = this.tileMap;
+            int tileSize = this.tileSize;
             Rectangle screenRectangle;
             Rectangle sourceRectangle;
 
@@ -90,7 +90,7 @@ namespace DreamStateMachine
                     //   tileMap[curNode.point.Y - 1, curNode.point.X] == 5)
                     if(this.tileIsInBounds(curNode.point.X - 1, curNode.point.Y - 1) &&
                         this.tileIsInBounds(curNode.point.X - 1, curNode.point.Y) &&
-                        this.tileIsInBounds(curNode.point.X - 1, curNode.point.Y))
+                        this.tileIsInBounds(curNode.point.X, curNode.point.Y - 1))
                     {
                         Point openPoint = new Point(curNode.point.X - 1, curNode.point.Y - 1);
                         PathNode openPathNode = new PathNode(curNode, openPoint, target, curNode.movementCost + 14);
@@ -307,28 +307,6 @@ namespace DreamStateMachine
             return tileMap;
         }
 
-        public Texture2D getFloorTileTex()
-        {
-            return this.floorTiles;
-        }
-
-        public int getTileSize()
-        {
-            return tileSize;
-        }
-
-        public Point getSpawnPos()
-        {
-            Point spawnTile = this.getSpawnTile();
-            Point spawnPos = new Point(spawnTile.X * tileSize + tileSize / 2, spawnTile.Y * tileSize + tileSize / 2);
-            return spawnPos;
-        }
-
-        public Point getSpawnTile()
-        {
-            return spawnTile;
-        }
-
         public List<SpawnFlag> getSpawns()
         {
             return spawns;
@@ -378,18 +356,6 @@ namespace DreamStateMachine
         public void setSpawns(List<SpawnFlag> s)
         {
             spawns = s;
-        }
-
-        public void useTileAtPoint(Point point)
-        {
-            Point tilePos = new Point(point.X / this.tileSize, point.Y / this.tileSize);
-            Console.WriteLine("Tile being used" + tileMap[tilePos.Y, tilePos.X]);
-        }
-
-        public void useTileAtPoint(int x, int y)
-        {
-            Point tilePos = new Point(x / this.tileSize, y / this.tileSize);
-            Console.WriteLine("Tile being used" + tileMap[tilePos.Y, tilePos.X]);
         }
 
         public TraceInfo traceWorld(Point origin, Point destination)

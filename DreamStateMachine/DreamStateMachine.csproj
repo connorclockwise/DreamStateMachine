@@ -63,7 +63,7 @@
     <Compile Include="Game\AI\Behavior.cs" />
     <Compile Include="Game\AI\Behaviors\Aggravated.cs" />
     <Compile Include="Game\AI\Behaviors\Alert.cs" />
-    <Compile Include="Game\AI\Behaviors\Follow.cs" />
+    <Compile Include="Game\AI\Behaviors\Pursue.cs" />
     <Compile Include="Game\AI\Behaviors\Neutral.cs" />
     <Compile Include="Game\AI\Behaviors\Stunned.cs" />
     <Compile Include="Game\AI\Behaviors\Wander.cs" />
