@@ -175,7 +175,7 @@
     <Content Include="Content\sfx\pickUp.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\sfx\Sounds.xml">
+    <Content Include="Content\Sounds.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\sfx\Music.xml">

@@ -110,7 +110,7 @@ namespace DreamStateMachine
             worldManager = new WorldManager(random);
             worldManager.initWorldConfig(Content, "Content/Worlds.xml");
             worldManager.initStartingWorld();
-            SoundManager.Instance.initSoundConfig(Content, "Content/sfx/Sounds.xml");
+            SoundManager.Instance.initSoundConfig(Content, "Content/Sounds.xml");
             actorController = new ActorController();
             actorManager = new ActorManager();
             actorManager.initAnimationConfig(Content, "Content/Animations.xml");

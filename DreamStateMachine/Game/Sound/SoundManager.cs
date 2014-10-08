@@ -14,7 +14,7 @@ namespace DreamStateMachine
     {
         private static volatile SoundManager instance;
         private static object syncRoot = new object();
-        static Dictionary<int, Sound> soundPrototypes;
+        static Dictionary<String, Sound> soundPrototypes;
 
         private SoundManager()
         {
@@ -39,26 +39,22 @@ namespace DreamStateMachine
 
         public void initSoundConfig(ContentManager content, String soundConfigFile)
         {
-            soundPrototypes = new Dictionary<int, Sound>();
+            soundPrototypes = new Dictionary<String, Sound>();
             var doc = XDocument.Load(soundConfigFile);
             var sounds = doc.Element("Sounds").Elements("Sound");
             String soundClass;
             SoundEffect effect;
-            int soundID;
             foreach (XElement sound in sounds)
             {
                 soundClass = sound.Attribute("className").Value;
                 effect = content.Load<SoundEffect>(sound.Attribute("filePath").Value);
-                soundID = int.Parse(sound.Attribute("soundID").Value);
-                soundPrototypes[soundID] = new Sound(effect);
-                soundPrototypes[soundID].className = soundClass;
-                soundPrototypes[soundID].soundID = soundID;
+                soundPrototypes[soundClass] = new Sound(effect);
             }
         }
 
-        public void playSound(int soundID)
+        public void playSound(String soundClass)
         {
-            soundPrototypes[soundID].playSound();
+            soundPrototypes[soundClass].playSound();
         }
     }
 }

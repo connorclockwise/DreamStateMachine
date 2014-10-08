@@ -2,19 +2,16 @@
 <Sounds>
   <Sound
     className="death"
-    filePath="sfx/death.wav"
-    soundID="1">
+    filePath="sfx/death.wav">
   </Sound>
 
   <Sound
     className="pickup"
-    filePath="sfx/pickUp.wav"
-    soundID="2">
+    filePath="sfx/pickUp.wav">
   </Sound>
 
   <Sound
     className="hurt1"
-    filePath="sfx/hurt1.wav"
-    soundID="3">
+    filePath="sfx/hurt1.wav">
   </Sound>
 </Sounds>
