@@ -14,7 +14,6 @@ namespace DreamStateMachine
         public List<IDrawable> actors;
         public Dictionary<IDrawable,IDrawable> healthBars;
         Actor protagonist;
-        HealthBar healthBar;
         SpriteBatch spriteBatch;
         bool debug; 
         Texture2D debugTex;
@@ -29,7 +28,7 @@ namespace DreamStateMachine
             //actors = new List<Actor>();
             actors = new List<IDrawable>();
             healthBars = new Dictionary<IDrawable, IDrawable>();
-            debug = true;
+            debug = false;
             debugTex = debugSq;
             this.healthBarTexture = healthBarTexture;
 
