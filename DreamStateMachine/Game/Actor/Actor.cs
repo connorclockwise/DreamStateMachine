@@ -268,7 +268,6 @@ namespace DreamStateMachine
 
         public void setPos(int x, int y)
         {
-            //posOffset = new Point();
             posOffset.X = x - hitBox.X;
             posOffset.Y = y - hitBox.Y;
             hitBox.X += posOffset.X;
@@ -323,8 +322,10 @@ namespace DreamStateMachine
                     {
                         this.onKill(damageInfo);
                     }
+                    return;
                 }
             }
+            
         }
 
         virtual public void update(float dt)
@@ -360,8 +361,6 @@ namespace DreamStateMachine
                     this.activeWeapon.calcWeaponPos(this);
                 }
             }
-            
-            //animationList.update(dt);
         }
     }
 }

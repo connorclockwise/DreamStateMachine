@@ -2,26 +2,31 @@
 <Worlds>
   <World
     worldName="forest"
-    enemyType="skeleton"
     worldTexture="GrassFloor"
     width="50"
     height="50"
     tileSize="64">
+    <Enemy class="skeleton">
+    </Enemy>
   </World>
   <World
     worldName="temple"
-    enemyType="skeleton"
     worldTexture="TempleFloor"
     width="50"
     height="50"
     tileSize="64">
+    <Enemy class="skeleton">
+    </Enemy>
   </World>
   <World
     worldName="tundra"
-    enemyType="golem"
     worldTexture="TundraFloor"
     width="50"
     height="50"
     tileSize="64">
+    <Enemy class="golem">
+    </Enemy>
+    <Enemy class="penguin">
+    </Enemy>
   </World>
 </Worlds>

@@ -51,52 +51,46 @@ namespace DreamStateMachine.Actions
 
         override public void onEnd()
         {
-            //owner.setAnimationFrame(0, 0);
+            //owner.setAnimationFrame(3, 0);
             ownerList.remove(this);
+
         }
 
         public override void onEnterFrame(int frame)
         {
-            setAnimationInfo();
+            //setAnimationInfo();
             frameIndex.X = animationInfo.texColumn + curFrame;
             frameIndex.Y = animationInfo.texRow;
             owner.setAnimationFrame(frameIndex.X, frameIndex.Y);
-
-
-            if (frame < animationInfo.frames.Length)
+            frameInfo = animationInfo.frames[frame];
+            if (owner.activeWeapon != null)
             {
-                frameInfo = animationInfo.frames[frame];
-                if (owner.activeWeapon != null)
-                {
-                    owner.gripPoint = frameInfo.gripPoint;
-                    owner.activeWeapon.setStance(frameInfo.stance);
-                    owner.activeWeapon.frameRotation = frameInfo.rotation;
-                    
-                }
-                if (frameInfo.attackPoints != null && frameInfo.attackPoints.Count > 0)
-                {
-                    attackBoxes = new List<Rectangle>();
-                    foreach (Rectangle attackPoint in frameInfo.attackPoints)
-                    {
-                        Point offset = new Point(attackPoint.X, attackPoint.Y);
-                        float s = (float)(Math.Sin(owner.bodyRotation));
-                        float c = (float)(Math.Cos(owner.bodyRotation));
-                        Point newOffset = new Point((int)(offset.X * c - offset.Y * s), (int)(offset.X * s + offset.Y * c));
-                        damageRect = new Rectangle();
-                        damageRect.Width = attackPoint.Width;
-                        damageRect.Height = attackPoint.Height;
-                        damageRect.X = owner.hitBox.Center.X + newOffset.X - damageRect.Width / 2;
-                        damageRect.Y = owner.hitBox.Center.Y + newOffset.Y - damageRect.Height / 2;
-                        
-                        attackBoxes.Add(damageRect);
-                    }
-                    DamageInfo damageInfo = new DamageInfo(owner, frameInfo.attackDamage, this.attackBoxes);
-                    owner.onAttack(damageInfo);
-                    attackBoxes.Clear();
-                }
-
-
+                owner.gripPoint = frameInfo.gripPoint;
+                owner.activeWeapon.setStance(frameInfo.stance);
+                owner.activeWeapon.frameRotation = frameInfo.rotation;
             }
+            if (frameInfo.attackPoints != null && frameInfo.attackPoints.Count > 0)
+            {
+                attackBoxes = new List<Rectangle>();
+                foreach (Rectangle attackPoint in frameInfo.attackPoints)
+                {
+                    Point offset = new Point(attackPoint.X, attackPoint.Y);
+                    float s = (float)(Math.Sin(owner.bodyRotation));
+                    float c = (float)(Math.Cos(owner.bodyRotation));
+                    Point newOffset = new Point((int)(offset.X * c - offset.Y * s), (int)(offset.X * s + offset.Y * c));
+                    damageRect = new Rectangle();
+                    damageRect.Width = attackPoint.Width;
+                    damageRect.Height = attackPoint.Height;
+                    damageRect.X = owner.hitBox.Center.X + newOffset.X - damageRect.Width / 2;
+                    damageRect.Y = owner.hitBox.Center.Y + newOffset.Y - damageRect.Height / 2;
+
+                    attackBoxes.Add(damageRect);
+                }
+                DamageInfo damageInfo = new DamageInfo(owner, frameInfo.attackDamage, this.attackBoxes);
+                owner.onAttack(damageInfo);
+                attackBoxes.Clear();
+            }
+
         }
 
         override public void update(float dt)
@@ -113,7 +107,7 @@ namespace DreamStateMachine.Actions
             }
             else
             {
-                onEnd();
+                isFinished = true;
             }
         }
 

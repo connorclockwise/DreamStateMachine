@@ -19,6 +19,26 @@
       </AttackBox>
      </Frame>
   </Animation>
+
+  <Animation
+    name="peck"
+    type="unarmed_light_attack"
+    attackType="single_box_attack"
+    holdingWeapon="false"
+    frames="5"
+    fps="12"
+    columnIndex="0"
+    rowIndex="1">
+    <Frame
+    frameIndex="4"
+    damage="25">
+      <AttackBox viewOffsetX="0"
+      viewOffsetY="15"
+      attackWidth="30"
+      attackHeight="30">
+      </AttackBox>
+    </Frame>
+  </Animation>
   
   <Animation
     name="over_head_smash"
@@ -47,6 +67,17 @@
     attackType="none"
     holdingWeapon="false"
     frames="10"
+    fps="12"
+    columnIndex="0"
+    rowIndex="0">
+  </Animation>
+
+  <Animation
+    name="waddle"
+    type="unarmed_walk"
+    attackType="none"
+    holdingWeapon="false"
+    frames="6"
     fps="12"
     columnIndex="0"
     rowIndex="0">

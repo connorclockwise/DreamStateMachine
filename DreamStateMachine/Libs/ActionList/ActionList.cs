@@ -38,10 +38,9 @@ namespace DreamStateMachine
 
                 curAction.update(dt);
 
-                if (curAction.duration <= curAction.elapsed && curAction.duration != -1)
+                if ((curAction.duration <= curAction.elapsed && curAction.duration != -1) || curAction.isFinished)
                     curAction.onEnd();
-
-                if (curAction.isBlocking)
+                else if (curAction.isBlocking)
                     i = actions.Count;
 
                 //Console.WriteLine("Elapsed:" + curAction.elapsed);

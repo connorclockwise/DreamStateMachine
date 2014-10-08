@@ -269,10 +269,10 @@ namespace DreamStateMachine
         //Returns an array of enumerated tiles.
         public World generateWorld(WorldConfig worldConfig, int numEnemies)
         {
-            return generateWorld(worldConfig.texture, worldConfig.enemyType, worldConfig.width, worldConfig.height, worldConfig.tileSize, numEnemies);
+            return generateWorld(worldConfig.texture, worldConfig.enemyClasses, worldConfig.width, worldConfig.height, worldConfig.tileSize, numEnemies);
         }
 
-        public World generateWorld(Texture2D floorTex, String enemyType, int width, int height, int tileSize, int numEnemies)
+        public World generateWorld(Texture2D floorTex, List<String> enemyClasses, int width, int height, int tileSize, int numEnemies)
         {
             rooms = new List<Room>();
             spawns = new List<SpawnFlag>();
@@ -352,12 +352,14 @@ namespace DreamStateMachine
             }
 
             Room room;
+            String enemyClass;
             for (int i = 0; i < rooms.Count; i++)
             {
                 room = rooms.ElementAt(i);
                 if (i != 0)
                 {
-                    placeEnemy(collisionMap, room, spawns, enemyType);
+                    enemyClass = enemyClasses[random.Next(0,enemyClasses.Count)];
+                    placeEnemy(collisionMap, room, spawns, enemyClass);
                 }
                 if (i == rooms.Count - 1)
                 {

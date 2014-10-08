@@ -71,11 +71,12 @@ namespace DreamStateMachine
 
         public void initWorldConfig(ContentManager content, String actorConfigFile)
         {
-            var doc = XDocument.Load(actorConfigFile);
-            var worlds = doc.Element("Worlds").Elements("World");
+            XDocument doc = XDocument.Load(actorConfigFile);
+            List<XElement> worlds = doc.Element("Worlds").Elements("World").ToList();
+            List<XElement> enemies;
 
             String worldName;
-            String enemyType;
+            List<String> enemyClasses;
             Texture2D texture;
             int width;
             int height;
@@ -84,12 +85,18 @@ namespace DreamStateMachine
             foreach (XElement world in worlds)
             {
                 worldName = world.Attribute("worldName").Value;
-                enemyType = world.Attribute("enemyType").Value;
+                enemies = world.Elements("Enemy").ToList();
                 texture = content.Load<Texture2D>(world.Attribute("worldTexture").Value);
                 width = int.Parse(world.Attribute("width").Value);
                 height = int.Parse(world.Attribute("height").Value);
                 tileSize = int.Parse(world.Attribute("tileSize").Value);
-                worldPrototypes[worldName] = new WorldConfig(worldName, enemyType, texture, width, height, tileSize);
+
+                enemyClasses = new List<String>();
+                foreach (XElement enemy in enemies)
+                {
+                    enemyClasses.Add(enemy.Attribute("class").Value);
+                }
+                worldPrototypes[worldName] = new WorldConfig(worldName, enemyClasses, texture, width, height, tileSize);
             }
         }
 
