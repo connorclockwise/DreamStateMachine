@@ -12,7 +12,6 @@ namespace DreamStateMachine.Actions
         Actor owner;
         List<Point> searchPath;
         Random random;
-        Point ownerTilePos;
         Rectangle pathTileRectangle;
        
 

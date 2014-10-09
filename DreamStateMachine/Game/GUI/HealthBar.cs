@@ -21,8 +21,8 @@ namespace DreamStateMachine
         public HealthBar(Actor actor, Texture2D barTex)
         {
             this.actor = actor;
-            bar = new Rectangle(0,0, 30, 10);
-            barContainer = new Rectangle(0, 0, 30, 10);
+            bar = new Rectangle(0, 0, 30, barHeight);
+            barContainer = new Rectangle(0, 0, 30, barHeight);
             barTexture = barTex;
         }
 

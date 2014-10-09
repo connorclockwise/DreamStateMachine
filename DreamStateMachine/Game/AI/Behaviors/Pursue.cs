@@ -12,9 +12,6 @@ namespace DreamStateMachine.Actions
         ActionList ownerList;
         Actor owner;
         Actor target;
-        Point ownerTilePos;
-        Point pathTilePos;
-        TraceInfo traceInfo;
         Rectangle pathTileRectangle;
 
         public Pursue(ActionList ownerList, Actor owner, Actor toFollow)

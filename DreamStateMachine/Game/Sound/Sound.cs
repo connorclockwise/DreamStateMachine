@@ -13,9 +13,6 @@ namespace DreamStateMachine
     class Sound
     {
         public SoundEffect effect;
-        public String className;
-
-        public int soundID;
 
         public Sound(SoundEffect effect)
         {

@@ -11,7 +11,6 @@ namespace DreamStateMachine.Actions
     {
         AnimationInfo animationInfo;
         Actor owner;
-        Stance curStance;
         Vector2 walkDirection;
         FrameInfo frameInfo;
         double dotProduct;

@@ -28,7 +28,6 @@ namespace DreamStateMachine
         AIController aiController;
         ItemManager itemManager;
         PhysicsController physicsController;
-        SoundManager soundManager;
         WorldManager worldManager;
 
         Actor player;
@@ -47,7 +46,7 @@ namespace DreamStateMachine
         InputHandler inputHandler;
 
         bool isLoadingWorld;
-        bool usingGamePad = false;
+        //bool usingGamePad = false;
 
         public delegate void GameUpdate(GameTime gameTime);
         public delegate void GameDraw(GameTime gameTime);

@@ -15,11 +15,7 @@ namespace DreamStateMachine.Actions
         Vector2 attackVector;
         Vector2 movement;
         float attackCoolDown;
-        float aggroCoolDown;
         float pursueCountDown;
-        int curTick;
-        int lastTick;
-        float thinkRate;
         TraceInfo traceInfo;
 
         public Aggravated(ActionList ownerList, Actor owner, Actor toFollow)
@@ -32,7 +28,7 @@ namespace DreamStateMachine.Actions
             elapsed = 0;
             duration = -1;
             attackCoolDown = 0;
-            pursueCountDown = 2.5f;
+            pursueCountDown = (2.5f);
             isBlocking = true;
         }
 
@@ -79,7 +75,7 @@ namespace DreamStateMachine.Actions
                     {
                         owner.setGaze(target.hitBox.Center);
                         owner.Light_Attack();
-                        attackCoolDown = (float)(8 / 12f);
+                        attackCoolDown = (float)(.5f);
                     }
                     else
                     {

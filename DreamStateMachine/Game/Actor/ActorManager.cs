@@ -88,7 +88,6 @@ namespace DreamStateMachine.Behaviors
             List<XElement> frames;
             List<XElement> attackBoxes;
             String animationName;
-            String animationType;
             String animationAttackType;
             bool animationHoldingWeapon;
             int animationFrames;
