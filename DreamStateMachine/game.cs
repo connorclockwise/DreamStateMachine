@@ -48,9 +48,13 @@ namespace DreamStateMachine
         bool isLoadingWorld;
         //bool usingGamePad = false;
 
+        
+
+
         public delegate void GameUpdate(GameTime gameTime);
         public delegate void GameDraw(GameTime gameTime);
-
+        public Queue<GameUpdate> gameDrawQueue;
+        public Queue<GameDraw> gameUpdateQueue;
         GameUpdate gameUpdate;
         GameDraw gameDraw;
 
@@ -62,8 +66,12 @@ namespace DreamStateMachine
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
             Content.RootDirectory = "Content";
-            gameUpdate = MainGameUpdate;
-            gameDraw = MainGameDraw;
+            gameDrawQueue = new Queue<GameUpdate>();
+            gameUpdateQueue = new Queue<GameDraw>();
+            gameDrawQueue.Enqueue(MainGameUpdate);
+            gameUpdateQueue.Enqueue(MainGameDraw);
+            gameUpdate = gameDrawQueue.Peek();
+            gameDraw = gameUpdateQueue.Peek();
 
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
         }
@@ -137,7 +145,21 @@ namespace DreamStateMachine
         protected override void Update(GameTime gameTime)
         {
             gameUpdate(gameTime);
+            //gameUpdateQueue.ElementAt(0)(gameTime);
+            //gameUpdateQueue.Peek()(gameTime);
+
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// This is called when the game should draw itself.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Draw(GameTime gameTime)
+        {
+            gameDraw(gameTime);
+            //gameUpdateQueue.ElementAt(0)(gameTime);
+            //gameDrawQueue.Peek()(gameTime);
         }
 
         public void MainGameUpdate(GameTime gameTime)
@@ -163,8 +185,11 @@ namespace DreamStateMachine
 
                 base.Update(gameTime);
             }
-            gameUpdate = MainGameUpdate;
-            gameDraw = MainGameDraw;
+            gameUpdateQueue.Dequeue();
+            gameDrawQueue.Dequeue();
+
+            //gameUpdate = MainGameUpdate;
+            //gameDraw = MainGameDraw;
         }
 
         private void UpdateInput()
@@ -178,14 +203,7 @@ namespace DreamStateMachine
             }
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
-        {
-            gameDraw(gameTime);
-        }
+        
 
         public void MainGameDraw(GameTime gameTime)
         {

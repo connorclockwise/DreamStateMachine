@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Game\Actor\Animations\Idle.cs" />
     <Compile Include="Game\Events\PickupEventArgs.cs" />
+    <Compile Include="Game\GUI\UIComponent.cs" />
     <Compile Include="Game\Input\DebugCommand.cs" />
     <Compile Include="Libs\ActionList\Action.cs" />
     <Compile Include="Libs\ActionList\ActionList.cs" />
