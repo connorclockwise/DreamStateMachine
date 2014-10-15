@@ -20,5 +20,10 @@ namespace DreamStateMachine.Input
             player.setGaze(gazeVec);
         }
 
+
+        public override void Execute(Game.GUI.UIComponent uiComponent)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

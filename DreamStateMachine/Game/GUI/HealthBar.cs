@@ -40,9 +40,32 @@ namespace DreamStateMachine
 
         }
 
+        public override void giveFocus()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void takeFocus()
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool isInDrawSpace(Rectangle drawSpace)
         {
             return bar.Intersects(drawSpace);
+        }
+
+        public override void setPos(Point pos)
+        {
+        }
+
+        public override void setPos(int x, int y)
+        {
+        }
+
+        public override UIComponent findFocusedChild()
+        {
+            throw new NotImplementedException();
         }
     }
 }

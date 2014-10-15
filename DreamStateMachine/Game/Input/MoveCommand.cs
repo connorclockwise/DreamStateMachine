@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using DreamStateMachine.Game.GUI;
 
 
 namespace DreamStateMachine.Input
@@ -27,6 +28,49 @@ namespace DreamStateMachine.Input
                 player.movementIntent.X = 0;
                 player.movementIntent.Y = 0;
                 player.isWalking = false;
+            }
+        }
+        public override void Execute(UIComponent uiComponent)
+        {
+            
+            if (uiComponent.children.Count > 0)
+            {
+                int curChildIndex = 0;
+                UIComponent curChild = uiComponent.children[curChildIndex];
+                while (!curChild.hasFocus && curChildIndex < uiComponent.children.Count - 1)
+                {
+                    curChildIndex++;
+                    curChild = uiComponent.children[curChildIndex];
+                }
+
+                if (curChild.hasFocus)
+                {
+                    movement.Normalize();
+                    if (movement.Y > 0)
+                    {
+                        if (curChildIndex == 0)
+                        {
+                            curChildIndex = uiComponent.children.Count - 1;
+                        }
+                        else
+                            curChildIndex--;
+                    }
+                    else if (movement.Y < 0)
+                    {
+                        if (curChildIndex == uiComponent.children.Count - 1)
+                        {
+                            curChildIndex = 0;
+                        }
+                        else
+                            curChildIndex++;
+                    }
+                    uiComponent.children[curChildIndex].giveFocus();
+                }
+                else
+                {
+                    uiComponent.children[0].giveFocus();
+                }
+                
             }
         }
     }

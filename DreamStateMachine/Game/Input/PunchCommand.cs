@@ -13,5 +13,10 @@ namespace DreamStateMachine.Input
         {
             player.Light_Attack();
         }
+
+        public override void Execute(Game.GUI.UIComponent uiComponent)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

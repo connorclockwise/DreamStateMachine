@@ -40,8 +40,9 @@ namespace DreamStateMachine
         SpriteBatch spriteBatch;
         SpriteFont arielBlackFont;
         Texture2D debugSquare;
-        Texture2D floorTiles;
-        Texture2D playerTexture;
+        Texture2D healthBar;
+        Texture2D whiteSquare;
+        Texture2D splashScreen;
         
         InputHandler inputHandler;
 
@@ -53,26 +54,29 @@ namespace DreamStateMachine
 
         public delegate void GameUpdate(GameTime gameTime);
         public delegate void GameDraw(GameTime gameTime);
-        public Queue<GameUpdate> gameDrawQueue;
-        public Queue<GameDraw> gameUpdateQueue;
+        public Stack<GameDraw> gameDrawQueue;
+        public Stack<GameUpdate> gameUpdateQueue;
         GameUpdate gameUpdate;
         GameDraw gameDraw;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 800;
-            graphics.IsFullScreen = false;
+            var screen = Screen.AllScreens.First(e => e.Primary);
+            graphics.PreferredBackBufferWidth = screen.Bounds.Width;
+            graphics.PreferredBackBufferHeight = screen.Bounds.Height;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+            //graphics.ToggleFullScreen();
             Content.RootDirectory = "Content";
-            gameDrawQueue = new Queue<GameUpdate>();
-            gameUpdateQueue = new Queue<GameDraw>();
-            gameDrawQueue.Enqueue(MainGameUpdate);
-            gameUpdateQueue.Enqueue(MainGameDraw);
-            gameUpdate = gameDrawQueue.Peek();
-            gameDraw = gameUpdateQueue.Peek();
-
+            gameDrawQueue = new Stack<GameDraw>();
+            gameUpdateQueue = new Stack<GameUpdate>();
+            gameDrawQueue.Push(StartMenuUpdate);
+            gameUpdateQueue.Push(StartMenuDraw);
+            //gameDrawQueue.Enqueue(MainGameUpdate);
+            //gameUpdateQueue.Enqueue(MainGameDraw);
+            gameUpdate = gameUpdateQueue.Peek();
+            gameDraw = gameDrawQueue.Peek();
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
         }
 
@@ -87,6 +91,7 @@ namespace DreamStateMachine
             base.Initialize();
             Window.Title = "Dream State Machine";
             Window.IsBorderless = false;
+            graphics.IsFullScreen = true;
             this.IsMouseVisible = true;
         }
 
@@ -96,12 +101,9 @@ namespace DreamStateMachine
         /// </summary>
         protected override void LoadContent()
         {
-            floorTiles = Content.Load<Texture2D>("TempleFloor.png");
-            //playerTexture = Content.Load<Texture2D>("protagonistBodyAnimations");
-            playerTexture = Content.Load<Texture2D>("dreamManAnimations.png");
-            debugSquare = Content.Load<Texture2D>("debugSquare");
-            Texture2D healthBar = Content.Load<Texture2D>("debugSquare");
+            
             arielBlackFont = Content.Load<SpriteFont>("SpriteFont1");
+            //splashScreen;
 
             device = graphics.GraphicsDevice;
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -110,21 +112,27 @@ namespace DreamStateMachine
             inputHandler = new InputHandler(origin);
             random = new Random();
             tileRect = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-            cam = new Camera(spriteBatch, tileRect, debugSquare, healthBar);
+            //tileRect = Window.ClientBounds;
+            cam = new Camera(spriteBatch, tileRect);
+            cam.loadGuiTextures(Content);
 
             aiController = new AIController();
             physicsController = new PhysicsController();
             worldManager = new WorldManager(random);
             worldManager.initWorldConfig(Content, "Content/Worlds.xml");
-            worldManager.initStartingWorld();
+            
             SoundManager.Instance.initSoundConfig(Content, "Content/Sounds.xml");
             actorController = new ActorController();
             actorManager = new ActorManager();
             actorManager.initAnimationConfig(Content, "Content/Animations.xml");
             actorManager.initActorConfig(Content, "Content/Actors.xml");
-            actorManager.spawnActors(worldManager.curWorld.getSpawns());
+            
             itemManager = new ItemManager();
             itemManager.initWeaponConfig(Content, "Content/Weapons.xml");
+
+            cam.enterStartMenu();
+            cam.NewGame += new EventHandler<EventArgs>(NewGameSelected);
+
         }
 
         /// <summary>
@@ -145,9 +153,6 @@ namespace DreamStateMachine
         protected override void Update(GameTime gameTime)
         {
             gameUpdate(gameTime);
-            //gameUpdateQueue.ElementAt(0)(gameTime);
-            //gameUpdateQueue.Peek()(gameTime);
-
             base.Update(gameTime);
         }
 
@@ -158,8 +163,13 @@ namespace DreamStateMachine
         protected override void Draw(GameTime gameTime)
         {
             gameDraw(gameTime);
-            //gameUpdateQueue.ElementAt(0)(gameTime);
-            //gameDrawQueue.Peek()(gameTime);
+        }
+
+        public void startNewGame()
+        {
+            Console.Write("THIS GOT RUN MANG");
+            worldManager.initStartingWorld();
+            //actorManager.spawnActors(worldManager.curWorld.getSpawns());
         }
 
         public void MainGameUpdate(GameTime gameTime)
@@ -169,7 +179,7 @@ namespace DreamStateMachine
             actorController.update(dt);
             aiController.update(dt);
             physicsController.update(dt);
-            cam.update();
+            cam.gameUpdate(dt);
            
             base.Update(gameTime);
         }
@@ -185,11 +195,18 @@ namespace DreamStateMachine
 
                 base.Update(gameTime);
             }
-            gameUpdateQueue.Dequeue();
-            gameDrawQueue.Dequeue();
+            gameUpdateQueue.Pop();
+            gameDrawQueue.Pop();
 
             //gameUpdate = MainGameUpdate;
             //gameDraw = MainGameDraw;
+        }
+
+        public void StartMenuUpdate(GameTime gameTime)
+        {
+            float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
+            cam.startMenuUpdate(dt);
+            UpdateInput();
         }
 
         private void UpdateInput()
@@ -201,14 +218,31 @@ namespace DreamStateMachine
                 foreach (Command c in commands)
                     c.Execute(player);
             }
+            else if (cam.menuEnabled && cam.rootGUIElement != null && inputHandler.controller)
+            {
+                List<Command> commands = inputHandler.handleInput();
+                foreach (Command c in commands)
+                    c.Execute(cam.rootGUIElement);
+            }
+            else if(cam.menuEnabled && cam.rootGUIElement != null)
+            {
+                cam.handleGuiControls();
+            }
         }
 
-        
+        public void StartMenuDraw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone);
+                cam.drawGUI();
+            spriteBatch.End();
+        }
 
         public void MainGameDraw(GameTime gameTime)
         {
 
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone);
                 cam.drawFloor();
@@ -246,7 +280,19 @@ namespace DreamStateMachine
 
         }
 
-        private void Actor_Spawn(object sender, EventArgs eventArgs)
+        public void NewGameSelected(Object sender, EventArgs eventArgs)
+        {
+            //Console.Write("new game selected");
+            cam.menuEnabled = false;
+            startNewGame();
+
+            gameUpdateQueue.Push(MainGameUpdate);
+            gameDrawQueue.Push(MainGameDraw);
+            gameUpdate = gameUpdateQueue.Peek();
+            gameDraw = gameDrawQueue.Peek();
+        }
+
+        private void Actor_Spawn(Object sender, EventArgs eventArgs)
         {
             Actor actor = (Actor)sender;
             if (actor.className == "player")

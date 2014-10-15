@@ -52,8 +52,13 @@
   <ItemGroup>
     <Compile Include="Game\Actor\Animations\Idle.cs" />
     <Compile Include="Game\Events\PickupEventArgs.cs" />
+    <Compile Include="Game\GUI\Button.cs" />
+    <Compile Include="Game\GUI\Label.cs" />
+    <Compile Include="Game\GUI\Panel.cs" />
     <Compile Include="Game\GUI\UIComponent.cs" />
     <Compile Include="Game\Input\DebugCommand.cs" />
+    <Compile Include="Game\World\Prop.cs" />
+    <Compile Include="Game\World\PropManager.cs" />
     <Compile Include="Libs\ActionList\Action.cs" />
     <Compile Include="Libs\ActionList\ActionList.cs" />
     <Compile Include="Game\Actor\Actor.cs" />
@@ -138,7 +143,19 @@
     <Content Include="Content\bone.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\DSMLogo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\golemAnimations.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\newGameButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\newGameButtonFocused.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\nightSky.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\penguinAnimations.png">
@@ -189,6 +206,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\TundraFloor.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\whiteSquare.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Worlds.xml">

@@ -12,5 +12,11 @@ namespace DreamStateMachine.Input
         {
             player.onUse();
         }
+
+
+        public override void Execute(Game.GUI.UIComponent uiComponent)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
