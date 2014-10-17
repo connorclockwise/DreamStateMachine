@@ -58,9 +58,9 @@
     texHeight="96"
     health="60"
     sight="600"
-    reach="50">
-    <Animation name="over_head_smash" type="unnarmed_light_attack"/>
-    <Animation name="walk" type="unarmed_walk"/>
+    reach="20">
+    <Animation name="heavy_punch" type="unnarmed_light_attack"/>
+    <Animation name="slow_walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
   </Actor>
 

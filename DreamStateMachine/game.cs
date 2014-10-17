@@ -167,9 +167,7 @@ namespace DreamStateMachine
 
         public void startNewGame()
         {
-            Console.Write("THIS GOT RUN MANG");
             worldManager.initStartingWorld();
-            //actorManager.spawnActors(worldManager.curWorld.getSpawns());
         }
 
         public void MainGameUpdate(GameTime gameTime)

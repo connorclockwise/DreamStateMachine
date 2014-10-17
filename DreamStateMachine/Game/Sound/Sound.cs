@@ -12,16 +12,24 @@ namespace DreamStateMachine
 {
     class Sound
     {
-        public SoundEffect effect;
+        public SoundEffectInstance effect;
+        float startFade;
+        bool isFadingIn = false;
+        bool isFadingOut = false;
 
         public Sound(SoundEffect effect)
         {
-          this.effect = effect;
+          this.effect = effect.CreateInstance();
         }
 
         public void playSound()
         {
             effect.Play();
+        }
+
+        public void fadeInSound(float timeToFadeIn)
+        {
+            effect.Volume = 0;
         }
 
      }
