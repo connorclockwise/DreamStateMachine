@@ -120,8 +120,8 @@ namespace DreamStateMachine
             physicsController = new PhysicsController();
             worldManager = new WorldManager(random);
             worldManager.initWorldConfig(Content, "Content/Worlds.xml");
-            
-            SoundManager.Instance.initSoundConfig(Content, "Content/Sounds.xml");
+
+            SoundManager.Instance.initSoundConfig(Content, "Content/Sounds.xml", "Content/Music.xml");
             actorController = new ActorController();
             actorManager = new ActorManager();
             actorManager.initAnimationConfig(Content, "Content/Animations.xml");
@@ -168,6 +168,7 @@ namespace DreamStateMachine
         public void startNewGame()
         {
             worldManager.initStartingWorld();
+            SoundManager.Instance.playSound("templeMusic");
         }
 
         public void MainGameUpdate(GameTime gameTime)
@@ -177,6 +178,7 @@ namespace DreamStateMachine
             actorController.update(dt);
             aiController.update(dt);
             physicsController.update(dt);
+            SoundManager.Instance.update(dt);
             cam.gameUpdate(dt);
            
             base.Update(gameTime);

@@ -173,7 +173,7 @@ namespace DreamStateMachine
                     mouseMoved(mouseState.X, mouseState.Y);
             }
 
-            if (mouseState.LeftButton == ButtonState.Pressed)
+            if (focusedElement != null && mouseState.LeftButton == ButtonState.Pressed)
             {
                 focusedElement.onClick();
             }
