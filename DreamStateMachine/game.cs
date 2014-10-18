@@ -102,7 +102,7 @@ namespace DreamStateMachine
         protected override void LoadContent()
         {
             
-            arielBlackFont = Content.Load<SpriteFont>("SpriteFont1");
+            //arielBlackFont = Content.Load<SpriteFont>("SpriteFont1");
             //splashScreen;
 
             device = graphics.GraphicsDevice;
@@ -168,7 +168,7 @@ namespace DreamStateMachine
         public void startNewGame()
         {
             worldManager.initStartingWorld();
-            SoundManager.Instance.playSound("templeMusic");
+            SoundManager.Instance.playSong("templeMusic");
         }
 
         public void MainGameUpdate(GameTime gameTime)

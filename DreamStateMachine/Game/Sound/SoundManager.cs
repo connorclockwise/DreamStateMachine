@@ -16,7 +16,7 @@ namespace DreamStateMachine
         private static volatile SoundManager instance;
         private static object syncRoot = new object();
         static Dictionary<String, Sound> soundPrototypes;
-        static Dictionary<String, Song> songPrototypes;
+        static Dictionary<String, String> songPrototypes;
 
         private SoundManager()
         {
@@ -42,14 +42,16 @@ namespace DreamStateMachine
         public void initSoundConfig(ContentManager content, String soundConfigFile, String musicConfigFile)
         {
             soundPrototypes = new Dictionary<String, Sound>();
-            songPrototypes = new Dictionary<String, Song>();
+            songPrototypes = new Dictionary<String, String>();
             XDocument soundDoc = XDocument.Load(soundConfigFile);
             List<XElement> sounds = soundDoc.Element("Sounds").Elements("Sound").ToList();
             XDocument musicDoc = XDocument.Load(musicConfigFile);
             List<XElement> songs = musicDoc.Element("Songs").Elements("Song").ToList();
             String soundClass;
-            String songName;
+         
             SoundEffect effect;
+            String songName;
+            String songPath;
             Song actualSong;
             foreach (XElement sound in sounds)
             {
@@ -60,14 +62,21 @@ namespace DreamStateMachine
             foreach (XElement song in songs)
             {
                 songName = song.Attribute("name").Value;
-                actualSong = content.Load<Song>(song.Attribute("filePath").Value);
-                songPrototypes[songName] = actualSong;
+                songPath = song.Attribute("filePath").Value;
+                actualSong = content.Load<Song>("StainedGlassAndSpookySkeletons");
+                //actualSong = content.Load<Song>(song.Attribute("filepath").Value);
+                songPrototypes[songName] = songPath;
             }
         }
 
         public void playSound(String soundClass)
         {
             soundPrototypes[soundClass].playSound();
+        }
+
+        public void playSong(String songName)
+        {
+            //MediaPlayer.Play();
         }
 
         public void update(float dt)

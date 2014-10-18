@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Actors>
+  <Actor
+    className="player"
+    texture="dreamManAnimations"
+    maxSpeed="6"
+    width="25"
+    height="25"
+    texWidth="64"
+    texHeight="64"
+    health="100"
+    sight="200"
+    reach="30">
+    <Animation name="punch" type="unnarmed_light_attack"/>
+    <Animation name="player_holding_weapon_walk" type="holding_weapon_walk"/>
+    <Animation name="player_holding_weapon_idle" type="holding_weapon_idle"/>
+    <Animation name="player_swing_weapon" type="light_weapon_attack"/>
+    <Animation name="walk" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
+  
+  <Actor
+    className="thief"
+    texture="dreamManAnimations"
+    maxSpeed="7"
+    width="25"
+    height="25"
+    texWidth="64"
+    texHeight="64"
+    health="25"
+    sight="200"
+    reach="50">
+  </Actor>
+
+  <Actor
+    className="skeleton"
+    texture="skeletonAnimations"
+    maxSpeed="4"
+    width="25"
+    height="25"
+    texWidth="64"
+    texHeight="64"
+    health="50"
+    sight="400"
+    reach="25">
+    <Animation name="over_head_smash" type="unnarmed_light_attack"/>
+    <Animation name="walk" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
+
+  <Actor
+    className="golem"
+    texture="golemAnimations"
+    maxSpeed="2"
+    width="42"
+    height="42"
+    texWidth="96"
+    texHeight="96"
+    health="60"
+    sight="600"
+    reach="20">
+    <Animation name="heavy_punch" type="unnarmed_light_attack"/>
+    <Animation name="slow_walk" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
+
+  <Actor
+    className="penguin"
+    texture="penguinAnimations"
+    maxSpeed="4"
+    width="20"
+    height="20"
+    texWidth="64"
+    texHeight="64"
+    health="25"
+    sight="250"
+    reach="20">
+    <Animation name="peck" type="unnarmed_light_attack"/>
+    <Animation name="waddle" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
+</Actors>

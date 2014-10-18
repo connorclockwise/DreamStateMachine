@@ -1,0 +1,285 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline">
+  <Asset Type="Pipeline:BuildItemCollection">
+    <Item>
+      <Source>block.png</Source>
+      <Name>block</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\block.xnb</Output>
+      <Time>2014-10-18T14:24:57.3463319-04:00</Time>
+    </Item>
+    <Item>
+      <Source>bone.png</Source>
+      <Name>bone</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\bone.xnb</Output>
+      <Time>2014-10-18T14:24:57.3773336-04:00</Time>
+    </Item>
+    <Item>
+      <Source>debugSquare.png</Source>
+      <Name>debugSquare</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\debugSquare.xnb</Output>
+      <Time>2014-10-18T14:24:57.3783337-04:00</Time>
+    </Item>
+    <Item>
+      <Source>dreamManAnimations.png</Source>
+      <Name>dreamManAnimations</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\dreamManAnimations.xnb</Output>
+      <Time>2014-10-18T14:24:57.384334-04:00</Time>
+    </Item>
+    <Item>
+      <Source>DSMLogo.png</Source>
+      <Name>DSMLogo</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\DSMLogo.xnb</Output>
+      <Time>2014-10-18T14:24:57.3953347-04:00</Time>
+    </Item>
+    <Item>
+      <Source>dungeonFloor.png</Source>
+      <Name>dungeonFloor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\dungeonFloor.xnb</Output>
+      <Time>2014-10-18T14:24:57.4173359-04:00</Time>
+    </Item>
+    <Item>
+      <Source>golemAnimations.png</Source>
+      <Name>golemAnimations</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\golemAnimations.xnb</Output>
+      <Time>2014-10-18T14:24:57.4403372-04:00</Time>
+    </Item>
+    <Item>
+      <Source>GrassFloor.png</Source>
+      <Name>GrassFloor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\GrassFloor.xnb</Output>
+      <Time>2014-10-18T14:24:57.4493377-04:00</Time>
+    </Item>
+    <Item>
+      <Source>newGameButton.png</Source>
+      <Name>newGameButton</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\newGameButton.xnb</Output>
+      <Time>2014-10-18T14:24:57.48934-04:00</Time>
+    </Item>
+    <Item>
+      <Source>newGameButtonFocused.png</Source>
+      <Name>newGameButtonFocused</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\newGameButtonFocused.xnb</Output>
+      <Time>2014-10-18T14:24:57.5133414-04:00</Time>
+    </Item>
+    <Item>
+      <Source>nightSky.png</Source>
+      <Name>nightSky</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\nightSky.xnb</Output>
+      <Time>2014-10-18T14:24:57.523342-04:00</Time>
+    </Item>
+    <Item>
+      <Source>penguinAnimations.png</Source>
+      <Name>penguinAnimations</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\penguinAnimations.xnb</Output>
+      <Time>2014-10-18T14:24:57.5303424-04:00</Time>
+    </Item>
+    <Item>
+      <Source>protagonistBodyAnimations.png</Source>
+      <Name>protagonistBodyAnimations</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\protagonistBodyAnimations.xnb</Output>
+      <Time>2014-10-18T14:24:57.541343-04:00</Time>
+    </Item>
+    <Item>
+      <Source>skeletonAnimations.png</Source>
+      <Name>skeletonAnimations</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\skeletonAnimations.xnb</Output>
+      <Time>2014-10-18T14:24:57.6053467-04:00</Time>
+    </Item>
+    <Item>
+      <Source>TempleFloor.png</Source>
+      <Name>TempleFloor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\TempleFloor.xnb</Output>
+      <Time>2014-10-18T14:24:57.6493492-04:00</Time>
+    </Item>
+    <Item>
+      <Source>TundraFloor.png</Source>
+      <Name>TundraFloor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\TundraFloor.xnb</Output>
+      <Time>2014-10-18T14:24:57.6693503-04:00</Time>
+    </Item>
+    <Item>
+      <Source>whiteSquare.png</Source>
+      <Name>whiteSquare</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\whiteSquare.xnb</Output>
+      <Time>2014-10-18T14:24:57.6723505-04:00</Time>
+    </Item>
+    <Item>
+      <Source>sfx\death.wav</Source>
+      <Name>sfx\death</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\sfx\death.xnb</Output>
+      <Time>2014-10-18T14:24:57.0893172-04:00</Time>
+    </Item>
+    <Item>
+      <Source>sfx\Explosion 1.wav</Source>
+      <Name>sfx\Explosion 1</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\sfx\Explosion 1.xnb</Output>
+      <Time>2014-10-18T14:24:57.1203189-04:00</Time>
+    </Item>
+    <Item>
+      <Source>sfx\Explosion 3.wav</Source>
+      <Name>sfx\Explosion 3</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\sfx\Explosion 3.xnb</Output>
+      <Time>2014-10-18T14:24:57.1343197-04:00</Time>
+    </Item>
+    <Item>
+      <Source>sfx\fiery take off.wav</Source>
+      <Name>sfx\fiery take off</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\sfx\fiery take off.xnb</Output>
+      <Time>2014-10-18T14:24:57.2163244-04:00</Time>
+    </Item>
+    <Item>
+      <Source>sfx\hurt1.wav</Source>
+      <Name>sfx\hurt1</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\sfx\hurt1.xnb</Output>
+      <Time>2014-10-18T14:24:57.2493263-04:00</Time>
+    </Item>
+    <Item>
+      <Source>sfx\Jump 2.wav</Source>
+      <Name>sfx\Jump 2</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\sfx\Jump 2.xnb</Output>
+      <Time>2014-10-18T14:24:57.2823282-04:00</Time>
+    </Item>
+    <Item>
+      <Source>sfx\Menu.wav</Source>
+      <Name>sfx\Menu</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\sfx\Menu.xnb</Output>
+      <Time>2014-10-18T14:24:57.2843283-04:00</Time>
+    </Item>
+    <Item>
+      <Source>sfx\pickUp.wav</Source>
+      <Name>sfx\pickUp</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\sfx\pickUp.xnb</Output>
+      <Time>2014-10-18T14:24:57.3183303-04:00</Time>
+    </Item>
+    <Item>
+      <Source>StainedGlassAndSpookySkeletons.mp3</Source>
+      <Name>StainedGlassAndSpookySkeletons</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\StainedGlassAndSpookySkeletons.xnb</Output>
+      <Extra>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\StainedGlassAndSpookySkeletons.wma</Extra>
+      <Time>2014-10-18T13:54:15.7659995-04:00</Time>
+    </Item>
+    <BuildSuccessful>true</BuildSuccessful>
+    <Settings>
+      <TargetPlatform>Windows</TargetPlatform>
+      <TargetProfile>HiDef</TargetProfile>
+      <BuildConfiguration>Windows</BuildConfiguration>
+      <CompressContent>false</CompressContent>
+      <RootDirectory>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1Content\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1Content\obj\Windows\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\Windows\Content\</OutputDirectory>
+    </Settings>
+    <Assemblies>
+      <Assembly>
+        <Key>C:\Program Files (x86)\MSBuild\MonoGame\v3.0\MonoGameContentProcessors.dll</Key>
+        <Value>2014-04-05T17:56:18-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
+        <Value>2010-08-23T13:41:18-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.VideoImporters.dll</Key>
+        <Value>2010-08-23T13:41:18-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
+        <Value>2010-08-23T13:41:18-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
+        <Value>2010-08-23T13:41:18-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
+        <Value>2010-08-23T13:41:18-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.AudioImporters.dll</Key>
+        <Value>2010-08-23T13:41:18-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Windows\Microsoft.Net\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
+        <Value>2013-11-21T13:37:33.6215073-05:00</Value>
+      </Assembly>
+    </Assemblies>
+  </Asset>
+</XnaContent>
