@@ -145,7 +145,29 @@ namespace DreamStateMachine
         private void onWorldChange(){
             worldChange(this, EventArgs.Empty);
         }
+        
+        public World loadFromCustom(int[,] tileMap, bool[,] collisionMap)
+        {
+            Point playerSpawnPos = new Point(1, 1);
+            return this.loadFromCustom(worldPrototypes["tundra"], tileMap, collisionMap, playerSpawnPos);
+        }
 
+        public World loadFromCustom(WorldConfig worldConfig, int[,] tileMap, bool[,] collisionMap, Point playerSpawnPos)
+        {
+            return this.loadFromCustom(worldConfig.texture, worldConfig.tileSize, tileMap, collisionMap, playerSpawnPos);
+        }
+
+        public World loadFromCustom(Texture2D tile, int tileSize, int[,] tileMap, bool[,] collisionMap, Point playerSpawnPos)
+        {
+            World tempWorld = new World(tile, tileSize);
+            List<SpawnFlag> spawns = new List<SpawnFlag>();
+            SpawnFlag playerSpawn = new SpawnFlag("player", playerSpawnPos, 1);
+            tempWorld.setTileMap(tileMap, collisionMap);
+            spawns.Add(playerSpawn);
+            tempWorld.setSpawnTile(playerSpawnPos);
+            tempWorld.setSpawns(spawns);
+            return tempWorld;
+        }
     }
 
 }
