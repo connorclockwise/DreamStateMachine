@@ -168,6 +168,28 @@ namespace DreamStateMachine
             tempWorld.setSpawns(spawns);
             return tempWorld;
         }
+        
+        public World loadFromCustom(Texture2D tile, int tileSize, int[,] tileMap, bool[,] collisionMap, Point playerSpawnPos, List<String> enemyTypeList, List<Point> enemySpawnPosList)
+        {
+            World tempWorld = new World(tile, tileSize);
+            List<SpawnFlag> spawns = new List<SpawnFlag>();
+            SpawnFlag playerSpawn = new SpawnFlag("player", playerSpawnPos, 1);
+            tempWorld.setTileMap(tileMap, collisionMap);
+            spawns.Add(playerSpawn);
+            tempWorld.setSpawnTile(playerSpawnPos);
+            SpawnFlag enemySpawn;
+            if(enemyTypeList.Count == enemySpawnPosList.Count)
+            {
+                for(int i = 0; i < enemyTypeList.Count; i++)
+                {
+                    enemySpawn = new SpawnFlag(enemyTypeList.ElementAt(i), enemySpawnPosList.ElementAt(i), 2);
+                    spawns.Add(enemySpawn);
+                }
+            }
+            tempWorld.setSpawns(spawns);
+            return tempWorld;
+
+        }
     }
 
 }
