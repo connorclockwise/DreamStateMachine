@@ -46,7 +46,7 @@
     <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GameName1Content\DSMContentProcessor.contentproj">
+    <ProjectReference Include="..\DSMContentProcessor\DSMContentProcessor.contentproj">
       <Name>DSMContentProcessor %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
       <Project>{2037DFA6-4065-498F-B91B-9C4C29D433A4}</Project>
