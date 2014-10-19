@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -15,6 +14,7 @@ using System.Xml;
 using System.Threading;
 using DreamStateMachine;
 using DreamStateMachine.Input;
+using System.Windows.Forms;
 
 namespace DreamStateMachine
 {
@@ -63,11 +63,14 @@ namespace DreamStateMachine
         {
             graphics = new GraphicsDeviceManager(this);
             var screen = Screen.AllScreens.First(e => e.Primary);
+            Window.IsBorderless = true;
+            Window.Position = new Point(screen.Bounds.X, screen.Bounds.Y);
             graphics.PreferredBackBufferWidth = screen.Bounds.Width;
             graphics.PreferredBackBufferHeight = screen.Bounds.Height;
             graphics.IsFullScreen = true;
-            graphics.ApplyChanges();
             //graphics.ToggleFullScreen();
+            //graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
             gameDrawQueue = new Stack<GameDraw>();
             gameUpdateQueue = new Stack<GameUpdate>();
@@ -90,8 +93,9 @@ namespace DreamStateMachine
         {
             base.Initialize();
             Window.Title = "Dream State Machine";
-            Window.IsBorderless = false;
-            graphics.IsFullScreen = true;
+            //Window.IsBorderless = true;
+            //graphics.IsFullScreen = true;
+            //graphics.ApplyChanges();
             this.IsMouseVisible = true;
         }
 
@@ -168,7 +172,7 @@ namespace DreamStateMachine
         public void startNewGame()
         {
             worldManager.initStartingWorld();
-            SoundManager.Instance.playSong("templeMusic");
+            SoundManager.Instance.playSong("templeTheme");
         }
 
         public void MainGameUpdate(GameTime gameTime)

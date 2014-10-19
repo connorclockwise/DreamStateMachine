@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DreamStateMachine")]
-[assembly: AssemblyProduct("DreamStateMachine")]
+[assembly: AssemblyTitle("DreamStateMachine2")]
+[assembly: AssemblyProduct("DreamStateMachine2")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("Microsoft")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("29fdacb4-c0e3-4468-be6a-fd6e095f217c")]
+[assembly: Guid("190bfc0c-920f-4bcd-9988-653b4b1eb309")]
 
 // Version information for an assembly consists of the following four values:
 //

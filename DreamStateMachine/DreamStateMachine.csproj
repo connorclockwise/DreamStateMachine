@@ -5,34 +5,19 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B04909EC-EE75-4B56-B184-18C27592265C}</ProjectGuid>
+    <ProjectGuid>{F6C16952-7674-4C89-8534-F927DA1A2167}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DreamStateMachine</RootNamespace>
-    <AssemblyName>DreamStateMachine</AssemblyName>
+    <RootNamespace>DreamStateMachine2</RootNamespace>
+    <AssemblyName>DreamStateMachine1</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\WindowsGL\Debug\</OutputPath>
+    <OutputPath>bin\Windows\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -41,7 +26,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\WindowsGL\Release\</OutputPath>
+    <OutputPath>bin\Windows\Release\</OutputPath>
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -50,119 +35,84 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Game\Actor\Animations\Idle.cs" />
-    <Compile Include="Game\Events\PickupEventArgs.cs" />
-    <Compile Include="Game\GUI\Button.cs" />
-    <Compile Include="Game\GUI\Label.cs" />
-    <Compile Include="Game\GUI\Panel.cs" />
-    <Compile Include="Game\GUI\UIComponent.cs" />
-    <Compile Include="Game\Input\DebugCommand.cs" />
-    <Compile Include="Game\World\Prop.cs" />
-    <Compile Include="Game\World\PropManager.cs" />
+    <Compile Include="game.cs" />
+    <Compile Include="game\Actor\Actor.cs" />
+    <Compile Include="game\Actor\ActorController.cs" />
+    <Compile Include="game\Actor\ActorManager.cs" />
+    <Compile Include="game\Actor\Animation.cs" />
+    <Compile Include="game\Actor\AnimationInfo.cs" />
+    <Compile Include="game\Actor\Animations\Attack.cs" />
+    <Compile Include="game\Actor\Animations\Idle.cs" />
+    <Compile Include="game\Actor\Animations\Recoil.cs" />
+    <Compile Include="game\Actor\Animations\Walk.cs" />
+    <Compile Include="game\Actor\DamageInfo.cs" />
+    <Compile Include="game\Actor\Stance.cs" />
+    <Compile Include="game\Actor\Weapon.cs" />
+    <Compile Include="game\AI\AIController.cs" />
+    <Compile Include="game\AI\Behavior.cs" />
+    <Compile Include="game\AI\Behaviors\Aggravated.cs" />
+    <Compile Include="game\AI\Behaviors\Alert.cs" />
+    <Compile Include="game\AI\Behaviors\Neutral.cs" />
+    <Compile Include="game\AI\Behaviors\Pursue.cs" />
+    <Compile Include="game\AI\Behaviors\Stunned.cs" />
+    <Compile Include="game\AI\Behaviors\Wander.cs" />
+    <Compile Include="game\AI\PathNode.cs" />
+    <Compile Include="game\Events\AttackEventArgs.cs" />
+    <Compile Include="game\Events\InputEventArgs.cs" />
+    <Compile Include="game\Events\PickupEventArgs.cs" />
+    <Compile Include="game\Events\SpawnEventArgs.cs" />
+    <Compile Include="game\GUI\Button.cs" />
+    <Compile Include="game\GUI\HealthBar.cs" />
+    <Compile Include="game\GUI\Label.cs" />
+    <Compile Include="game\GUI\Panel.cs" />
+    <Compile Include="game\GUI\UIComponent.cs" />
+    <Compile Include="game\Input\Command.cs" />
+    <Compile Include="game\Input\DebugCommand.cs" />
+    <Compile Include="game\Input\GazeCommand.cs" />
+    <Compile Include="game\Input\InputHandler.cs" />
+    <Compile Include="game\Input\MoveCommand.cs" />
+    <Compile Include="game\Input\PunchCommand.cs" />
+    <Compile Include="game\Input\UseCommand.cs" />
+    <Compile Include="game\Items\ItemManager.cs" />
+    <Compile Include="game\Physics\PhysicsController.cs" />
+    <Compile Include="game\Rendering\Camera.cs" />
+    <Compile Include="game\Rendering\IDrawable.cs" />
+    <Compile Include="game\Sound\Sound.cs" />
+    <Compile Include="game\Sound\SoundManager.cs" />
+    <Compile Include="game\World\Prop.cs" />
+    <Compile Include="game\World\PropManager.cs" />
+    <Compile Include="game\World\Room.cs" />
+    <Compile Include="game\World\SpawnFlag.cs" />
+    <Compile Include="game\World\TraceInfo.cs" />
+    <Compile Include="game\World\World.cs" />
+    <Compile Include="game\World\WorldConfig.cs" />
+    <Compile Include="game\World\WorldFactory.cs" />
+    <Compile Include="game\World\WorldManager.cs" />
     <Compile Include="Libs\ActionList\Action.cs" />
     <Compile Include="Libs\ActionList\ActionList.cs" />
-    <Compile Include="Game\Actor\Actor.cs" />
-    <Compile Include="Game\Actor\ActorManager.cs" />
-    <Compile Include="Game\Actor\Animations\Attack.cs" />
-    <Compile Include="Game\Actor\Animations\Recoil.cs" />
-    <Compile Include="Game\Actor\Animations\Walk.cs" />
-    <Compile Include="Game\AI\Behavior.cs" />
-    <Compile Include="Game\AI\Behaviors\Aggravated.cs" />
-    <Compile Include="Game\AI\Behaviors\Alert.cs" />
-    <Compile Include="Game\AI\Behaviors\Pursue.cs" />
-    <Compile Include="Game\AI\Behaviors\Neutral.cs" />
-    <Compile Include="Game\AI\Behaviors\Stunned.cs" />
-    <Compile Include="Game\AI\Behaviors\Wander.cs" />
-    <Compile Include="Game\Rendering\Camera.cs" />
-    <Compile Include="Game\Actor\AnimationInfo.cs" />
-    <Compile Include="Game\Actor\Animation.cs" />
-    <Compile Include="Game\AI\AIController.cs" />
-    <Compile Include="Game\Events\AttackEventArgs.cs" />
-    <Compile Include="Game\Items\ItemManager.cs" />
-    <Compile Include="Game\Events\InputEventArgs.cs" />
-    <Compile Include="Game\GUI\HealthBar.cs" />
-    <Compile Include="Game\Input\UseCommand.cs" />
-    <Compile Include="Game\Rendering\IDrawable.cs" />
-    <Compile Include="Game\Actor\Stance.cs" />
-    <Compile Include="Game\Sound\Sound.cs" />
-    <Compile Include="Game\Sound\SoundManager.cs" />
-    <Compile Include="Game\Input\GazeCommand.cs" />
-    <Compile Include="Game\Input\MoveCommand.cs" />
-    <Compile Include="Game\Input\PunchCommand.cs" />
-    <Compile Include="Game\Input\Command.cs" />
-    <Compile Include="Game\Input\InputHandler.cs" />
-    <Compile Include="Game\Actor\ActorController.cs" />
-    <Compile Include="Game\Physics\PhysicsController.cs" />
-    <Compile Include="Game\Events\SpawnEventArgs.cs" />
-    <Compile Include="Game\Actor\DamageInfo.cs" />
-    <Compile Include="game.cs" />
     <Compile Include="Libs\Tree\Node.cs" />
     <Compile Include="Libs\Tree\NodeList.cs" />
-    <Compile Include="Game\AI\PathNode.cs" />
+    <Compile Include="Libs\Tree\Tree.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Game\World\Room.cs" />
-    <Compile Include="Game\World\SpawnFlag.cs" />
-    <Compile Include="Game\World\TraceInfo.cs" />
-    <Compile Include="Libs\Tree\Tree.cs" />
-    <Compile Include="Game\Actor\Weapon.cs" />
-    <Compile Include="Game\World\World.cs" />
-    <Compile Include="Game\World\WorldConfig.cs" />
-    <Compile Include="Game\World\WorldFactory.cs" />
-    <Compile Include="Game\World\WorldManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="OpenTK">
-      <HintPath>ThirdParty\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="MonoGame.Framework">
-      <HintPath>ThirdParty\MonoGame.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Lidgren.Network">
-      <HintPath>ThirdParty\Lidgren.Network.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="Tao.Sdl">
-      <HintPath>ThirdParty\Tao.Sdl.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MSBuild\..\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\GameName1\GameName1\DSMContent.csproj">
+    <ProjectReference Include="..\DSMContentProject\DSMWindowsContent\DSMWindowsContent.csproj">
       <Project>{313BB489-E187-4B9D-8926-8E14B4B02B20}</Project>
-      <Name>DSMContent</Name>
+      <Name>DSMWindowsContent</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

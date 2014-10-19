@@ -16,7 +16,7 @@ namespace DreamStateMachine
         private static volatile SoundManager instance;
         private static object syncRoot = new object();
         static Dictionary<String, Sound> soundPrototypes;
-        static Dictionary<String, String> songPrototypes;
+        static Dictionary<String, Song> songPrototypes;
 
         private SoundManager()
         {
@@ -42,7 +42,7 @@ namespace DreamStateMachine
         public void initSoundConfig(ContentManager content, String soundConfigFile, String musicConfigFile)
         {
             soundPrototypes = new Dictionary<String, Sound>();
-            songPrototypes = new Dictionary<String, String>();
+            songPrototypes = new Dictionary<String, Song>();
             XDocument soundDoc = XDocument.Load(soundConfigFile);
             List<XElement> sounds = soundDoc.Element("Sounds").Elements("Sound").ToList();
             XDocument musicDoc = XDocument.Load(musicConfigFile);
@@ -65,7 +65,7 @@ namespace DreamStateMachine
                 songPath = song.Attribute("filePath").Value;
                 actualSong = content.Load<Song>("StainedGlassAndSpookySkeletons");
                 //actualSong = content.Load<Song>(song.Attribute("filepath").Value);
-                songPrototypes[songName] = songPath;
+                songPrototypes[songName] = actualSong;
             }
         }
 
@@ -76,7 +76,7 @@ namespace DreamStateMachine
 
         public void playSong(String songName)
         {
-            //MediaPlayer.Play();
+            MediaPlayer.Play(songPrototypes[songName]);
         }
 
         public void update(float dt)

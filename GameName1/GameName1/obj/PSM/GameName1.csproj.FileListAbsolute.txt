@@ -1,3 +1,0 @@
-C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\bin\PSM\IgnoreMe.dll
-C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\obj\PSM\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\Connor\Documents\Visual Studio 2010\Projects\DreamStateMachine\GameName1\GameName1\obj\PSM\IgnoreMe.dll

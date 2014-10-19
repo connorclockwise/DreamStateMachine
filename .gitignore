@@ -2,3 +2,8 @@ DreamStateMachine/game.cs.orig
 DreamStateMachine/obj/
 DreamStateMachine/bin/WindowsGL/Debug/Content/Animations.xml
 DreamStateMachine/bin/
+DSMContentProject/DSMWindowsContent/bin/
+DSMContentProject/DSMContentProcessor/obj/
+DSMContentProject/DSMWindowsContent/obj/
+DSMContentProject/DSMWindowsContent/DSMContent.csproj.Windows.cachefile
+*.cachefile
