@@ -54,8 +54,8 @@ namespace DreamStateMachine
 
         public delegate void GameUpdate(GameTime gameTime);
         public delegate void GameDraw(GameTime gameTime);
-        public Stack<GameDraw> gameDrawQueue;
-        public Stack<GameUpdate> gameUpdateQueue;
+        public Stack<GameDraw> gameDrawStack;
+        public Stack<GameUpdate> gameUpdateStack;
         GameUpdate gameUpdate;
         GameDraw gameDraw;
 
@@ -72,14 +72,14 @@ namespace DreamStateMachine
             //graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
-            gameDrawQueue = new Stack<GameDraw>();
-            gameUpdateQueue = new Stack<GameUpdate>();
-            gameDrawQueue.Push(StartMenuUpdate);
-            gameUpdateQueue.Push(StartMenuDraw);
-            //gameDrawQueue.Enqueue(MainGameUpdate);
-            //gameUpdateQueue.Enqueue(MainGameDraw);
-            gameUpdate = gameUpdateQueue.Peek();
-            gameDraw = gameDrawQueue.Peek();
+            gameDrawStack = new Stack<GameDraw>();
+            gameUpdateStack = new Stack<GameUpdate>();
+            gameDrawStack.Push(StartMenuUpdate);
+            gameUpdateStack.Push(StartMenuDraw);
+            //gameDrawStack.Enqueue(MainGameUpdate);
+            //gameUpdateStack.Enqueue(MainGameDraw);
+            gameUpdate = gameUpdateStack.Peek();
+            gameDraw = gameDrawStack.Peek();
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
         }
 
@@ -199,8 +199,8 @@ namespace DreamStateMachine
 
                 base.Update(gameTime);
             }
-            gameUpdateQueue.Pop();
-            gameDrawQueue.Pop();
+            gameUpdateStack.Pop();
+            gameDrawStack.Pop();
 
             //gameUpdate = MainGameUpdate;
             //gameDraw = MainGameDraw;
@@ -290,10 +290,10 @@ namespace DreamStateMachine
             cam.menuEnabled = false;
             startNewGame();
 
-            gameUpdateQueue.Push(MainGameUpdate);
-            gameDrawQueue.Push(MainGameDraw);
-            gameUpdate = gameUpdateQueue.Peek();
-            gameDraw = gameDrawQueue.Peek();
+            gameUpdateStack.Push(MainGameUpdate);
+            gameDrawStack.Push(MainGameDraw);
+            gameUpdate = gameUpdateStack.Peek();
+            gameDraw = gameDrawStack.Peek();
         }
 
         private void Actor_Spawn(Object sender, EventArgs eventArgs)
