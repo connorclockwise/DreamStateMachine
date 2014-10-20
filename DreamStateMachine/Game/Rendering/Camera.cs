@@ -55,7 +55,8 @@ namespace DreamStateMachine
         public void loadGuiTextures(ContentManager content){
             guiTextures["whiteSquare"] = content.Load<Texture2D>("whiteSquare");
             guiTextures["debugSquare"] = content.Load<Texture2D>("debugSquare");
-            guiTextures["healthBar"] = content.Load<Texture2D>("debugSquare");
+            guiTextures["healthBar"] = content.Load<Texture2D>("playerHealthBarTransparency");
+            guiTextures["enemyHealthBar"] = content.Load<Texture2D>("enemyHealthBarTransparency");
             guiTextures["menuPanel"] = content.Load<Texture2D>("nightSky");
             guiTextures["logo"] = content.Load<Texture2D>("DSMLogo");
             guiTextures["newGameButton"] = content.Load<Texture2D>("newGameButton");
@@ -81,7 +82,10 @@ namespace DreamStateMachine
             }
             else
             {
-                healthBars[hurtActor] = new HealthBar(hurtActor, guiTextures["healthBar"]);
+                if (hurtActor.className == "player")
+                    healthBars[hurtActor] = new HealthBar(hurtActor, guiTextures["healthBar"]);
+                else
+                    healthBars[hurtActor] = new HealthBar(hurtActor, guiTextures["enemyHealthBar"]);
             }
             
         }

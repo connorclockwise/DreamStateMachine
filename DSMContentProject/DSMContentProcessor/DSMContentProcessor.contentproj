@@ -241,6 +241,22 @@
   <ItemGroup>
     <Folder Include="music\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="playerHealthBarTransparency.png">
+      <Name>playerHealthBarTransparency</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="enemyHealthBarTransparency.png">
+      <Name>enemyHealthBarTransparency</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--
       To modify your build process, add your task inside one of the targets below and uncomment it. 

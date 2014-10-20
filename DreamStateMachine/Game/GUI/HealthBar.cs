@@ -12,9 +12,10 @@ namespace DreamStateMachine
     {
         Actor actor;
         Rectangle bar;
+        Rectangle barDimensions;
         Texture2D barTexture;
-        int barWidth = 30;
-        int barHeight = 10;
+        int barWidth = 50;
+        int barHeight = 15;
         int displaceX = 0;
         int displaceY = -30;
 
@@ -31,15 +32,20 @@ namespace DreamStateMachine
             float healthPercentage = ((float)actor.health / actor.maxHealth);
             dimensions.X = actor.hitBox.Center.X - (dimensions.Width / 2) - drawSpace.X + displaceX;
             dimensions.Y = actor.hitBox.Center.Y - (dimensions.Height / 2) - drawSpace.Y + displaceY;
-            bar.X = dimensions.X;
-            bar.Y = dimensions.Y;
+            //
             bar.Width = (int)(dimensions.Width * healthPercentage);
+            bar.X = 0;
+            bar.Y = 0;
+            barDimensions.X = dimensions.X;
+            barDimensions.Y = dimensions.Y;
+            barDimensions.Width = bar.Width;
+            barDimensions.Height = bar.Height;
+            
             //bar.Height = dimensions.Height;
-            spriteBatch.Draw(barTexture, dimensions, Color.Black);   
-            spriteBatch.Draw(barTexture, bar, Color.White);   
-
+            spriteBatch.Draw(barTexture, dimensions, Color.Black); 
+            //spriteBatch.Draw(barTexture, bar, Color.White);  
+            spriteBatch.Draw(barTexture, barDimensions, bar, Color.White);
         }
-
         public override void giveFocus()
         {
             throw new NotImplementedException();
