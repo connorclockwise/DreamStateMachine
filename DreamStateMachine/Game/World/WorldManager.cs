@@ -225,36 +225,12 @@ namespace DreamStateMachine
                               {0, 7, 8, 8, 8, 8, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 5, 5, 5, 5, 6, 0, 0, 0},
                               {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 8, 8, 8, 8, 8, 9, 0, 0, 0},
                               {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
-            bool[,] collisionMap = {{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
-                              {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
-                              {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
-                              {false, false, false, true, true, true, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, true, true, true, true, true, false, false, false},
-                              {false, false, false, true, true, true, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, true, true, true, true, true, false, false, false},
-                              {false, false, false, true, true, true, false, false, false, false, false, false, true, true, true, true,false, false, false, false, false,false, true, true, true, true, true, false, false, false},
-                              {false, false, false,false, true,false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false, false},
-                              {false, false, false, false, true, false, false, false, false, false, false, false, true, true, true, true,false, false, false, false, false,false, true, true, true, true, true, false, false, false},
-                              {false, false, false, false, true, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, true, true, true, true, true, false, false, false},
-                              {false, false, false,false, true,false, false, false, false, false, false, false,false, true,false, false, false, false, false, false, false, false, false,false, true,false, false, false, false, false},
-                              {false, false, true, true, true, true, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false},
-                              {false, false, true, true, true, true, true, false, false, false, false, false,false, true,false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false},
-                              {false, false, true, true, true, true, true, false, false, false, false, true, true, true, true, true, false, false, false, false, false, false, false,false, true,false, false, false, false, false},
-                              {false, false, true, true, true, true, true, false, false, false, false, true, true, true, true, true, false, false, false, false, false, true, true, true, true, true, true, false, false, false},
-                              {false, false, true, true, true, true, true, false, false, false, false, true, true, true, true, true, false, false, false, false, false, true, true, true, true, true, true, false, false, false},
-                              {false, false, false,false, true,false, false, false, false, false, false, true, true, true, true, true, false, false, false, false, false, true, true, true, true, true, true, false, false, false},
-                              {false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, false, false, false},
-                              {false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,false, true,false, false, false, false, false},
-                              {false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false},
-                              {false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false},
-                              {false, false, false,false, true,false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false},
-                              {false, false, true, true, true, true, false, false, false, false, false, true, true, true, true, true, false, false, false, false, false, false, false,false, true,false, false, false, false, false},
-                              {false, false, true, true, true, true, false, false, false, false, false, true, true, true, true, true, false, false, false, false, false, true, true, true, true, true, false, false, false, false},
-                              {false, false, true, true, true, true,false, false, false, false,false, true, true, true, true, true,false, false, false, false,false, true, true, true, true, true, false, false, false, false},
-                              {false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false, false, false},
-                              {false, false, true, true, true, true,false, false, false, false,false, true, true, true, true, true,false, false, false, false,false, true, true, true, true, true, false, false, false, false},
-                              {false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false},
-                              {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false},
-                              {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
-                              {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}};
+            bool[,] collisionMap = new bool[30,30];
+            for(int i = 0; i < 30; i++) {
+                for(int j = 0; j < 30; j++) {
+                    collisionMap[i, j] = ((tileMap[i, j] == 5) || (tileMap[i, j] == 15));
+                }
+            }
             Point playerSpawnPos = new Point(15,14);
             List<String> enemyTypeList = new List<String>();
             enemyTypeList.Add("skeleton");
