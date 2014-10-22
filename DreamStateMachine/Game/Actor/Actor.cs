@@ -365,5 +365,9 @@ namespace DreamStateMachine
                 }
             }
         }
+
+        public void remove(){
+            Actor.DamagedPoint -= new EventHandler<AttackEventArgs>(Actor_Attacked);
+        }
     }
 }

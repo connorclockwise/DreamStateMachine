@@ -22,24 +22,23 @@ namespace DreamStateMachine
         public HealthBar(Actor actor, Texture2D barTex):base()
         {
             this.actor = actor;
-            bar = new Rectangle(0, 0, barWidth, barHeight);
+            bar = new Rectangle(0, 0, barTex.Width, barTex.Height);
+            barDimensions = new Rectangle(0, 0, barWidth, barHeight);
             dimensions = new Rectangle(0, 0, barWidth, barHeight);
             barTexture = barTex;
         }
 
         public override void draw(SpriteBatch spriteBatch, Rectangle drawSpace, Texture2D debugTex, bool debugging = false)
         {
-            float healthPercentage = ((float)actor.health / actor.maxHealth);
+            float healthPercentage = (float)((float)actor.health / actor.maxHealth);
             dimensions.X = actor.hitBox.Center.X - (dimensions.Width / 2) - drawSpace.X + displaceX;
             dimensions.Y = actor.hitBox.Center.Y - (dimensions.Height / 2) - drawSpace.Y + displaceY;
             //
-            bar.Width = (int)(dimensions.Width * healthPercentage);
-            bar.X = 0;
-            bar.Y = 0;
+            //bar.Width = (int)(barWidth * healthPercentage);
             barDimensions.X = dimensions.X;
-            barDimensions.Y = dimensions.Y;
-            barDimensions.Width = bar.Width;
-            barDimensions.Height = bar.Height;
+            barDimensions.Y = dimensions.Y - 30;
+            //barDimensions.Width = barWidth;
+            //barDimensions.Height = barHeight;
             
             //bar.Height = dimensions.Height;
             spriteBatch.Draw(barTexture, dimensions, Color.Black); 

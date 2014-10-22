@@ -97,6 +97,10 @@ namespace DreamStateMachine.Behaviors
         {
             WorldManager worldManager = (WorldManager) sender;
             World curWorld = worldManager.curWorld;
+            foreach (Actor actor in actors)
+            {
+                actor.remove();
+            }
             actors.Clear();
             actionLists.Clear();
         }
