@@ -20,8 +20,10 @@ namespace DreamStateMachine
         public List<IDrawable> menuItems;
         public Dictionary<IDrawable,IDrawable> healthBars;
         public Dictionary<String,Texture2D> guiTextures;
+        public List<IDrawable> tutorialGui;
         Actor protagonist;
         SpriteBatch spriteBatch;
+        SpriteFont spriteFont;
         bool debug;
         public bool menuEnabled;
         IDrawable curWorld;
@@ -43,6 +45,7 @@ namespace DreamStateMachine
             
             healthBars = new Dictionary<IDrawable, IDrawable>();
             guiTextures = new Dictionary<string,Texture2D>();
+            tutorialGui = new List<IDrawable>();
             debug = false;
 
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
@@ -61,6 +64,7 @@ namespace DreamStateMachine
             guiTextures["logo"] = content.Load<Texture2D>("DSMLogo");
             guiTextures["newGameButton"] = content.Load<Texture2D>("newGameButton");
             guiTextures["newGameButtonFocused"] = content.Load<Texture2D>("newGameButtonFocused");
+            spriteFont = content.Load<SpriteFont>("SpriteFont1");
         }
 
         private void Actor_Spawn(object sender, EventArgs e)
@@ -133,6 +137,10 @@ namespace DreamStateMachine
             }
             foreach( KeyValuePair<IDrawable,  IDrawable> entry in healthBars){
                 entry.Value.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], debug);
+            }
+            foreach( IDrawable entry in tutorialGui)
+            {
+                entry.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], debug);
             }
             //healthBar.draw();
         }
@@ -241,6 +249,38 @@ namespace DreamStateMachine
             this.curWorld = worldManager.curWorld;
             healthBars.Clear();
             actors.Clear();
+            tutorialGui.Clear();
+            if (worldManager.curLevel == 1)
+            {
+                WorldLabel walkUpLabel = new WorldLabel(spriteFont, "press w to walk up");
+                walkUpLabel.dimensions.X = 500;
+                walkUpLabel.dimensions.Y = 500;
+                tutorialGui.Add(walkUpLabel);
+                WorldLabel walkRightLabel = new WorldLabel(spriteFont, "press d to walk right");
+                walkRightLabel.dimensions.X = 1100;
+                walkRightLabel.dimensions.Y = 700;
+                tutorialGui.Add(walkRightLabel);
+                WorldLabel walkDownLabel = new WorldLabel(spriteFont, "press s to walk down");
+                walkDownLabel.dimensions.X = 1800;
+                walkDownLabel.dimensions.Y = 400;
+                tutorialGui.Add(walkDownLabel);
+                WorldLabel walkLeftLabel = new WorldLabel(spriteFont, "press a to walk left");
+                walkLeftLabel.dimensions.X = 1100;
+                walkLeftLabel.dimensions.Y = 1200;
+                tutorialGui.Add(walkLeftLabel);
+                WorldLabel followLabel = new WorldLabel(spriteFont, "Your character follows the mouse cursor");
+                followLabel.dimensions.X = 400;
+                followLabel.dimensions.Y = 1800;
+                tutorialGui.Add(followLabel);
+                WorldLabel attackLabel = new WorldLabel(spriteFont, "click the left mouse button to attack");
+                attackLabel.dimensions.X = -500;
+                attackLabel.dimensions.Y = 1500;
+                tutorialGui.Add(attackLabel);
+                WorldLabel useLabel = new WorldLabel(spriteFont, "press e to go down stairs");
+                useLabel.dimensions.X = -200;
+                useLabel.dimensions.Y = 200;
+                tutorialGui.Add(useLabel);
+            }
         }
     }
 }

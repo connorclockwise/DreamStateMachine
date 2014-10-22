@@ -8,23 +8,27 @@ using DreamStateMachine.Game.GUI;
 
 namespace DreamStateMachine
 {
-    class Label: UIComponent
+    class WorldLabel: Label
     {
 
-        public SpriteFont spriteFont;
-        public String contents;
-        public Vector2 pos;
+        Vector2 normalizedPos;
 
-        public Label(SpriteFont spriteFont, String contents):base()
+        public WorldLabel(SpriteFont spriteFont, String contents):base(spriteFont, contents)
         {
-            this.spriteFont = spriteFont;
-            this.contents = contents;
-            pos = new Vector2(0, 0);
+            dimensions.Width = (int)spriteFont.MeasureString(contents).X;
+            dimensions.Height = (int)spriteFont.MeasureString(contents).Y;
+            normalizedPos = new Vector2();
         }
 
         public override void draw(SpriteBatch spriteBatch, Rectangle drawSpace, Texture2D debugTex, bool debugging = false)
         {
-            spriteBatch.DrawString(spriteFont, contents, pos, Color.White);
+            if (dimensions.Intersects(drawSpace))
+            {
+                normalizedPos.X = dimensions.X - drawSpace.X;
+                normalizedPos.Y = dimensions.Y - drawSpace.Y;
+                spriteBatch.DrawString(base.spriteFont, base.contents, normalizedPos, Color.White);
+            }
+            
         }
 
         public override void giveFocus()

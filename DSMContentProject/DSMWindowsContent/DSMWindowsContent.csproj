@@ -52,11 +52,6 @@
       <Project>{2037DFA6-4065-498F-B91B-9C4C29D433A4}</Project>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="SpriteFont1.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

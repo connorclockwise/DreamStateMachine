@@ -34,10 +34,10 @@ namespace DreamStateMachine
             dimensions.X = actor.hitBox.Center.X - (dimensions.Width / 2) - drawSpace.X + displaceX;
             dimensions.Y = actor.hitBox.Center.Y - (dimensions.Height / 2) - drawSpace.Y + displaceY;
             //
-            //bar.Width = (int)(barWidth * healthPercentage);
+            bar.Width = (int)(barTexture.Width * healthPercentage);
             barDimensions.X = dimensions.X;
-            barDimensions.Y = dimensions.Y - 30;
-            //barDimensions.Width = barWidth;
+            barDimensions.Y = dimensions.Y;
+            barDimensions.Width = (int)(barWidth * healthPercentage);
             //barDimensions.Height = barHeight;
             
             //bar.Height = dimensions.Height;
