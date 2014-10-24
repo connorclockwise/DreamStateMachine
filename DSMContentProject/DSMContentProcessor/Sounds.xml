@@ -14,4 +14,25 @@
     className="hurt1"
     filePath="sfx/hurt1">
   </Sound>
+
+  <Sound
+    className="templeTheme"
+    filePath="StainedGlassAndSpookySkeletons">
+  </Sound>
+  <Sound
+    className="forestTheme"
+    filePath="LumiasGrove">
+  </Sound>
+  <Sound
+    className="nightmareTheme"
+    filePath="Steps">
+  </Sound>
+  <Sound
+    className="iceTheme"
+    filePath="CrystallineDreams">
+  </Sound>
+  <Sound
+    className="tutorialTheme"
+    filePath="GoodNight">
+  </Sound>
 </Sounds>

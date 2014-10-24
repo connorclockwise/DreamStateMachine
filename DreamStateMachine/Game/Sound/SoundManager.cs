@@ -18,10 +18,12 @@ namespace DreamStateMachine
         static Dictionary<String, Sound> soundPrototypes;
         static Dictionary<String, Song> songPrototypes;
         private Song curSong;
+        private SongCollection songCollection;
 
         private SoundManager()
         {
             MediaPlayer.IsRepeating = false;
+            songCollection = new SongCollection();
         }
 
         public static SoundManager Instance
@@ -60,13 +62,14 @@ namespace DreamStateMachine
                 effect = content.Load<SoundEffect>(sound.Attribute("filePath").Value);
                 soundPrototypes[soundClass] = new Sound(effect);
             }
-            foreach (XElement song in songs)
-            {
-                songName = song.Attribute("name").Value;
-                songPath = song.Attribute("filePath").Value;
-                //actualSong = content.Load<Song>("StainedGlassAndSpookySkeletons");
-                songPrototypes[songName] = content.Load<Song>(songPath);
-            }
+            //foreach (XElement song in songs)
+            //{
+            //    songName = song.Attribute("name").Value;
+            //    songPath = song.Attribute("filePath").Value;
+            //    //actualSong = content.Load<Song>("StainedGlassAndSpookySkeletons");
+            //    songPrototypes[songName] = content.Load<Song>(songPath);
+            //    songCollection.Add(songPrototypes[songName]);
+            //}
         }
 
         public void playSound(String soundClass)
@@ -77,14 +80,21 @@ namespace DreamStateMachine
         public void playSong(String songName)
         {
             //curSong = ;
-            MediaPlayer.Play(songPrototypes[songName]);
-            
-
+            //MediaPlayer.Play(songPrototypes[songName]);
+            //MediaPlayer.Play(songCollection);
+            soundPrototypes[songName].playSound();
         }
 
-        public void stopSong(String songName)
+        public void switchSong(String firstSong, String secondSong)
         {
-            MediaPlayer.Stop();
+            soundPrototypes[firstSong].stopSound();
+            soundPrototypes[secondSong].playSound();
+            //MediaPlayer.Stop();
+            //MediaPlayer.Play(songCollection, 3);
+            //MediaPlayer.Stop();
+            //MediaPlayer.Play(songPrototypes[secondSong]);
+            //MediaPlayer.Queue.ActiveSongIndex = 1;
+            //MediaPlayer.Play(
             //MediaPlayer.Pause();
             //MediaPlayer.Stop();
             //MediaPlayer.Queue.ActiveSong.Dispose();

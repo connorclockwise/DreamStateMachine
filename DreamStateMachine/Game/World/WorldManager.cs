@@ -112,7 +112,7 @@ namespace DreamStateMachine
             curWorldNode = rootWorld;
             worldTree.setRoot(rootWorld);
             SoundManager.Instance.playSong("templeTheme");
-            SoundManager.Instance.playSong(curWorld.themeMusic);
+            //SoundManager.Instance.playSong(curWorld.themeMusic);
             
             onWorldChange();
 
@@ -162,7 +162,8 @@ namespace DreamStateMachine
             curLevel++;
             //if (curWorld.themeMusic != prevWorld.themeMusic)
             //{
-            SoundManager.Instance.playSong(curWorld.themeMusic);
+            SoundManager.Instance.playSong("templeTheme");
+            SoundManager.Instance.switchSong("templeTheme", curWorld.themeMusic);
                 //SoundManager.Instance.stopSong(prevWorld.themeMusic);
             //}
             return tempWorld;

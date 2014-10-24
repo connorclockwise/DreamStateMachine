@@ -29,6 +29,11 @@ namespace DreamStateMachine
             effect.Play();
         }
 
+        public void stopSound()
+        {
+            effect.Stop();
+        }
+
         public void fadeInSound(float fadeTime)
         {
             curFadeTime = 0;

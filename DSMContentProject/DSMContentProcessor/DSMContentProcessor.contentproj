@@ -204,7 +204,7 @@
     <Compile Include="StainedGlassAndSpookySkeletons.mp3">
       <Name>StainedGlassAndSpookySkeletons</Name>
       <Importer>Mp3Importer</Importer>
-      <Processor>MGSongProcessor</Processor>
+      <Processor>MGSoundEffectProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="TempleFloor.png">
@@ -273,7 +273,7 @@
     <Compile Include="LumiasGrove.mp3">
       <Name>LumiasGrove</Name>
       <Importer>Mp3Importer</Importer>
-      <Processor>MGSongProcessor</Processor>
+      <Processor>MGSoundEffectProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -281,7 +281,7 @@
     <Compile Include="GoodNight.mp3">
       <Name>GoodNight</Name>
       <Importer>Mp3Importer</Importer>
-      <Processor>MGSongProcessor</Processor>
+      <Processor>MGSoundEffectProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -289,7 +289,7 @@
     <Compile Include="CrystallineDreams.mp3">
       <Name>CrystallineDreams</Name>
       <Importer>Mp3Importer</Importer>
-      <Processor>MGSongProcessor</Processor>
+      <Processor>MGSoundEffectProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -297,7 +297,7 @@
     <Compile Include="Steps.mp3">
       <Name>Steps</Name>
       <Importer>Mp3Importer</Importer>
-      <Processor>MGSongProcessor</Processor>
+      <Processor>MGSoundEffectProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
