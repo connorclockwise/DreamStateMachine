@@ -16,6 +16,7 @@ namespace DreamStateMachine.Behaviors
         Dictionary<String, Actor> actorPrototypes;
         Dictionary<String, AnimationInfo> animationPrototypes;
         Random random;
+        Actor player;
 
         public ActorManager()
         {
@@ -189,11 +190,20 @@ namespace DreamStateMachine.Behaviors
             {
                 if (actorPrototypes.ContainsKey(spawn.className))
                 {
-                        Actor actorToCopy = (Actor)actorPrototypes[spawn.className].Clone();
-                        Point spawnTile = spawn.tilePosition;
-                        Vector2 newSightVector = new Vector2((float)random.NextDouble() * 2 - 1, (float)random.NextDouble() * 2 - 1);
-                        actorToCopy.setGaze(newSightVector);
-                        spawnActor(actorToCopy, spawnTile, spawn.spawnType);
+                    Point spawnTile = spawn.tilePosition;
+                    Vector2 newSightVector = new Vector2((float)random.NextDouble() * 2 - 1, (float)random.NextDouble() * 2 - 1);
+                    Actor actorToCopy;
+                    if (spawn.className.Equals("player") && player != null)
+                    {
+                        actorToCopy = (Actor)player.Clone();
+                    }
+                    else
+                    {
+                        actorToCopy = (Actor)actorPrototypes[spawn.className].Clone();
+                        
+                    }
+                    actorToCopy.setGaze(newSightVector);
+                    spawnActor(actorToCopy, spawnTile, spawn.spawnType);
                 }
             }
         }
@@ -216,11 +226,13 @@ namespace DreamStateMachine.Behaviors
         private void World_Change(Object sender, EventArgs eventArgs)
         {
             WorldManager worldManager = (WorldManager)sender;
+            player = worldManager.playerTransfer;
             if (worldManager.curWorld != null)
             {
                 List<SpawnFlag> spawns = worldManager.curWorld.getSpawns();
                 spawnActors(spawns);
             }
+            player = null;
         }
     }
 }
