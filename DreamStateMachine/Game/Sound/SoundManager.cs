@@ -17,10 +17,11 @@ namespace DreamStateMachine
         private static object syncRoot = new object();
         static Dictionary<String, Sound> soundPrototypes;
         static Dictionary<String, Song> songPrototypes;
+        private Song curSong;
 
         private SoundManager()
         {
-           
+            MediaPlayer.IsRepeating = false;
         }
 
         public static SoundManager Instance
@@ -63,9 +64,8 @@ namespace DreamStateMachine
             {
                 songName = song.Attribute("name").Value;
                 songPath = song.Attribute("filePath").Value;
-                actualSong = content.Load<Song>("StainedGlassAndSpookySkeletons");
-                //actualSong = content.Load<Song>(song.Attribute("filepath").Value);
-                songPrototypes[songName] = actualSong;
+                //actualSong = content.Load<Song>("StainedGlassAndSpookySkeletons");
+                songPrototypes[songName] = content.Load<Song>(songPath);
             }
         }
 
@@ -76,7 +76,19 @@ namespace DreamStateMachine
 
         public void playSong(String songName)
         {
+            //curSong = ;
             MediaPlayer.Play(songPrototypes[songName]);
+            
+
+        }
+
+        public void stopSong(String songName)
+        {
+            MediaPlayer.Stop();
+            //MediaPlayer.Pause();
+            //MediaPlayer.Stop();
+            //MediaPlayer.Queue.ActiveSong.Dispose();
+            //MediaPlayer.MoveNext();
         }
 
         public void update(float dt)

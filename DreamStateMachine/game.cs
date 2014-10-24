@@ -137,6 +137,7 @@ namespace DreamStateMachine
 
             cam.enterStartMenu();
             cam.NewGame += new EventHandler<EventArgs>(NewGameSelected);
+            cam.Tutorial += new EventHandler<EventArgs>(TutorialSelected);
 
         }
 
@@ -173,7 +174,11 @@ namespace DreamStateMachine
         public void startNewGame()
         {
             worldManager.initStartingWorld();
-            SoundManager.Instance.playSong("templeTheme");
+        }
+
+        public void startTutorial()
+        {
+            worldManager.initTutorial();
         }
 
         public void MainGameUpdate(GameTime gameTime)
@@ -293,6 +298,18 @@ namespace DreamStateMachine
             //Console.Write("new game selected");
             cam.menuEnabled = false;
             startNewGame();
+
+            gameUpdateStack.Push(MainGameUpdate);
+            gameDrawStack.Push(MainGameDraw);
+            gameUpdate = gameUpdateStack.Peek();
+            gameDraw = gameDrawStack.Peek();
+        }
+
+        public void TutorialSelected(Object sender, EventArgs eventArgs)
+        {
+            //Console.Write("new game selected");
+            cam.menuEnabled = false;
+            startTutorial();
 
             gameUpdateStack.Push(MainGameUpdate);
             gameDrawStack.Push(MainGameDraw);

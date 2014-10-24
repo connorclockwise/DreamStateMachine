@@ -14,6 +14,7 @@ namespace DreamStateMachine
     {
 
         public event EventHandler<EventArgs> NewGame;
+        public event EventHandler<EventArgs> Tutorial;
 
         public Rectangle drawSpace;
         public List<IDrawable> actors;
@@ -64,6 +65,8 @@ namespace DreamStateMachine
             guiTextures["logo"] = content.Load<Texture2D>("titlePanel");
             guiTextures["newGameButton"] = content.Load<Texture2D>("newGameBtnUnfocused");
             guiTextures["newGameButtonFocused"] = content.Load<Texture2D>("newGameBtnFocused");
+            guiTextures["tutorialButton"] = content.Load<Texture2D>("tutorialBtnUnfocused");
+            guiTextures["tutorialButtonFocused"] = content.Load<Texture2D>("tutorialBtnFocused");
             spriteFont = content.Load<SpriteFont>("SpriteFont1");
         }
 
@@ -174,23 +177,44 @@ namespace DreamStateMachine
             logo.dimensions.Y = 50;
             logo.dimensions.Width = guiTextures["logo"].Width;
             logo.dimensions.Height = guiTextures["logo"].Height * 4 / 5;
+            bg.addChild(logo);
             Button newGameButton = new Button(guiTextures["newGameButton"]);
-            newGameButton.dimensions.X = drawSpace.Width / 2 - guiTextures["newGameButton"].Width / 2;
+            newGameButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
             newGameButton.dimensions.Y = 400;
-            newGameButton.dimensions.Width = guiTextures["newGameButton"].Width;
-            newGameButton.dimensions.Height = guiTextures["newGameButton"].Height * 4 / 5;
+            newGameButton.dimensions.Width = 450;
+            newGameButton.dimensions.Height = 125;
             newGameButton.onClick = newGameClicked;
             bg.addChild(newGameButton);
-            bg.addChild(logo);
+            Button tutorialButton = new Button(guiTextures["tutorialButton"]);
+            tutorialButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
+            tutorialButton.dimensions.Y = 550;
+            tutorialButton.dimensions.Width = 450;
+            tutorialButton.dimensions.Height = 125;
+            tutorialButton.onClick = tutorialClicked;
+            bg.addChild(tutorialButton);
+            //Button creditsButton = new Button(guiTextures["tutorialButton"]);
+            //creditsButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
+            //creditsButton.dimensions.Y = 550;
+            //creditsButton.dimensions.Width = 450;
+            //creditsButton.dimensions.Height = 125;
+            //creditsButton.onClick = newGameClicked;
+            //bg.addChild(creditsButton);
+
+
             menuItems.Add(bg);
             rootGUIElement = bg;
             menuEnabled = true;
             //EnableMenu(this, EventArgs.Empty);
         }
 
-        public void newGameClicked()
+        private void newGameClicked()
         {
             NewGame(this, EventArgs.Empty);
+        }
+
+        private void tutorialClicked()
+        {
+            Tutorial(this, EventArgs.Empty);
         }
 
         public void handleGuiControls()
@@ -269,7 +293,7 @@ namespace DreamStateMachine
             if (worldManager.curWorld != null)
             {
                 this.curWorld = worldManager.curWorld;
-                if (worldManager.curLevel == 1)
+                if (worldManager.curWorld.isTutorial)
                 {
                     WorldLabel walkUpLabel = new WorldLabel(spriteFont, "press w to walk up");
                     walkUpLabel.dimensions.X = 500;

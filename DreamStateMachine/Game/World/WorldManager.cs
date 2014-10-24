@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using System.Xml.Linq;
 using DreamStateMachine;
+using Microsoft.Xna.Framework.Media;
 
 namespace DreamStateMachine
 {
@@ -106,12 +107,26 @@ namespace DreamStateMachine
         public void initStartingWorld()
         {
             curLevel = 1;
-            //curWorld = this.worldFactory.generateWorld(worldPrototypes["forest"], 5);
-            curWorld = loadTutorialLevel();
+            curWorld = this.worldFactory.generateWorld(worldPrototypes["forest"], 5);
             Node<World> rootWorld = new Node<World>(curWorld);
             curWorldNode = rootWorld;
-            //Node<World> newWorldNode = Node<World>(curWorld);
             worldTree.setRoot(rootWorld);
+            SoundManager.Instance.playSong("templeTheme");
+            SoundManager.Instance.playSong(curWorld.themeMusic);
+            
+            onWorldChange();
+
+        }
+
+        public void initTutorial()
+        {
+            curLevel = 1;
+            curWorld = loadTutorialLevel();
+            curWorld.isTutorial = true;
+            Node<World> rootWorld = new Node<World>(curWorld);
+            curWorldNode = rootWorld;
+            worldTree.setRoot(rootWorld);
+            //SoundManager.Instance.playSong(curWorld.themeMusic);
             onWorldChange();
         }
 
@@ -137,37 +152,25 @@ namespace DreamStateMachine
 
         public World createNextWorld(int worldIndex)
         {
+            World prevWorld = curWorld;
+            
             World tempWorld = this.worldFactory.generateWorld(worldPrototypes["nightmare"], 5);
             Node<World> tempNode = new Node<World>(tempWorld);
             curWorldNode.Children.Insert(worldIndex, tempNode);
             curWorldNode = curWorldNode.Children[worldIndex];
             curWorld = curWorldNode.Value;
             curLevel++;
+            //if (curWorld.themeMusic != prevWorld.themeMusic)
+            //{
+            SoundManager.Instance.playSong(curWorld.themeMusic);
+                //SoundManager.Instance.stopSong(prevWorld.themeMusic);
+            //}
             return tempWorld;
         }
 
         private void onWorldChange(){
             worldChange(this, EventArgs.Empty);
         }
-
-
-        //public World loadFromCustom(int[,] tileMap, bool[,] collisionMap)
-        //{
-        //    Point playerSpawnPos = new Point(1, 1);
-        //    return this.loadFromCustom(worldPrototypes["tundra"], tileMap, collisionMap, playerSpawnPos);
-        //}
-
-        //public World loadFromCustom(WorldConfig worldConfig, int[,] tileMap, bool[,] collisionMap, Point playerSpawnPos)
-        //{
-        //    return this.loadFromCustom(worldConfig.texture, worldConfig.tileSize, tileMap, collisionMap, playerSpawnPos);
-        //}
-
-        //public World loadFromCustom(Texture2D tile, int tileSize, int[,] tileMap, bool[,] collisionMap, Point playerSpawnPos)
-        //{
-        //    List<String> enemyTypeList = new List<String>();
-        //    List<Point> enemySpawnPosList = new List<Point>();
-        //    return this.loadFromCustom(tile, tileSize, tileMap, collisionMap, playerSpawnPos, enemyTypeList, enemySpawnPosList);
-        //}
 
         public World loadFromCustom(WorldConfig worldConfig, int[,] tileMap, bool[,] collisionMap, Point playerSpawnPos, List<String> enemyTypeList, List<Point> enemySpawnPosList)
         {

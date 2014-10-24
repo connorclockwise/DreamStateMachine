@@ -4,4 +4,20 @@
     name="templeTheme"
     filePath="StainedGlassAndSpookySkeletons">
   </Song>
+  <Song
+    name="forestTheme"
+    filePath="LumiasGrove">
+  </Song>
+  <Song
+    name="nightmareTheme"
+    filePath="Steps">
+  </Song>
+  <Song
+    name="iceTheme"
+    filePath="CrystallineDreams">
+  </Song>
+  <Song
+    name="tutorialTheme"
+    filePath="GoodNight">
+  </Song>
 </Songs>

@@ -12,6 +12,7 @@ namespace DreamStateMachine
     {
         List<Room> roomList;
         List<SpawnFlag> spawns;
+        List<Rectangle> usePoints;
         Point topLeftTilePos;
         Point topRightTilePos;
         Point bottomLeftTilePos;
@@ -22,6 +23,7 @@ namespace DreamStateMachine
         int[,] tileMap;
         bool[,] collisionMap;
         public int tileSize;
+        public bool isTutorial;
 
         public World(Texture2D floorTex, int ts)
         {

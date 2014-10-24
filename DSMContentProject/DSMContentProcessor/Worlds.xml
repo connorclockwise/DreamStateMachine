@@ -6,7 +6,7 @@
     width="50"
     height="50"
     tileSize="64"
-    themeMusic="LumiasGrove">
+    themeMusic="forestTheme">
     <Enemy class="skeleton">
     </Enemy>
   </World>
@@ -16,7 +16,7 @@
     width="50"
     height="50"
     tileSize="96"
-    themeMusic="Steps">
+    themeMusic="nightmareTheme">
     <Enemy class="skeleton">
     </Enemy>
   </World>
@@ -26,7 +26,7 @@
     width="50"
     height="50"
     tileSize="64"
-    themeMusic="StainedGlassAndSpookySkeletons">
+    themeMusic="templeTheme">
     <Enemy class="skeleton">
     </Enemy>
   </World>
@@ -36,7 +36,7 @@
     width="50"
     height="50"
     tileSize="64"
-    themeMusic="CrystallineDreams">
+    themeMusic="iceTheme">
     <Enemy class="golem">
     </Enemy>
     <Enemy class="penguin">
@@ -48,7 +48,7 @@
     width="50"
     height="50"
     tileSize="64"
-    themeMusic="GoodNight">
+    themeMusic="tutorialTheme">
     <Enemy class="skeleton">
     </Enemy>
   </World>
