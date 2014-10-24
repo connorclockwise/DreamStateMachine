@@ -60,10 +60,10 @@ namespace DreamStateMachine
             guiTextures["debugSquare"] = content.Load<Texture2D>("debugSquare");
             guiTextures["healthBar"] = content.Load<Texture2D>("playerHealthBarTransparency");
             guiTextures["enemyHealthBar"] = content.Load<Texture2D>("enemyHealthBarTransparency");
-            guiTextures["menuPanel"] = content.Load<Texture2D>("nightSky");
-            guiTextures["logo"] = content.Load<Texture2D>("DSMLogo");
-            guiTextures["newGameButton"] = content.Load<Texture2D>("newGameButton");
-            guiTextures["newGameButtonFocused"] = content.Load<Texture2D>("newGameButtonFocused");
+            guiTextures["menuPanel"] = content.Load<Texture2D>("splashScreen");
+            guiTextures["logo"] = content.Load<Texture2D>("titlePanel");
+            guiTextures["newGameButton"] = content.Load<Texture2D>("newGameBtnUnfocused");
+            guiTextures["newGameButtonFocused"] = content.Load<Texture2D>("newGameBtnFocused");
             spriteFont = content.Load<SpriteFont>("SpriteFont1");
         }
 
@@ -96,8 +96,22 @@ namespace DreamStateMachine
 
         private void Actor_Death(object sender, EventArgs e)
         {
-            healthBars.Remove((Actor)sender);
-            actors.Remove((Actor)sender);
+            Actor deadActor = (Actor)sender;
+            healthBars.Remove(deadActor);
+            actors.Remove(deadActor);
+            if (deadActor.className == "player")
+            {
+                Label deadLabel = new Label(spriteFont, "YEAH YOU ARE PRETTY MUCH DEAD HOMBRE");
+                deadLabel.color = Color.Red;
+                deadLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString("YEAH YOU ARE PRETTY MUCH DEAD HOMBRE").X / 2;
+                deadLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString("YEAH YOU ARE PRETTY MUCH DEAD HOMBRE").Y / 2;
+                tutorialGui.Add(deadLabel);
+                Label helpLabel = new Label(spriteFont, "Press e to start over ya dangus");
+                //label.color = Color.Red;
+                helpLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString("Press e to start over ya dangus").X / 2;
+                helpLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString("Press e to start over ya dangus").Y / 2 + 50;
+                tutorialGui.Add(helpLabel);
+            }
         }
 
         public void ToggleDebug(){
@@ -147,6 +161,9 @@ namespace DreamStateMachine
 
         public void enterStartMenu()
         {
+            menuItems.Clear();
+            drawSpace.X = 0;
+            drawSpace.Y = 0;
             Panel bg = new Panel(guiTextures["menuPanel"], new Color(255, 255, 255));
             bg.dimensions.X = drawSpace.X;
             bg.dimensions.Y = drawSpace.Y;
@@ -246,40 +263,43 @@ namespace DreamStateMachine
         {
 
             WorldManager worldManager = (WorldManager)sender;
-            this.curWorld = worldManager.curWorld;
             healthBars.Clear();
             actors.Clear();
             tutorialGui.Clear();
-            if (worldManager.curLevel == 1)
+            if (worldManager.curWorld != null)
             {
-                WorldLabel walkUpLabel = new WorldLabel(spriteFont, "press w to walk up");
-                walkUpLabel.dimensions.X = 500;
-                walkUpLabel.dimensions.Y = 500;
-                tutorialGui.Add(walkUpLabel);
-                WorldLabel walkRightLabel = new WorldLabel(spriteFont, "press d to walk right");
-                walkRightLabel.dimensions.X = 1100;
-                walkRightLabel.dimensions.Y = 700;
-                tutorialGui.Add(walkRightLabel);
-                WorldLabel walkDownLabel = new WorldLabel(spriteFont, "press s to walk down");
-                walkDownLabel.dimensions.X = 1800;
-                walkDownLabel.dimensions.Y = 400;
-                tutorialGui.Add(walkDownLabel);
-                WorldLabel walkLeftLabel = new WorldLabel(spriteFont, "press a to walk left");
-                walkLeftLabel.dimensions.X = 1100;
-                walkLeftLabel.dimensions.Y = 1200;
-                tutorialGui.Add(walkLeftLabel);
-                WorldLabel followLabel = new WorldLabel(spriteFont, "Your character follows the mouse cursor");
-                followLabel.dimensions.X = 400;
-                followLabel.dimensions.Y = 1800;
-                tutorialGui.Add(followLabel);
-                WorldLabel attackLabel = new WorldLabel(spriteFont, "click the left mouse button to attack");
-                attackLabel.dimensions.X = -500;
-                attackLabel.dimensions.Y = 1500;
-                tutorialGui.Add(attackLabel);
-                WorldLabel useLabel = new WorldLabel(spriteFont, "press e to go down stairs");
-                useLabel.dimensions.X = -200;
-                useLabel.dimensions.Y = 200;
-                tutorialGui.Add(useLabel);
+                this.curWorld = worldManager.curWorld;
+                if (worldManager.curLevel == 1)
+                {
+                    WorldLabel walkUpLabel = new WorldLabel(spriteFont, "press w to walk up");
+                    walkUpLabel.dimensions.X = 500;
+                    walkUpLabel.dimensions.Y = 500;
+                    tutorialGui.Add(walkUpLabel);
+                    WorldLabel walkRightLabel = new WorldLabel(spriteFont, "press d to walk right");
+                    walkRightLabel.dimensions.X = 1100;
+                    walkRightLabel.dimensions.Y = 700;
+                    tutorialGui.Add(walkRightLabel);
+                    WorldLabel walkDownLabel = new WorldLabel(spriteFont, "press s to walk down");
+                    walkDownLabel.dimensions.X = 1800;
+                    walkDownLabel.dimensions.Y = 400;
+                    tutorialGui.Add(walkDownLabel);
+                    WorldLabel walkLeftLabel = new WorldLabel(spriteFont, "press a to walk left");
+                    walkLeftLabel.dimensions.X = 1100;
+                    walkLeftLabel.dimensions.Y = 1200;
+                    tutorialGui.Add(walkLeftLabel);
+                    WorldLabel followLabel = new WorldLabel(spriteFont, "Your character faces the mouse cursor");
+                    followLabel.dimensions.X = 400;
+                    followLabel.dimensions.Y = 1800;
+                    tutorialGui.Add(followLabel);
+                    WorldLabel attackLabel = new WorldLabel(spriteFont, "click the left mouse button to attack");
+                    attackLabel.dimensions.X = -450;
+                    attackLabel.dimensions.Y = 1500;
+                    tutorialGui.Add(attackLabel);
+                    WorldLabel useLabel = new WorldLabel(spriteFont, "press e when you are standing over stairs to go down a floor");
+                    useLabel.dimensions.X = -200;
+                    useLabel.dimensions.Y = 50;
+                    tutorialGui.Add(useLabel);
+                }
             }
         }
     }

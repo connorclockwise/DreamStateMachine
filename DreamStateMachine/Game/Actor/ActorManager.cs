@@ -216,8 +216,11 @@ namespace DreamStateMachine.Behaviors
         private void World_Change(Object sender, EventArgs eventArgs)
         {
             WorldManager worldManager = (WorldManager)sender;
-            List<SpawnFlag> spawns = worldManager.curWorld.getSpawns();
-            spawnActors(spawns);
+            if (worldManager.curWorld != null)
+            {
+                List<SpawnFlag> spawns = worldManager.curWorld.getSpawns();
+                spawnActors(spawns);
+            }
         }
     }
 }

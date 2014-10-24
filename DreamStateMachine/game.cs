@@ -81,6 +81,7 @@ namespace DreamStateMachine
             gameUpdate = gameUpdateStack.Peek();
             gameDraw = gameDrawStack.Peek();
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
+            Actor.Use += new EventHandler<EventArgs>(Actor_Use);
         }
 
         /// <summary>
@@ -220,7 +221,10 @@ namespace DreamStateMachine
             {
                 List<Command> commands = inputHandler.handleInput();
                 foreach (Command c in commands)
-                    c.Execute(player);
+                {
+                    if (player != null)
+                        c.Execute(player);
+                }
             }
             else if (cam.menuEnabled && cam.rootGUIElement != null && inputHandler.controller)
             {
@@ -301,6 +305,24 @@ namespace DreamStateMachine
             Actor actor = (Actor)sender;
             if (actor.className == "player")
                 player = actor;
+        }
+
+        private void Actor_Use(Object sender, EventArgs eventArgs)
+        {
+            Actor deadActor = (Actor)sender;
+            if (deadActor.className == "player" && deadActor.health <= 0 && gameUpdateStack.Count > 1)
+            {
+                player = null;
+                
+                cam.enterStartMenu();
+                cam.drawSpace.X = 0;
+                cam.drawSpace.Y = 0;
+                worldManager.restart();
+                gameUpdateStack.Pop();
+                gameDrawStack.Pop();
+                gameUpdate = gameUpdateStack.Peek();
+                gameDraw = gameDrawStack.Peek();
+            }
         }
     }
 }

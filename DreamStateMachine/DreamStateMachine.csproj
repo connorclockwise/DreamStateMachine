@@ -74,7 +74,7 @@
     <Compile Include="game\Input\MoveCommand.cs" />
     <Compile Include="game\Input\PunchCommand.cs" />
     <Compile Include="game\Input\UseCommand.cs" />
-    <Compile Include="game\Items\ItemManager.cs" />
+    <Compile Include="game\Physics\Items\ItemManager.cs" />
     <Compile Include="game\Physics\PhysicsController.cs" />
     <Compile Include="game\Rendering\Camera.cs" />
     <Compile Include="game\Rendering\IDrawable.cs" />

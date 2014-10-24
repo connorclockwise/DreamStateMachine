@@ -17,6 +17,7 @@ namespace DreamStateMachine
         Point bottomLeftTilePos;
         Point spawnTile;
         Point bottomRightTilePos;
+        public String themeMusic;
         Texture2D floorTiles;
         int[,] tileMap;
         bool[,] collisionMap;

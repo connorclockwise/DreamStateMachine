@@ -5,7 +5,18 @@
     worldTexture="GrassFloor"
     width="50"
     height="50"
-    tileSize="64">
+    tileSize="64"
+    themeMusic="LumiasGrove">
+    <Enemy class="skeleton">
+    </Enemy>
+  </World>
+  <World
+    worldName="nightmare"
+    worldTexture="hellTiles"
+    width="50"
+    height="50"
+    tileSize="96"
+    themeMusic="Steps">
     <Enemy class="skeleton">
     </Enemy>
   </World>
@@ -14,7 +25,8 @@
     worldTexture="TempleFloor"
     width="50"
     height="50"
-    tileSize="64">
+    tileSize="64"
+    themeMusic="StainedGlassAndSpookySkeletons">
     <Enemy class="skeleton">
     </Enemy>
   </World>
@@ -23,10 +35,21 @@
     worldTexture="TundraFloor"
     width="50"
     height="50"
-    tileSize="64">
+    tileSize="64"
+    themeMusic="CrystallineDreams">
     <Enemy class="golem">
     </Enemy>
     <Enemy class="penguin">
+    </Enemy>
+  </World>
+  <World
+    worldName="tutorial"
+    worldTexture="TempleFloor"
+    width="50"
+    height="50"
+    tileSize="64"
+    themeMusic="GoodNight">
+    <Enemy class="skeleton">
     </Enemy>
   </World>
 </Worlds>

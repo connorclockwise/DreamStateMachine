@@ -269,7 +269,9 @@ namespace DreamStateMachine
         //Returns an array of enumerated tiles.
         public World generateWorld(WorldConfig worldConfig, int numEnemies)
         {
-            return generateWorld(worldConfig.texture, worldConfig.enemyClasses, worldConfig.width, worldConfig.height, worldConfig.tileSize, numEnemies);
+            World world = generateWorld(worldConfig.texture, worldConfig.enemyClasses, worldConfig.width, worldConfig.height, worldConfig.tileSize, numEnemies);
+            world.themeMusic = worldConfig.music;
+            return world;
         }
 
         public World generateWorld(Texture2D floorTex, List<String> enemyClasses, int width, int height, int tileSize, int numEnemies)

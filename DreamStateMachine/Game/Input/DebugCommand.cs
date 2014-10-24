@@ -11,7 +11,11 @@ namespace DreamStateMachine.Input
     {
         public override void Execute(Actor player)
         {
-            player.onPickup("bone");
+            //player.onPickup("bone");
+            //List<Rectangle> attackRect = new List<Rectangle>();
+            //attackRect.Add(player.hitBox);
+            //player.onHurt(new DamageInfo(player, 100, attackRect));
+            player.kill();
         }
 
         public override void Execute(Game.GUI.UIComponent uiComponent)

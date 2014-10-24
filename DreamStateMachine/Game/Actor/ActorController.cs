@@ -104,6 +104,5 @@ namespace DreamStateMachine.Behaviors
             actors.Clear();
             actionLists.Clear();
         }
-
     }
 }

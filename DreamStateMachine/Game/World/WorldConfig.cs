@@ -17,6 +17,7 @@ namespace DreamStateMachine
         public int width;
         public int height;
         public int tileSize;
+        public String music;
 
         //Constructor
         public WorldConfig(String worldName, List<String> enemyClasses, Texture2D worldTexture, int worldWidth, int worldHeight, int tileSize)

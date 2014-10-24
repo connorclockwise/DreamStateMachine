@@ -14,17 +14,21 @@ namespace DreamStateMachine
         public SpriteFont spriteFont;
         public String contents;
         public Vector2 pos;
+        public Color color;
 
         public Label(SpriteFont spriteFont, String contents):base()
         {
             this.spriteFont = spriteFont;
             this.contents = contents;
+            color = Color.White;
             pos = new Vector2(0, 0);
         }
 
         public override void draw(SpriteBatch spriteBatch, Rectangle drawSpace, Texture2D debugTex, bool debugging = false)
         {
-            spriteBatch.DrawString(spriteFont, contents, pos, Color.White);
+            pos.X = dimensions.X;
+            pos.Y = dimensions.Y;
+            spriteBatch.DrawString(spriteFont, contents, pos, color);
         }
 
         public override void giveFocus()

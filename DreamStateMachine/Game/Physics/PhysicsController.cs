@@ -257,8 +257,11 @@ namespace DreamStateMachine.Behaviors
 
         private void World_Change(Object sender, EventArgs eventArgs)
         {
+            actors.Clear();
+            
             WorldManager worldManager = (WorldManager)sender;
-            world = worldManager.curWorld;
+            if(worldManager.curWorld != null)
+                world = worldManager.curWorld;
         }
     }
 }

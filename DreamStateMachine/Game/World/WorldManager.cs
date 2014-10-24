@@ -44,28 +44,31 @@ namespace DreamStateMachine
 
         private void Actor_Use(object sender, EventArgs e)
         {
-            
+           
             Actor usingActor = (Actor)sender;
-            int reach = usingActor.reach;
-            Vector2 sightVector = usingActor.sightVector;
-            Point usePoint = new Point();
-            usePoint.X = (int)((usingActor.hitBox.Center.X + (int)(sightVector.X * reach))  / this.curWorld.tileSize);
-            usePoint.Y = (int)((usingActor.hitBox.Center.Y + (int)(sightVector.Y * reach)) / this.curWorld.tileSize);
-            int[,] tileMap = this.curWorld.getTileMap();
-            if (tileMap[usePoint.Y, usePoint.X] == 15)
+            if (usingActor.health > 0)
             {
-                //worldManager.curWorld.useTileAtPoint(usePoint);
-                //Console.Write(worldManager.curLevel);
-                if (this.getWorldChild(0) == null)
+                int reach = usingActor.reach;
+                Vector2 sightVector = usingActor.sightVector;
+                Point usePoint = new Point();
+                usePoint.X = (int)((usingActor.hitBox.Center.X + (int)(sightVector.X * reach)) / this.curWorld.tileSize);
+                usePoint.Y = (int)((usingActor.hitBox.Center.Y + (int)(sightVector.Y * reach)) / this.curWorld.tileSize);
+                int[,] tileMap = this.curWorld.getTileMap();
+                if (tileMap[usePoint.Y, usePoint.X] == 15)
                 {
-                    this.createNextWorld(0);
-                    onWorldChange();
-                    
-                    //this.spawnActor(protagonist, worldManager.curWorld.getSpawnPos(), 1);
-                    //this.spawnActors(worldManager.curWorld.getSpawns());
+                    //worldManager.curWorld.useTileAtPoint(usePoint);
+                    //Console.Write(worldManager.curLevel);
+                    if (this.getWorldChild(0) == null)
+                    {
+                        this.createNextWorld(0);
+                        onWorldChange();
+
+                        //this.spawnActor(protagonist, worldManager.curWorld.getSpawnPos(), 1);
+                        //this.spawnActors(worldManager.curWorld.getSpawns());
+                    }
+                    //isLoadingWorld = false;
+                    //Console.Write(worldManager.curLevel);
                 }
-                //isLoadingWorld = false;
-                //Console.Write(worldManager.curLevel);
             }
         }
 
@@ -90,13 +93,13 @@ namespace DreamStateMachine
                 width = int.Parse(world.Attribute("width").Value);
                 height = int.Parse(world.Attribute("height").Value);
                 tileSize = int.Parse(world.Attribute("tileSize").Value);
-
                 enemyClasses = new List<String>();
                 foreach (XElement enemy in enemies)
                 {
                     enemyClasses.Add(enemy.Attribute("class").Value);
                 }
                 worldPrototypes[worldName] = new WorldConfig(worldName, enemyClasses, texture, width, height, tileSize);
+                worldPrototypes[worldName].music = world.Attribute("themeMusic").Value;
             }
         }
 
@@ -134,7 +137,7 @@ namespace DreamStateMachine
 
         public World createNextWorld(int worldIndex)
         {
-            World tempWorld = this.worldFactory.generateWorld(worldPrototypes["tundra"], 5);
+            World tempWorld = this.worldFactory.generateWorld(worldPrototypes["nightmare"], 5);
             Node<World> tempNode = new Node<World>(tempWorld);
             curWorldNode.Children.Insert(worldIndex, tempNode);
             curWorldNode = curWorldNode.Children[worldIndex];
@@ -237,6 +240,14 @@ namespace DreamStateMachine
             List<Point> enemySpawnPosList = new List<Point>();
             enemySpawnPosList.Add(new Point(4, 13));
             return this.loadFromCustom(worldPrototypes["forest"], tileMap, collisionMap, playerSpawnPos, enemyTypeList, enemySpawnPosList);
+        }
+
+        public void restart()
+        {
+            curLevel = -1;
+            curWorld = null;
+            curWorldNode = null;
+            worldChange(this, EventArgs.Empty);
         }
     }
 

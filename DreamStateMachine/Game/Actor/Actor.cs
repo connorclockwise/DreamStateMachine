@@ -193,6 +193,12 @@ namespace DreamStateMachine
             activeWeapon = weapon;
         }
 
+        public void kill()
+        {
+            this.health = -1;
+            Death(this, EventArgs.Empty);
+        }
+
         public void unlockMovement()
         {
             lockedMovement = false;
