@@ -196,11 +196,11 @@ namespace DreamStateMachine.Behaviors
                     if (spawn.className.Equals("player") && player != null)
                     {
                         actorToCopy = (Actor)player.Clone();
+                        actorToCopy.giveWeapon(player.activeWeapon);
                     }
                     else
                     {
-                        actorToCopy = (Actor)actorPrototypes[spawn.className].Clone();
-                        
+                        actorToCopy = (Actor)actorPrototypes[spawn.className].Clone();   
                     }
                     actorToCopy.setGaze(newSightVector);
                     spawnActor(actorToCopy, spawnTile, spawn.spawnType);
@@ -226,13 +226,13 @@ namespace DreamStateMachine.Behaviors
         private void World_Change(Object sender, EventArgs eventArgs)
         {
             WorldManager worldManager = (WorldManager)sender;
-            player = worldManager.playerTransfer;
             if (worldManager.curWorld != null)
             {
+                player = worldManager.playerTransfer;
                 List<SpawnFlag> spawns = worldManager.curWorld.getSpawns();
                 spawnActors(spawns);
+                player = null;
             }
-            player = null;
         }
     }
 }

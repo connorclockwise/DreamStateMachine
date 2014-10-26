@@ -74,6 +74,10 @@ namespace DreamStateMachine
             if (spawnedActor.className == "player")
             {
                 protagonist = spawnedActor;
+                if (protagonist.health != protagonist.maxHealth)
+                {
+                    healthBars[protagonist] = new HealthBar(protagonist, guiTextures["healthBar"]);
+                }
                 //healthBar = new HealthBar(protagonist, healthBarTexture);
             }
         }
