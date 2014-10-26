@@ -15,6 +15,7 @@ namespace DreamStateMachine
 
         public event EventHandler<EventArgs> NewGame;
         public event EventHandler<EventArgs> Tutorial;
+        public event EventHandler<EventArgs> Credits;
 
         public Rectangle drawSpace;
         public List<IDrawable> actors;
@@ -22,11 +23,13 @@ namespace DreamStateMachine
         public Dictionary<IDrawable,IDrawable> healthBars;
         public Dictionary<String,Texture2D> guiTextures;
         public List<IDrawable> tutorialGui;
+        List<List<MovingLabel>> credits;
         Actor protagonist;
         SpriteBatch spriteBatch;
         SpriteFont spriteFont;
         bool debug;
         public bool menuEnabled;
+        public bool creditsEnabled;
         IDrawable curWorld;
         public UIComponent rootGUIElement;
         UIComponent focusedElement;
@@ -47,7 +50,10 @@ namespace DreamStateMachine
             healthBars = new Dictionary<IDrawable, IDrawable>();
             guiTextures = new Dictionary<string,Texture2D>();
             tutorialGui = new List<IDrawable>();
+            credits = new List<List<MovingLabel>>();
             debug = false;
+            menuEnabled = false;
+            creditsEnabled = false;
 
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
             Actor.Hurt += new EventHandler<AttackEventArgs>(Actor_Hurt);
@@ -67,6 +73,8 @@ namespace DreamStateMachine
             guiTextures["newGameButtonFocused"] = content.Load<Texture2D>("newGameBtnFocused");
             guiTextures["tutorialButton"] = content.Load<Texture2D>("tutorialBtnUnfocused");
             guiTextures["tutorialButtonFocused"] = content.Load<Texture2D>("tutorialBtnFocused");
+            guiTextures["creditsButton"] = content.Load<Texture2D>("creditsBtnUnfocused");
+            guiTextures["creditsButtonFocused"] = content.Load<Texture2D>("creditsBtnFocused");
             spriteFont = content.Load<SpriteFont>("SpriteFont1");
         }
 
@@ -138,6 +146,17 @@ namespace DreamStateMachine
             }
         }
 
+        public void drawCredits()
+        {
+            foreach (List<MovingLabel> creditList in credits)
+            {
+                foreach (MovingLabel mention in creditList)
+                {
+                    mention.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], false);
+                }
+            }
+        }
+
         public void drawFloor()
         {
             curWorld.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], debug);
@@ -165,6 +184,7 @@ namespace DreamStateMachine
         public void enterStartMenu()
         {
             menuItems.Clear();
+            credits.Clear();
             drawSpace.X = 0;
             drawSpace.Y = 0;
             Panel bg = new Panel(guiTextures["menuPanel"], new Color(255, 255, 255));
@@ -180,25 +200,25 @@ namespace DreamStateMachine
             bg.addChild(logo);
             Button newGameButton = new Button(guiTextures["newGameButton"]);
             newGameButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
-            newGameButton.dimensions.Y = 400;
+            newGameButton.dimensions.Y = 300;
             newGameButton.dimensions.Width = 450;
             newGameButton.dimensions.Height = 125;
             newGameButton.onClick = newGameClicked;
             bg.addChild(newGameButton);
             Button tutorialButton = new Button(guiTextures["tutorialButton"]);
             tutorialButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
-            tutorialButton.dimensions.Y = 550;
+            tutorialButton.dimensions.Y = 425;
             tutorialButton.dimensions.Width = 450;
             tutorialButton.dimensions.Height = 125;
             tutorialButton.onClick = tutorialClicked;
             bg.addChild(tutorialButton);
-            //Button creditsButton = new Button(guiTextures["tutorialButton"]);
-            //creditsButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
-            //creditsButton.dimensions.Y = 550;
-            //creditsButton.dimensions.Width = 450;
-            //creditsButton.dimensions.Height = 125;
-            //creditsButton.onClick = newGameClicked;
-            //bg.addChild(creditsButton);
+            Button creditsButton = new Button(guiTextures["creditsButton"]);
+            creditsButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
+            creditsButton.dimensions.Y = 550;
+            creditsButton.dimensions.Width = 450;
+            creditsButton.dimensions.Height = 125;
+            creditsButton.onClick = creditsClicked;
+            bg.addChild(creditsButton);
 
 
             menuItems.Add(bg);
@@ -217,6 +237,11 @@ namespace DreamStateMachine
             Tutorial(this, EventArgs.Empty);
         }
 
+        private void creditsClicked()
+        {
+            Credits(this, EventArgs.Empty);
+        }
+
         public void handleGuiControls()
         {
             mouseState = Mouse.GetState();
@@ -226,7 +251,7 @@ namespace DreamStateMachine
                     mouseMoved(mouseState.X, mouseState.Y);
             }
 
-            if (focusedElement != null && mouseState.LeftButton == ButtonState.Pressed)
+            if (focusedElement != null && mouseState.LeftButton == ButtonState.Pressed && menuEnabled)
             {
                 focusedElement.onClick();
             }
@@ -277,10 +302,120 @@ namespace DreamStateMachine
             
         }
 
+        public void creditsUpdate(float dt)
+        {
+            foreach (List<MovingLabel> creditList in credits)
+            {
+                foreach (MovingLabel mention in creditList)
+                {
+                    mention.update(dt);
+                }
+            }
+        }
+
         public void gameUpdate(float dt)
         {
             if (drawSpace.Center.X != protagonist.hitBox.Center.X || drawSpace.Center.Y != protagonist.hitBox.Center.Y)
                 setFocus(protagonist.hitBox.Center.X, protagonist.hitBox.Center.Y);
+        }
+
+        public void rollCredits()
+        {
+            MovingLabel header = new MovingLabel(spriteFont, "DREAM STATE MACHINE");
+            List<MovingLabel> gameHeaderList = new List<MovingLabel>();
+            gameHeaderList.Add(header);
+            credits.Add(gameHeaderList);
+            MovingLabel projectLeadHeader = new MovingLabel(spriteFont, "Connor Brinkmann");
+            MovingLabel projectLead = new MovingLabel(spriteFont, "Project lead, Game Architect, Programming, Animation, World design");
+            List<MovingLabel> projectLeadList = new List<MovingLabel>();
+            projectLeadList.Add(projectLeadHeader);
+            projectLeadList.Add(projectLead);
+            credits.Add(projectLeadList);
+
+            MovingLabel MitchProgrammerHeader = new MovingLabel(spriteFont, "Mitchell McClellan");
+            MovingLabel MitchProgrammer = new MovingLabel(spriteFont, "Sound programmer, Item programmer, Character design/animation");
+            List<MovingLabel> MitchProgrammerList = new List<MovingLabel>();
+            MitchProgrammerList.Add(MitchProgrammerHeader);
+            MitchProgrammerList.Add(MitchProgrammer);
+            credits.Add(MitchProgrammerList);
+
+            MovingLabel JeremyProgrammerHeader = new MovingLabel(spriteFont, "Jeremy Feltracco");
+            MovingLabel JeremyProgrammer = new MovingLabel(spriteFont, "Game input programming, Controller support programming");
+            List<MovingLabel> JeremyProgrammerList = new List<MovingLabel>();
+            JeremyProgrammerList.Add(JeremyProgrammerHeader);
+            JeremyProgrammerList.Add(JeremyProgrammer);
+            credits.Add(JeremyProgrammerList);
+
+            MovingLabel AaronProgrammerHeader = new MovingLabel(spriteFont, "Aaron Andrews");
+            MovingLabel AaronProgrammer = new MovingLabel(spriteFont, "Prop programming");
+            List<MovingLabel> AaronProgrammerList = new List<MovingLabel>();
+            AaronProgrammerList.Add(AaronProgrammerHeader);
+            AaronProgrammerList.Add(AaronProgrammer);
+            credits.Add(AaronProgrammerList);
+
+            MovingLabel HoKeunProgrammerHeader = new MovingLabel(spriteFont, "Ho Keun Kim");
+            MovingLabel HoKeunProgrammer = new MovingLabel(spriteFont, "Tutorial World programming/design");
+            List<MovingLabel> HoKeunProgrammerList = new List<MovingLabel>();
+            HoKeunProgrammerList.Add(HoKeunProgrammerHeader);
+            HoKeunProgrammerList.Add(HoKeunProgrammer);
+            credits.Add(HoKeunProgrammerList);
+
+            MovingLabel OjanProgrammerHeader = new MovingLabel(spriteFont, "Ojan Croft");
+            MovingLabel OjanProgrammer = new MovingLabel(spriteFont, "Rendering programming, world transition programming");
+            List<MovingLabel> OjanProgrammerList = new List<MovingLabel>();
+            OjanProgrammerList.Add(OjanProgrammerHeader);
+            OjanProgrammerList.Add(OjanProgrammer);
+            credits.Add(OjanProgrammerList);
+
+            MovingLabel PatrickArtistHeader = new MovingLabel(spriteFont, "Patrick Sewell");
+            MovingLabel PatrickArtist = new MovingLabel(spriteFont, "Menu design/art, additional Sound effects, Health bar design");
+            List<MovingLabel> PatrickArtistList = new List<MovingLabel>();
+            PatrickArtistList.Add(PatrickArtistHeader);
+            PatrickArtistList.Add(PatrickArtist);
+            credits.Add(PatrickArtistList);
+
+            MovingLabel NickMusicianHeader = new MovingLabel(spriteFont, "Nicholas Shooter");
+            MovingLabel NickMusician = new MovingLabel(spriteFont, "Composer for Ice World, Temple world, Grass world");
+            List<MovingLabel> NickMusicianList = new List<MovingLabel>();
+            NickMusicianList.Add(NickMusicianHeader);
+            NickMusicianList.Add(NickMusician);
+            credits.Add(NickMusicianList);
+
+            MovingLabel XenaMusicianHeader = new MovingLabel(spriteFont, "Xena Grant");
+            MovingLabel XenaMusician = new MovingLabel(spriteFont, "Composer for Nightmare world");
+            List<MovingLabel> XenaMusicianList = new List<MovingLabel>();
+            XenaMusicianList.Add(XenaMusicianHeader);
+            XenaMusicianList.Add(XenaMusician);
+            credits.Add(XenaMusicianList);
+
+            MovingLabel userTestingHeader = new MovingLabel(spriteFont, "USER TESTING:");
+            MovingLabel RobbieTest = new MovingLabel(spriteFont, "Robbie Thomas");
+            MovingLabel ChaseTest = new MovingLabel(spriteFont, "Chase Melton");
+            MovingLabel IdeanTest = new MovingLabel(spriteFont, "Idean Behforouz");
+            MovingLabel MattTest = new MovingLabel(spriteFont, "Mathew Guzdial");
+            List<MovingLabel> UserTestingList = new List<MovingLabel>();
+            UserTestingList.Add(userTestingHeader);
+            UserTestingList.Add(RobbieTest);
+            UserTestingList.Add(ChaseTest);
+            UserTestingList.Add(IdeanTest);
+            UserTestingList.Add(MattTest);
+            credits.Add(UserTestingList);
+
+
+            int startingY = drawSpace.Height + 100;
+            int additionalOffsetY = 0;
+            foreach (List<MovingLabel> creditList in credits)
+            {
+                foreach (MovingLabel mention in creditList)
+                {
+                    mention.dimensions.X = 30;
+                    mention.dimensions.Y = startingY + additionalOffsetY;
+                    mention.velocity.Y = -1;
+                    additionalOffsetY += 30;
+                }
+                additionalOffsetY += 50;
+            }
+            //header.dimensions.X = 550;
         }
 
         private void World_Change(Object sender, EventArgs eventArgs)

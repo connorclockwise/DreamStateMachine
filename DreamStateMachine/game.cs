@@ -38,16 +38,8 @@ namespace DreamStateMachine
         Point origin;
         Camera cam;
         SpriteBatch spriteBatch;
-        SpriteFont arielBlackFont;
-        Texture2D debugSquare;
-        Texture2D healthBar;
-        Texture2D whiteSquare;
-        Texture2D splashScreen;
         
         InputHandler inputHandler;
-
-        bool isLoadingWorld;
-        //bool usingGamePad = false;
 
         
 
@@ -138,6 +130,7 @@ namespace DreamStateMachine
             cam.enterStartMenu();
             cam.NewGame += new EventHandler<EventArgs>(NewGameSelected);
             cam.Tutorial += new EventHandler<EventArgs>(TutorialSelected);
+            cam.Credits += new EventHandler<EventArgs>(CreditsSelected);
 
         }
 
@@ -194,28 +187,35 @@ namespace DreamStateMachine
             base.Update(gameTime);
         }
 
-        public void LoadWorldUpdate(GameTime gameTime)
-        {
-            while (isLoadingWorld)
-            {
-                float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
-                //UpdateInput();
-                //actorManager.update(dt);
-                //UpdateCamera(cam, player);
+        //public void LoadWorldUpdate(GameTime gameTime)
+        //{
+        //    while (isLoadingWorld)
+        //    {
+        //        float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
+        //        //UpdateInput();
+        //        //actorManager.update(dt);
+        //        //UpdateCamera(cam, player);
 
-                base.Update(gameTime);
-            }
-            gameUpdateStack.Pop();
-            gameDrawStack.Pop();
+        //        base.Update(gameTime);
+        //    }
+        //    gameUpdateStack.Pop();
+        //    gameDrawStack.Pop();
 
-            //gameUpdate = MainGameUpdate;
-            //gameDraw = MainGameDraw;
-        }
+        //    //gameUpdate = MainGameUpdate;
+        //    //gameDraw = MainGameDraw;
+        //}
 
         public void StartMenuUpdate(GameTime gameTime)
         {
             float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
             cam.startMenuUpdate(dt);
+            UpdateInput();
+        }
+
+        public void CreditsUpdate(GameTime gameTime)
+        {
+            float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
+            cam.creditsUpdate(dt);
             UpdateInput();
         }
 
@@ -267,26 +267,39 @@ namespace DreamStateMachine
 
         }
 
-        public void LoadWorldDraw(GameTime gameTime)
+        public void CreditsDraw(GameTime gameTime)
         {
 
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone);
-            // Draw Hello World
-            string output = "Loading World";
-
-            // Find the center of the string
-            Vector2 FontOrigin = arielBlackFont.MeasureString(output) / 2;
-            Vector2 screenorigin = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
-            // Draw the string
-            spriteBatch.DrawString(arielBlackFont, output, screenorigin, Color.White,
-                0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
+                cam.drawCredits();
             spriteBatch.End();
 
             base.Draw(gameTime);
 
         }
+
+        //public void LoadWorldDraw(GameTime gameTime)
+        //{
+
+        //    GraphicsDevice.Clear(Color.Black);
+
+        //    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone);
+        //    // Draw Hello World
+        //    string output = "Loading World";
+
+        //    // Find the center of the string
+        //    Vector2 FontOrigin = arielBlackFont.MeasureString(output) / 2;
+        //    Vector2 screenorigin = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+        //    // Draw the string
+        //    spriteBatch.DrawString(arielBlackFont, output, screenorigin, Color.White,
+        //        0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
+        //    spriteBatch.End();
+
+        //    base.Draw(gameTime);
+
+        //}
 
         public void LoadNextWorld()
         {
@@ -317,6 +330,17 @@ namespace DreamStateMachine
             gameDraw = gameDrawStack.Peek();
         }
 
+        public void CreditsSelected(Object sender, EventArgs eventArgs)
+        {
+            cam.menuEnabled = false;
+            cam.creditsEnabled = true;
+            cam.rollCredits();
+            gameUpdateStack.Push(CreditsUpdate);
+            gameDrawStack.Push(CreditsDraw);
+            gameUpdate = gameUpdateStack.Peek();
+            gameDraw = gameDrawStack.Peek();
+        }
+
         private void Actor_Spawn(Object sender, EventArgs eventArgs)
         {
             Actor actor = (Actor)sender;
@@ -330,7 +354,7 @@ namespace DreamStateMachine
             if (deadActor.className == "player" && deadActor.health <= 0 && gameUpdateStack.Count > 1)
             {
                 player = null;
-                
+
                 cam.enterStartMenu();
                 cam.drawSpace.X = 0;
                 cam.drawSpace.Y = 0;
@@ -340,6 +364,18 @@ namespace DreamStateMachine
                 gameUpdate = gameUpdateStack.Peek();
                 gameDraw = gameDrawStack.Peek();
             }
+            
+            //if( cam.creditsEnabled && gameUpdateStack.Count > 1 )
+            //{
+            //    cam.creditsEnabled = false;
+            //    cam.enterStartMenu();
+            //    cam.drawSpace.X = 0;
+            //    cam.drawSpace.Y = 0;
+            //    gameUpdateStack.Pop();
+            //    gameDrawStack.Pop();
+            //    gameUpdate = gameUpdateStack.Peek();
+            //    gameDraw = gameDrawStack.Peek();
+            //}
         }
     }
 }

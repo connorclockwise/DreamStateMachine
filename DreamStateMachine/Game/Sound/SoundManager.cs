@@ -82,13 +82,14 @@ namespace DreamStateMachine
             //curSong = ;
             //MediaPlayer.Play(songPrototypes[songName]);
             //MediaPlayer.Play(songCollection);
-            soundPrototypes[songName].playSound();
+            soundPrototypes[songName].playLoopedSound();
+            //soundPrototypes[songName].
         }
 
-        public void switchSong(String firstSong, String secondSong)
+        public void crossFadeSongs(String firstSong, String secondSong)
         {
-            soundPrototypes[firstSong].stopSound();
-            soundPrototypes[secondSong].playSound();
+            soundPrototypes[firstSong].fadeOutSound(5);
+            soundPrototypes[secondSong].fadeInSound(5);
             //MediaPlayer.Stop();
             //MediaPlayer.Play(songCollection, 3);
             //MediaPlayer.Stop();

@@ -160,12 +160,11 @@ namespace DreamStateMachine
             curWorldNode = curWorldNode.Children[worldIndex];
             curWorld = curWorldNode.Value;
             curLevel++;
-            //if (curWorld.themeMusic != prevWorld.themeMusic)
-            //{
-            SoundManager.Instance.playSong("templeTheme");
-            SoundManager.Instance.switchSong("templeTheme", curWorld.themeMusic);
-                //SoundManager.Instance.stopSong(prevWorld.themeMusic);
-            //}
+            if (curWorld.themeMusic != prevWorld.themeMusic)
+            {
+                //SoundManager.Instance.playSong("templeTheme");
+                SoundManager.Instance.crossFadeSongs("templeTheme", curWorld.themeMusic);
+            }
             return tempWorld;
         }
 
