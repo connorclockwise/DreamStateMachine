@@ -17,6 +17,7 @@ namespace DreamStateMachine
         public Node<World> curWorldNode;
         public World curWorld;
         public int curLevel;
+        public Actor playerTransfer;
 
         private Dictionary<String, WorldConfig> worldPrototypes;
         private Random random;
@@ -60,8 +61,10 @@ namespace DreamStateMachine
                     //Console.Write(worldManager.curLevel);
                     if (this.getWorldChild(0) == null)
                     {
+                        playerTransfer = usingActor;
                         this.createNextWorld(0);
                         onWorldChange();
+                        playerTransfer = null;
 
                         //this.spawnActor(protagonist, worldManager.curWorld.getSpawnPos(), 1);
                         //this.spawnActors(worldManager.curWorld.getSpawns());
