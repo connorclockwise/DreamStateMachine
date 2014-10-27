@@ -24,6 +24,7 @@ namespace DreamStateMachine
         bool[,] collisionMap;
         public int tileSize;
         public bool isTutorial;
+        public WorldConfig worldConfig;
 
         public World(Texture2D floorTex, int ts)
         {

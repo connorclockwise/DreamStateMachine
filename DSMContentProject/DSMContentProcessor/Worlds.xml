@@ -7,7 +7,14 @@
     height="50"
     tileSize="64"
     themeMusic="forestTheme">
-    <Enemy class="skeleton">
+    <Enemy class="skeleton"
+           difficulty="2">
+    </Enemy>
+    <Enemy class="greenSkeleton"
+           difficulty="4">
+    </Enemy>
+    <Enemy class="greenGolem"
+           difficulty="3">
     </Enemy>
   </World>
   <World
@@ -17,7 +24,17 @@
     height="50"
     tileSize="96"
     themeMusic="nightmareTheme">
-    <Enemy class="skeleton">
+    <Enemy class="skeleton"
+           difficulty="2">
+    </Enemy>
+    <Enemy class="maskSkeleton"
+           difficulty="10">
+    </Enemy>
+    <Enemy class="pinkSkeleton"
+           difficulty="15">
+    </Enemy>
+    <Enemy class="pinkGolem"
+           difficulty="8">
     </Enemy>
   </World>
   <World
@@ -27,7 +44,15 @@
     height="50"
     tileSize="64"
     themeMusic="templeTheme">
-    <Enemy class="skeleton">
+    <Enemy class="skeleton"
+           difficulty="2">
+    </Enemy>
+    <Enemy class="redSkeleton"
+           difficulty="5">
+    </Enemy>
+    <Enemy class="redGolem"
+           difficulty="7">
+           
     </Enemy>
   </World>
   <World
@@ -37,19 +62,14 @@
     height="50"
     tileSize="64"
     themeMusic="iceTheme">
-    <Enemy class="golem">
+    <Enemy class="iceSkeleton"
+           difficulty="3">
     </Enemy>
-    <Enemy class="penguin">
+    <Enemy class="golem"
+           difficulty="5">
     </Enemy>
-  </World>
-  <World
-    worldName="tutorial"
-    worldTexture="TempleFloor"
-    width="50"
-    height="50"
-    tileSize="64"
-    themeMusic="tutorialTheme">
-    <Enemy class="skeleton">
+    <Enemy class="penguin"
+           difficulty="1">
     </Enemy>
   </World>
 </Worlds>

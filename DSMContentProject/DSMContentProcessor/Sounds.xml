@@ -32,7 +32,7 @@
     filePath="CrystallineDreams">
   </Sound>
   <Sound
-    className="tutorialTheme"
+    className="creditsTheme"
     filePath="GoodNight">
   </Sound>
 </Sounds>

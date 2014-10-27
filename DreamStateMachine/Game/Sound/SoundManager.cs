@@ -51,25 +51,13 @@ namespace DreamStateMachine
             XDocument musicDoc = XDocument.Load(musicConfigFile);
             List<XElement> songs = musicDoc.Element("Songs").Elements("Song").ToList();
             String soundClass;
-         
             SoundEffect effect;
-            String songName;
-            String songPath;
-            Song actualSong;
             foreach (XElement sound in sounds)
             {
                 soundClass = sound.Attribute("className").Value;
                 effect = content.Load<SoundEffect>(sound.Attribute("filePath").Value);
                 soundPrototypes[soundClass] = new Sound(effect);
             }
-            //foreach (XElement song in songs)
-            //{
-            //    songName = song.Attribute("name").Value;
-            //    songPath = song.Attribute("filePath").Value;
-            //    //actualSong = content.Load<Song>("StainedGlassAndSpookySkeletons");
-            //    songPrototypes[songName] = content.Load<Song>(songPath);
-            //    songCollection.Add(songPrototypes[songName]);
-            //}
         }
 
         public void playSound(String soundClass)
@@ -79,27 +67,18 @@ namespace DreamStateMachine
 
         public void playSong(String songName)
         {
-            //curSong = ;
-            //MediaPlayer.Play(songPrototypes[songName]);
-            //MediaPlayer.Play(songCollection);
             soundPrototypes[songName].playLoopedSound();
-            //soundPrototypes[songName].
         }
 
         public void crossFadeSongs(String firstSong, String secondSong)
         {
-            soundPrototypes[firstSong].fadeOutSound(5);
+            soundPrototypes[firstSong].fadeOutSound(2);
             soundPrototypes[secondSong].fadeInSound(5);
-            //MediaPlayer.Stop();
-            //MediaPlayer.Play(songCollection, 3);
-            //MediaPlayer.Stop();
-            //MediaPlayer.Play(songPrototypes[secondSong]);
-            //MediaPlayer.Queue.ActiveSongIndex = 1;
-            //MediaPlayer.Play(
-            //MediaPlayer.Pause();
-            //MediaPlayer.Stop();
-            //MediaPlayer.Queue.ActiveSong.Dispose();
-            //MediaPlayer.MoveNext();
+        }
+
+        public void stopSong(String songName)
+        {
+            soundPrototypes[songName].stopSound();
         }
 
         public void update(float dt)

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Content;
 using System.Xml.Linq;
 using DreamStateMachine;
 using Microsoft.Xna.Framework.Media;
+using DreamStateMachine2.game.World;
 
 namespace DreamStateMachine
 {
@@ -57,18 +58,11 @@ namespace DreamStateMachine
                 int[,] tileMap = this.curWorld.getTileMap();
                 if (tileMap[usePoint.Y, usePoint.X] == 15)
                 {
-                    //worldManager.curWorld.useTileAtPoint(usePoint);
-                    //Console.Write(worldManager.curLevel);
                     if (this.getWorldChild(0) == null)
                     {
                         this.createNextWorld(0);
                         onWorldChange();
-
-                        //this.spawnActor(protagonist, worldManager.curWorld.getSpawnPos(), 1);
-                        //this.spawnActors(worldManager.curWorld.getSpawns());
                     }
-                    //isLoadingWorld = false;
-                    //Console.Write(worldManager.curLevel);
                 }
             }
         }
@@ -80,7 +74,8 @@ namespace DreamStateMachine
             List<XElement> enemies;
 
             String worldName;
-            List<String> enemyClasses;
+            List<EnemyConfig> enemyConfigs;
+            EnemyConfig enemyConfig;
             Texture2D texture;
             int width;
             int height;
@@ -94,12 +89,13 @@ namespace DreamStateMachine
                 width = int.Parse(world.Attribute("width").Value);
                 height = int.Parse(world.Attribute("height").Value);
                 tileSize = int.Parse(world.Attribute("tileSize").Value);
-                enemyClasses = new List<String>();
+                enemyConfigs = new List<EnemyConfig>();
                 foreach (XElement enemy in enemies)
                 {
-                    enemyClasses.Add(enemy.Attribute("class").Value);
+                    enemyConfig = new EnemyConfig(enemy.Attribute("class").Value, int.Parse(enemy.Attribute("difficulty").Value));
+                    enemyConfigs.Add(enemyConfig);
                 }
-                worldPrototypes[worldName] = new WorldConfig(worldName, enemyClasses, texture, width, height, tileSize);
+                worldPrototypes[worldName] = new WorldConfig(worldName, enemyConfigs, texture, width, height, tileSize);
                 worldPrototypes[worldName].music = world.Attribute("themeMusic").Value;
             }
         }
@@ -111,11 +107,8 @@ namespace DreamStateMachine
             Node<World> rootWorld = new Node<World>(curWorld);
             curWorldNode = rootWorld;
             worldTree.setRoot(rootWorld);
-            SoundManager.Instance.playSong("templeTheme");
-            //SoundManager.Instance.playSong(curWorld.themeMusic);
-            
+            SoundManager.Instance.playSong(curWorld.themeMusic);
             onWorldChange();
-
         }
 
         public void initTutorial()
@@ -126,7 +119,7 @@ namespace DreamStateMachine
             Node<World> rootWorld = new Node<World>(curWorld);
             curWorldNode = rootWorld;
             worldTree.setRoot(rootWorld);
-            //SoundManager.Instance.playSong(curWorld.themeMusic);
+            SoundManager.Instance.playSong(curWorld.themeMusic);
             onWorldChange();
         }
 
@@ -153,17 +146,25 @@ namespace DreamStateMachine
         public World createNextWorld(int worldIndex)
         {
             World prevWorld = curWorld;
-            
-            World tempWorld = this.worldFactory.generateWorld(worldPrototypes["nightmare"], 5);
+            curLevel++;
+            int difficulty = (int)((5 * Math.Log(curLevel) * curLevel)+ 5* Math.Sin(3*curLevel/2) + 5);
+            World tempWorld;
+            if (curLevel % 5 == 0)
+            {
+               List<WorldConfig> worldConfigs = worldPrototypes.Values.ToList();
+               worldConfigs.Remove(prevWorld.worldConfig);
+               tempWorld = this.worldFactory.generateWorld(worldConfigs[random.Next(0, worldConfigs.Count)], difficulty);
+            }else{
+                tempWorld = this.worldFactory.generateWorld(prevWorld.worldConfig, difficulty);
+            }
             Node<World> tempNode = new Node<World>(tempWorld);
             curWorldNode.Children.Insert(worldIndex, tempNode);
             curWorldNode = curWorldNode.Children[worldIndex];
             curWorld = curWorldNode.Value;
-            curLevel++;
+            
             if (curWorld.themeMusic != prevWorld.themeMusic)
             {
-                //SoundManager.Instance.playSong("templeTheme");
-                SoundManager.Instance.crossFadeSongs("templeTheme", curWorld.themeMusic);
+                SoundManager.Instance.crossFadeSongs(prevWorld.themeMusic, curWorld.themeMusic);
             }
             return tempWorld;
         }
@@ -195,6 +196,7 @@ namespace DreamStateMachine
                 }
             }
             tempWorld.setSpawns(spawns);
+            tempWorld.themeMusic = "forestTheme";
             return tempWorld;
 
         }

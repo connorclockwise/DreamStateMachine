@@ -16,6 +16,7 @@ namespace DreamStateMachine
         public event EventHandler<EventArgs> NewGame;
         public event EventHandler<EventArgs> Tutorial;
         public event EventHandler<EventArgs> Credits;
+        public event EventHandler<EventArgs> CreditsExit;
 
         public Rectangle drawSpace;
         public List<IDrawable> actors;
@@ -31,19 +32,17 @@ namespace DreamStateMachine
         public bool menuEnabled;
         public bool creditsEnabled;
         IDrawable curWorld;
+        Label helpLabel;
         public UIComponent rootGUIElement;
         UIComponent focusedElement;
         MouseState mouseState;
         MouseState lastMouseState;
         KeyboardState keyboardState;
 
-        //public static event EventHandler<EventArgs> EnableMenu;
-
         public Camera(SpriteBatch sB, Rectangle dS)
         {
             spriteBatch = sB;
             drawSpace = dS;
-            //actors = new List<Actor>();
             actors = new List<IDrawable>();
             menuItems = new List<IDrawable>();
             
@@ -85,7 +84,6 @@ namespace DreamStateMachine
             if (spawnedActor.className == "player")
             {
                 protagonist = spawnedActor;
-                //healthBar = new HealthBar(protagonist, healthBarTexture);
             }
         }
 
@@ -102,7 +100,6 @@ namespace DreamStateMachine
                 else
                     healthBars[hurtActor] = new HealthBar(hurtActor, guiTextures["enemyHealthBar"]);
             }
-            
         }
 
         private void Actor_Death(object sender, EventArgs e)
@@ -118,7 +115,6 @@ namespace DreamStateMachine
                 deadLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString("YEAH YOU ARE PRETTY MUCH DEAD HOMBRE").Y / 2;
                 tutorialGui.Add(deadLabel);
                 Label helpLabel = new Label(spriteFont, "Press e to start over ya dangus");
-                //label.color = Color.Red;
                 helpLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString("Press e to start over ya dangus").X / 2;
                 helpLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString("Press e to start over ya dangus").Y / 2 + 50;
                 tutorialGui.Add(helpLabel);
@@ -132,9 +128,6 @@ namespace DreamStateMachine
         public void drawActors()
         {
             IDrawable curActor;
-            //Rectangle normalizedPosition;
-            //Rectangle sourceRectangle;
-            //Texture2D tex;
 
             for (int i = 0; i < actors.Count; i++)
             {
@@ -148,6 +141,7 @@ namespace DreamStateMachine
 
         public void drawCredits()
         {
+            helpLabel.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], false);
             foreach (List<MovingLabel> creditList in credits)
             {
                 foreach (MovingLabel mention in creditList)
@@ -178,7 +172,6 @@ namespace DreamStateMachine
             {
                 entry.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], debug);
             }
-            //healthBar.draw();
         }
 
         public void enterStartMenu()
@@ -187,17 +180,20 @@ namespace DreamStateMachine
             credits.Clear();
             drawSpace.X = 0;
             drawSpace.Y = 0;
+
             Panel bg = new Panel(guiTextures["menuPanel"], new Color(255, 255, 255));
             bg.dimensions.X = drawSpace.X;
             bg.dimensions.Y = drawSpace.Y;
             bg.dimensions.Width = drawSpace.Width;
             bg.dimensions.Height = drawSpace.Height;
+
             Panel logo = new Panel(guiTextures["logo"], new Color(255, 255, 255));
             logo.dimensions.X = drawSpace.Width / 2 - guiTextures["logo"].Width /2;
             logo.dimensions.Y = 50;
             logo.dimensions.Width = guiTextures["logo"].Width;
             logo.dimensions.Height = guiTextures["logo"].Height * 4 / 5;
             bg.addChild(logo);
+
             Button newGameButton = new Button(guiTextures["newGameButton"]);
             newGameButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
             newGameButton.dimensions.Y = 300;
@@ -205,6 +201,7 @@ namespace DreamStateMachine
             newGameButton.dimensions.Height = 125;
             newGameButton.onClick = newGameClicked;
             bg.addChild(newGameButton);
+
             Button tutorialButton = new Button(guiTextures["tutorialButton"]);
             tutorialButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
             tutorialButton.dimensions.Y = 425;
@@ -212,6 +209,7 @@ namespace DreamStateMachine
             tutorialButton.dimensions.Height = 125;
             tutorialButton.onClick = tutorialClicked;
             bg.addChild(tutorialButton);
+
             Button creditsButton = new Button(guiTextures["creditsButton"]);
             creditsButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
             creditsButton.dimensions.Y = 550;
@@ -242,6 +240,10 @@ namespace DreamStateMachine
             Credits(this, EventArgs.Empty);
         }
 
+        private void creditsExit(){
+            CreditsExit(this, EventArgs.Empty);
+        }
+
         public void handleGuiControls()
         {
             mouseState = Mouse.GetState();
@@ -254,6 +256,11 @@ namespace DreamStateMachine
             if (focusedElement != null && mouseState.LeftButton == ButtonState.Pressed && menuEnabled)
             {
                 focusedElement.onClick();
+            }
+
+            if (keyboardState.IsKeyDown(Keys.E) && creditsEnabled)
+            {
+                creditsExit();
             }
 
 
@@ -321,6 +328,12 @@ namespace DreamStateMachine
 
         public void rollCredits()
         {
+
+            helpLabel = new MovingLabel(spriteFont, "Press E to go back to the menu.");
+            helpLabel.dimensions.X = drawSpace.Width / 2 + 200;
+            helpLabel.dimensions.Y = 20;
+
+
             MovingLabel header = new MovingLabel(spriteFont, "DREAM STATE MACHINE");
             List<MovingLabel> gameHeaderList = new List<MovingLabel>();
             gameHeaderList.Add(header);
@@ -374,6 +387,13 @@ namespace DreamStateMachine
             PatrickArtistList.Add(PatrickArtist);
             credits.Add(PatrickArtistList);
 
+            MovingLabel LarryArtistHeader = new MovingLabel(spriteFont, "Larry Smith");
+            MovingLabel LarryArtist = new MovingLabel(spriteFont, "Character design/animation");
+            List<MovingLabel> LarryArtistList = new List<MovingLabel>();
+            LarryArtistList.Add(LarryArtistHeader);
+            LarryArtistList.Add(LarryArtist);
+            credits.Add(LarryArtistList);
+
             MovingLabel NickMusicianHeader = new MovingLabel(spriteFont, "Nicholas Shooter");
             MovingLabel NickMusician = new MovingLabel(spriteFont, "Composer for Ice World, Temple world, Grass world");
             List<MovingLabel> NickMusicianList = new List<MovingLabel>();
@@ -387,6 +407,13 @@ namespace DreamStateMachine
             XenaMusicianList.Add(XenaMusicianHeader);
             XenaMusicianList.Add(XenaMusician);
             credits.Add(XenaMusicianList);
+
+            MovingLabel CaylenaMusicianHeader = new MovingLabel(spriteFont, "Caylen Lee");
+            MovingLabel CaylenaMusician = new MovingLabel(spriteFont, "Composer for Credits");
+            List<MovingLabel> CaylenaMusicianList = new List<MovingLabel>();
+            CaylenaMusicianList.Add(CaylenaMusicianHeader);
+            CaylenaMusicianList.Add(CaylenaMusician);
+            credits.Add(CaylenaMusicianList);
 
             MovingLabel userTestingHeader = new MovingLabel(spriteFont, "USER TESTING:");
             MovingLabel RobbieTest = new MovingLabel(spriteFont, "Robbie Thomas");

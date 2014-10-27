@@ -11,6 +11,7 @@ namespace DreamStateMachine
         public String className;
         public Point tilePosition;
         public int spawnType;
+        public bool hasKey;
 
         public SpawnFlag(String cN, Point point, int type){
             className = cN;

@@ -131,6 +131,7 @@ namespace DreamStateMachine
             cam.NewGame += new EventHandler<EventArgs>(NewGameSelected);
             cam.Tutorial += new EventHandler<EventArgs>(TutorialSelected);
             cam.Credits += new EventHandler<EventArgs>(CreditsSelected);
+            cam.CreditsExit += new EventHandler<EventArgs>(CreditsExited);
 
         }
 
@@ -237,7 +238,7 @@ namespace DreamStateMachine
                 foreach (Command c in commands)
                     c.Execute(cam.rootGUIElement);
             }
-            else if(cam.menuEnabled && cam.rootGUIElement != null)
+            else if ((cam.creditsEnabled || cam.menuEnabled) && cam.rootGUIElement != null)
             {
                 cam.handleGuiControls();
             }
@@ -320,7 +321,6 @@ namespace DreamStateMachine
 
         public void TutorialSelected(Object sender, EventArgs eventArgs)
         {
-            //Console.Write("new game selected");
             cam.menuEnabled = false;
             startTutorial();
 
@@ -339,6 +339,20 @@ namespace DreamStateMachine
             gameDrawStack.Push(CreditsDraw);
             gameUpdate = gameUpdateStack.Peek();
             gameDraw = gameDrawStack.Peek();
+            SoundManager.Instance.playSong("creditsTheme");
+        }
+
+        public void CreditsExited(Object sender, EventArgs eventArgs)
+        {
+            cam.creditsEnabled = false;
+            cam.enterStartMenu();
+            cam.drawSpace.X = 0;
+            cam.drawSpace.Y = 0;
+            gameUpdateStack.Pop();
+            gameDrawStack.Pop();
+            gameUpdate = gameUpdateStack.Peek();
+            gameDraw = gameDrawStack.Peek();
+            SoundManager.Instance.stopSong("creditsTheme");
         }
 
         private void Actor_Spawn(Object sender, EventArgs eventArgs)
@@ -364,18 +378,6 @@ namespace DreamStateMachine
                 gameUpdate = gameUpdateStack.Peek();
                 gameDraw = gameDrawStack.Peek();
             }
-            
-            //if( cam.creditsEnabled && gameUpdateStack.Count > 1 )
-            //{
-            //    cam.creditsEnabled = false;
-            //    cam.enterStartMenu();
-            //    cam.drawSpace.X = 0;
-            //    cam.drawSpace.Y = 0;
-            //    gameUpdateStack.Pop();
-            //    gameDrawStack.Pop();
-            //    gameUpdate = gameUpdateStack.Peek();
-            //    gameDraw = gameDrawStack.Peek();
-            //}
         }
     }
 }

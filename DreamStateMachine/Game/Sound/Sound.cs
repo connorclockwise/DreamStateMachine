@@ -33,7 +33,6 @@ namespace DreamStateMachine
         {
             effect.IsLooped = true;
             effect.Play();
-            
         }
 
         public void stopSound()

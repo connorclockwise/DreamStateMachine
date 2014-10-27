@@ -81,6 +81,7 @@
     <Compile Include="game\Rendering\IDrawable.cs" />
     <Compile Include="game\Sound\Sound.cs" />
     <Compile Include="game\Sound\SoundManager.cs" />
+    <Compile Include="game\World\EnemyConfig.cs" />
     <Compile Include="game\World\Prop.cs" />
     <Compile Include="game\World\PropManager.cs" />
     <Compile Include="game\World\Room.cs" />
