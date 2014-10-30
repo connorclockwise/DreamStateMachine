@@ -20,6 +20,7 @@ namespace DreamStateMachine
 
         public Rectangle drawSpace;
         public List<IDrawable> actors;
+        public List<IDrawable> props;
         public List<IDrawable> menuItems;
         public Dictionary<IDrawable,IDrawable> healthBars;
         public Dictionary<String,Texture2D> guiTextures;
@@ -44,6 +45,7 @@ namespace DreamStateMachine
             spriteBatch = sB;
             drawSpace = dS;
             actors = new List<IDrawable>();
+            props = new List<IDrawable>();
             menuItems = new List<IDrawable>();
             
             healthBars = new Dictionary<IDrawable, IDrawable>();
@@ -55,8 +57,10 @@ namespace DreamStateMachine
             creditsEnabled = false;
 
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
+            Prop.Spawn += new EventHandler<SpawnEventArgs>(Prop_Spawn);
             Actor.Hurt += new EventHandler<AttackEventArgs>(Actor_Hurt);
             Actor.Death += new EventHandler<EventArgs>(Actor_Death);
+            Prop.Remove += new EventHandler<EventArgs>(Prop_Remove);
             WorldManager.worldChange += new EventHandler<EventArgs>(World_Change);
 
         }
@@ -85,6 +89,18 @@ namespace DreamStateMachine
             {
                 protagonist = spawnedActor;
             }
+        }
+
+        private void Prop_Spawn(object sender, EventArgs e)
+        {
+            Prop spawnedProp = (Prop)sender;
+            props.Add(spawnedProp);
+        }
+
+        private void Prop_Remove(object sender, EventArgs e)
+        {
+            Prop toRemove = (Prop)sender;
+            props.Remove(toRemove);
         }
 
         private void Actor_Hurt(object sender, AttackEventArgs e)
@@ -171,6 +187,14 @@ namespace DreamStateMachine
             foreach( IDrawable entry in tutorialGui)
             {
                 entry.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], debug);
+            }
+        }
+
+        public void drawProps()
+        {
+            foreach (Prop prop in props)
+            {
+                prop.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], false);
             }
         }
 

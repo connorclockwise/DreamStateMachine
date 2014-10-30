@@ -28,6 +28,7 @@ namespace DreamStateMachine
         AIController aiController;
         ItemManager itemManager;
         PhysicsController physicsController;
+        PropManager propManager;
         WorldManager worldManager;
 
         Actor player;
@@ -126,6 +127,9 @@ namespace DreamStateMachine
             
             itemManager = new ItemManager();
             itemManager.initWeaponConfig(Content, "Content/Weapons.xml");
+
+            propManager = new PropManager();
+            propManager.initPropConfig(Content, "Content/Props.xml");
 
             cam.enterStartMenu();
             cam.NewGame += new EventHandler<EventArgs>(NewGameSelected);
@@ -261,6 +265,7 @@ namespace DreamStateMachine
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
                 cam.drawFloor();
                 cam.drawActors();
+                cam.drawProps();
                 cam.drawGUI();
             spriteBatch.End();
 

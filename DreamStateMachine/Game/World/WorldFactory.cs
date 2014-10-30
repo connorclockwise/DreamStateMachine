@@ -8,8 +8,11 @@ using DreamStateMachine2.game.World;
 
 namespace DreamStateMachine
 {
+    enum SPAWNTYPES { ACTOR, ENEMY, PROP, DOOR, ITEM };
+
     class WorldFactory
     {
+
         Random random;
         World newWorld;
         List<Room> rooms;
@@ -336,7 +339,7 @@ namespace DreamStateMachine
             firstRoom.depth = 0;
 
             Point spawnPos = new Point(coors.X, coors.Y);
-            SpawnFlag playerSpawn = new SpawnFlag("player", spawnPos, 1);
+            SpawnFlag playerSpawn = new SpawnFlag("player", spawnPos, (int)SPAWNTYPES.ACTOR);
             spawns.Add(playerSpawn);
             newWorld.setSpawnTile(spawnPos);
             tileMap[coors.Y, coors.X] = 14;
@@ -422,7 +425,9 @@ namespace DreamStateMachine
             if (possibleLockedRooms.Count > 0)
             {
                 Room lockedRoom = possibleLockedRooms[random.Next(0, possibleLockedRooms.Count - 1)];
-                tileMap[lockedRoom.hallEntrance.Y, lockedRoom.hallEntrance.X] = 15;
+                //tileMap[lockedRoom.hallEntrance.Y, lockedRoom.hallEntrance.X] = 15;
+                SpawnFlag lockedDoorFlag = new SpawnFlag("Generic_Door", lockedRoom.hallEntrance, (int)SPAWNTYPES.DOOR);
+                spawns.Add(lockedDoorFlag);
                 List<Room> possibleKeyRooms = new List<Room>(rooms);
                 possibleKeyRooms = partitionPastRoom(possibleKeyRooms, lockedRoom);
                 Room keyRoom;
@@ -473,7 +478,7 @@ namespace DreamStateMachine
                 }
             }
 
-            SpawnFlag spawnFlag = new SpawnFlag(enemyType, coors, 2);
+            SpawnFlag spawnFlag = new SpawnFlag(enemyType, coors, (int)SPAWNTYPES.ENEMY);
             spawns.Add(spawnFlag);
             room.spawns.Add(spawnFlag);
         }
@@ -497,7 +502,7 @@ namespace DreamStateMachine
                 }
             }
 
-            SpawnFlag spawnFlag = new SpawnFlag("key", coors, 3);
+            SpawnFlag spawnFlag = new SpawnFlag("key", coors, (int)SPAWNTYPES.ITEM);
             spawns.Add(spawnFlag);
             room.spawns.Add(spawnFlag);
         }

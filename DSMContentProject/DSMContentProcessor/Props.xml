@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Props>
+  <Door className="Generic_Door"
+        texture="door"
+        width="64"
+        height="64"
+        texWidth="64"
+        texHeight="64">
+  </Door>
+</Props>
