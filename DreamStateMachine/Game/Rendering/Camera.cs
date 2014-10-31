@@ -390,6 +390,13 @@ namespace DreamStateMachine
             AaronProgrammerList.Add(AaronProgrammer);
             credits.Add(AaronProgrammerList);
 
+            MovingLabel MattProgrammerHeader = new MovingLabel(spriteFont, "Matt Schmidt");
+            MovingLabel MattProgrammer = new MovingLabel(spriteFont, "Linux assistance");
+            List<MovingLabel> MattProgrammerList = new List<MovingLabel>();
+            MattProgrammerList.Add(MattProgrammerHeader);
+            MattProgrammerList.Add(MattProgrammer);
+            credits.Add(MattProgrammerList);
+
             MovingLabel HoKeunProgrammerHeader = new MovingLabel(spriteFont, "Ho Keun Kim");
             MovingLabel HoKeunProgrammer = new MovingLabel(spriteFont, "Tutorial World programming/design");
             List<MovingLabel> HoKeunProgrammerList = new List<MovingLabel>();
