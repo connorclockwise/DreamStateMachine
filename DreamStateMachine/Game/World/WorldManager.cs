@@ -59,10 +59,14 @@ namespace DreamStateMachine
                 int[,] tileMap = this.curWorld.getTileMap();
                 if (tileMap[usePoint.Y, usePoint.X] == 15)
                 {
-                    if (this.getWorldChild(0) == null)
+                    if (this.getWorldChild(0) == null && !curWorld.isTutorial)
                     {
                         playerTransfer = usingActor;
                         this.createNextWorld(0);
+                        onWorldChange();
+                    }
+                    else if (curWorld.isTutorial)
+                    {
                         onWorldChange();
                     }
                 }

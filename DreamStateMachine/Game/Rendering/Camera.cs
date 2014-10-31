@@ -212,33 +212,34 @@ namespace DreamStateMachine
             bg.dimensions.Height = drawSpace.Height;
 
             Panel logo = new Panel(guiTextures["logo"], new Color(255, 255, 255));
-            logo.dimensions.X = drawSpace.Width / 2 - guiTextures["logo"].Width /2;
+            logo.dimensions.Width = drawSpace.Width * 4 / 5;
+            logo.dimensions.Height = drawSpace.Height * 2 / 10;
+            logo.dimensions.X = drawSpace.Width / 2 - logo.dimensions.Width / 2;
             logo.dimensions.Y = 50;
-            logo.dimensions.Width = guiTextures["logo"].Width;
-            logo.dimensions.Height = guiTextures["logo"].Height * 4 / 5;
+            
             bg.addChild(logo);
 
             Button newGameButton = new Button(guiTextures["newGameButton"]);
-            newGameButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
-            newGameButton.dimensions.Y = 300;
-            newGameButton.dimensions.Width = 450;
-            newGameButton.dimensions.Height = 125;
+            newGameButton.dimensions.Width = drawSpace.Width * 2 / 5;
+            newGameButton.dimensions.Height = drawSpace.Height / 6;
+            newGameButton.dimensions.X = drawSpace.Width / 2 - newGameButton.dimensions.Width / 2;
+            newGameButton.dimensions.Y = drawSpace.Height * 3 / 10;
             newGameButton.onClick = newGameClicked;
             bg.addChild(newGameButton);
 
             Button tutorialButton = new Button(guiTextures["tutorialButton"]);
-            tutorialButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
-            tutorialButton.dimensions.Y = 425;
-            tutorialButton.dimensions.Width = 450;
-            tutorialButton.dimensions.Height = 125;
+            tutorialButton.dimensions.Width = drawSpace.Width * 2 / 5;
+            tutorialButton.dimensions.Height = drawSpace.Height / 6;
+            tutorialButton.dimensions.X = drawSpace.Width / 2 - tutorialButton.dimensions.Width / 2;
+            tutorialButton.dimensions.Y = drawSpace.Height * 5 / 10;
             tutorialButton.onClick = tutorialClicked;
             bg.addChild(tutorialButton);
 
             Button creditsButton = new Button(guiTextures["creditsButton"]);
-            creditsButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
-            creditsButton.dimensions.Y = 550;
-            creditsButton.dimensions.Width = 450;
-            creditsButton.dimensions.Height = 125;
+            creditsButton.dimensions.Width = drawSpace.Width * 2 / 5;
+            creditsButton.dimensions.Height = drawSpace.Height / 6;
+            creditsButton.dimensions.X = drawSpace.Width / 2 - creditsButton.dimensions.Width / 2;
+            creditsButton.dimensions.Y = drawSpace.Height * 7 / 10;
             creditsButton.onClick = creditsClicked;
             bg.addChild(creditsButton);
 
@@ -451,12 +452,14 @@ namespace DreamStateMachine
             MovingLabel ChaseTest = new MovingLabel(spriteFont, "Chase Melton");
             MovingLabel IdeanTest = new MovingLabel(spriteFont, "Idean Behforouz");
             MovingLabel MattTest = new MovingLabel(spriteFont, "Mathew Guzdial");
+            MovingLabel ElliotTest = new MovingLabel(spriteFont, "Elliot Outland");
             List<MovingLabel> UserTestingList = new List<MovingLabel>();
             UserTestingList.Add(userTestingHeader);
             UserTestingList.Add(RobbieTest);
             UserTestingList.Add(ChaseTest);
             UserTestingList.Add(IdeanTest);
             UserTestingList.Add(MattTest);
+            UserTestingList.Add(ElliotTest);
             credits.Add(UserTestingList);
 
 
