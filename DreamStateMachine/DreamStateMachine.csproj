@@ -83,6 +83,7 @@
     <Compile Include="game\Sound\SoundManager.cs" />
     <Compile Include="game\World\Door.cs" />
     <Compile Include="game\World\EnemyConfig.cs" />
+    <Compile Include="game\World\Potion.cs" />
     <Compile Include="game\World\Prop.cs" />
     <Compile Include="game\World\PropManager.cs" />
     <Compile Include="game\World\Room.cs" />

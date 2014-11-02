@@ -7,4 +7,13 @@
         texWidth="64"
         texHeight="64">
   </Door>
+
+  <Potion className="Weak_Potion"
+          texture="potion"
+          width="32"
+          height="32"
+          texWidth="32"
+          texHeight="32"
+          restore="5">
+  </Potion>
 </Props>
