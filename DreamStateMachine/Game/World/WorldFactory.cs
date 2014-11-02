@@ -8,7 +8,7 @@ using DreamStateMachine2.game.World;
 
 namespace DreamStateMachine
 {
-    enum SPAWNTYPES { ACTOR, ENEMY, PROP, DOOR, ITEM };
+    enum SPAWNTYPES { ACTOR, ENEMY, PROP, DOOR, ITEM, POTION };
 
     class WorldFactory
     {
@@ -27,7 +27,7 @@ namespace DreamStateMachine
         int minHallLength = 4;
         int minRoomWidth = 4;
         int minRoomHeight = 4;
-        
+     
         //Constructor
         public WorldFactory(Random r)
         {
@@ -35,7 +35,6 @@ namespace DreamStateMachine
             //roomMap = new int [w,h];
             //tileMap = new int [w,h];
         }
-
 
         //Checks if the given coordinate can house a room
         //within the given constraints. (maxRoomWidth, 
@@ -79,6 +78,7 @@ namespace DreamStateMachine
                 return false;
             else if (map[yCoor + stretchTall, xCoor - stretchWide] != 0 || map[yCoor + stretchTall, xCoor + stretchWide] != 0)
                 return false;
+           
 
             //for (int i = 0; i <= minRoomWidth || i <= minRoomHeight; i++)
             //{
@@ -136,6 +136,7 @@ namespace DreamStateMachine
             //}
 
             //Console.WriteLine("Room fits");
+
             return true;
         }
 
@@ -389,6 +390,7 @@ namespace DreamStateMachine
                         Room tempRoom = curRoom;
                         curRoom = placeRoom(tileMap, collisionMap, hallCoors[4], hallCoors[5]);
                         curRoom.hallEntrance = new Point(hallCoors[0], hallCoors[1]);
+                        curRoom.roomCenter = new Point(hallCoors[0], hallCoors[1]);
                         curRoom.parent = tempRoom;
                         tempRoom.children.Add(curRoom);
                         curRoom.depth = curRoom.parent.depth + 1;
@@ -450,6 +452,15 @@ namespace DreamStateMachine
                 {
                     placeKey(collisionMap, keyRoom);
                 }
+            }
+
+            List<Room> possiblePotionRooms = rooms.FindAll(x => !x.isOptional && !x.startRoom && x.depth > 1);
+
+            if (possiblePotionRooms.Count > 0)
+            {
+                Room potionRoom = possiblePotionRooms[random.Next(0, possiblePotionRooms.Count - 1)];
+                SpawnFlag potionFlag = new SpawnFlag("Weak_Potion", potionRoom.roomCenter, (int)SPAWNTYPES.DOOR);
+                spawns.Add(potionFlag);
             }
 
             //Set room list here
