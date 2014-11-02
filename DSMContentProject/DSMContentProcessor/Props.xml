@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Props>
+  <Door className="Generic_Door"
+        texture="door"
+        width="64"
+        height="64"
+        texWidth="64"
+        texHeight="64">
+  </Door>
+
+  <Potion className="Weak_Potion"
+          texture="potion"
+          width="32"
+          height="32"
+          texWidth="32"
+          texHeight="32"
+          restore="5">
+  </Potion>
+</Props>
