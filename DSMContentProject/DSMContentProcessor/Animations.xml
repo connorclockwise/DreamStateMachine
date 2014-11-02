@@ -31,7 +31,7 @@
     rowIndex="1">
     <Frame
     frameIndex="3"
-    damage="50">
+    damage="20">
       <AttackBox viewOffsetX="0"
       viewOffsetY="30"
       attackWidth="40"

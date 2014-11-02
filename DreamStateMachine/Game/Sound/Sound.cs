@@ -29,12 +29,32 @@ namespace DreamStateMachine
             effect.Play();
         }
 
+        public void playLoopedSound()
+        {
+            effect.IsLooped = true;
+            effect.Play();
+        }
+
+        public void stopSound()
+        {
+            effect.Stop();
+        }
+
         public void fadeInSound(float fadeTime)
         {
+            this.playLoopedSound();
             curFadeTime = 0;
             endFadeTime = fadeTime;
             isFadingIn = true;
             effect.Volume = 0;
+        }
+
+        public void fadeOutSound(float fadeTime)
+        {
+            curFadeTime = 0;
+            endFadeTime = fadeTime;
+            isFadingOut = true;
+            effect.Volume = 1;
         }
 
         public void update(float dt)

@@ -23,12 +23,14 @@ namespace DreamStateMachine
         public Stance curStance;
         public Texture2D tex;
         public Rectangle dimensions;
+        public int damage;
         public float frameRotation;
         public float rotation;
 
-        public Weapon(String name, Texture2D tex, Dictionary<String, String> animations, Dictionary<String, Stance> stances)
+        public Weapon(String name, Texture2D tex,int damage, Dictionary<String, String> animations, Dictionary<String, Stance> stances)
         {
             this.stances = stances;
+            this.damage = damage;
             this.animations = animations;
             this.name = name;
             this.tex = tex;
@@ -36,7 +38,7 @@ namespace DreamStateMachine
         }
 
         public Object Clone(){
-            Weapon clonedWeapon = new Weapon(name, tex, animations, stances);
+            Weapon clonedWeapon = new Weapon(name, tex, damage, animations, stances);
             return clonedWeapon;
         }
 

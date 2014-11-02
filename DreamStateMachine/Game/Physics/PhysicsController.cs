@@ -13,6 +13,7 @@ namespace DreamStateMachine.Behaviors
     class PhysicsController
     {
         List<Actor> actors;
+        List<Prop> props;
         World world;
         Random random;
         Rectangle predictedMove;
@@ -25,9 +26,12 @@ namespace DreamStateMachine.Behaviors
         {
 
             actors = new List<Actor>();
+            props = new List<Prop>();
             random = new Random();
 
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
+            Prop.Spawn += new EventHandler<SpawnEventArgs>(Prop_Spawn);
+            Prop.Remove += new EventHandler<EventArgs>(Prop_Remove);
             Actor.Death += new EventHandler<EventArgs>(Actor_Death);
             WorldManager.worldChange +=new EventHandler<EventArgs>(World_Change);
         }
@@ -41,6 +45,20 @@ namespace DreamStateMachine.Behaviors
             
         }
 
+        private void Prop_Spawn(object sender, SpawnEventArgs e)
+        {
+            Prop spawnedProp = (Prop)sender;
+            Point spawnPoint = new Point(e.spawnTile.X * world.tileSize, e.spawnTile.Y * world.tileSize);
+            spawnedProp.setPos(spawnPoint);
+            props.Add(spawnedProp);
+        }
+
+        private void Prop_Remove(object sender, EventArgs e)
+        {
+            Prop toRemoveProp = (Prop)sender;
+            props.Remove(toRemoveProp);
+        }
+
         private void Actor_Death(object sender, EventArgs e)
         {
             Actor deadActor = (Actor)sender;
@@ -50,11 +68,77 @@ namespace DreamStateMachine.Behaviors
         public void update(float dt){
             foreach (Actor actor in actors)
             {
+                this.handlePropCollision(actor);
                 this.handleMapCollision(actor);
                 this.handleMovement(actor);
             }
         }
 
+        public bool collidesWithProp(Prop prop,Rectangle rect)
+        {
+            if(prop.hitBox.Intersects(rect)){
+                return true;
+            }
+            return false;
+        }
+
+        public bool collidesWithProp(Prop prop, Point point)
+        {
+            if (prop.hitBox.Contains(point))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void handlePropCollision(Actor actor)
+        {
+            Rectangle intersectedRect = new Rectangle();
+            Point newPos = new Point();
+            foreach (Prop prop in props)
+            {
+                if (collidesWithProp(prop, actor.hitBox))
+                {
+                    Rectangle.Intersect(ref actor.hitBox,ref prop.hitBox,out intersectedRect);
+                    if (actor.velocity.X < 0)
+                    {
+                        newPos.X = actor.hitBox.X + intersectedRect.Width + 1;   
+                    }
+                    else if (actor.velocity.X > 0)
+                    {
+                        newPos.X = actor.hitBox.X - intersectedRect.Width - 1;
+                    }
+                    else
+                    {
+                        newPos.X = actor.hitBox.X;
+                    }
+
+                    if (actor.velocity.Y < 0)
+                    {
+                        newPos.Y = actor.hitBox.Y + intersectedRect.Height + 1;
+                    }
+                    else if (actor.velocity.Y > 0)
+                    {
+                        newPos.Y = actor.hitBox.Y - intersectedRect.Height - 1;
+                    }else{
+                        newPos.Y = actor.hitBox.Y;
+                    }
+
+                    if(!collidesWithProp(prop, new Point(newPos.X, actor.hitBox.Y))){
+                        actor.setPos(new Point(newPos.X, actor.hitBox.Y));
+                    }
+                    else if (!collidesWithProp(prop, new Point(actor.hitBox.X, newPos.Y)))
+                    {
+                        actor.setPos(new Point(actor.hitBox.X, newPos.Y));
+                    }
+                    else{
+                        actor.setPos(newPos);
+                    }
+                    
+                }
+                
+            }
+        }
 
         public void handleMapCollision(Actor actor)
         {
@@ -116,8 +200,7 @@ namespace DreamStateMachine.Behaviors
                 if (world.isInBounds(predictedMove))
                     actor.setPos(actor.hitBox.X + remainingMovement.X, actor.hitBox.Y + remainingMovement.Y);
 
-            }
-
+            }            
         }
 
         public void handleMovement(Actor actor)

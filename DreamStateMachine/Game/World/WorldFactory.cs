@@ -4,11 +4,15 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using DreamStateMachine2.game.World;
 
 namespace DreamStateMachine
 {
+    enum SPAWNTYPES { ACTOR, ENEMY, PROP, DOOR, ITEM, POTION };
+
     class WorldFactory
     {
+
         Random random;
         World newWorld;
         List<Room> rooms;
@@ -23,7 +27,7 @@ namespace DreamStateMachine
         int minHallLength = 4;
         int minRoomWidth = 4;
         int minRoomHeight = 4;
-        
+     
         //Constructor
         public WorldFactory(Random r)
         {
@@ -31,7 +35,6 @@ namespace DreamStateMachine
             //roomMap = new int [w,h];
             //tileMap = new int [w,h];
         }
-
 
         //Checks if the given coordinate can house a room
         //within the given constraints. (maxRoomWidth, 
@@ -75,6 +78,7 @@ namespace DreamStateMachine
                 return false;
             else if (map[yCoor + stretchTall, xCoor - stretchWide] != 0 || map[yCoor + stretchTall, xCoor + stretchWide] != 0)
                 return false;
+           
 
             //for (int i = 0; i <= minRoomWidth || i <= minRoomHeight; i++)
             //{
@@ -132,8 +136,27 @@ namespace DreamStateMachine
             //}
 
             //Console.WriteLine("Room fits");
+
             return true;
         }
+
+        public List<Room> partitionPastRoom(List<Room> rooms, Room lockedBranch)
+        {
+            rooms.Remove(lockedBranch);
+            if (lockedBranch.children.Count > 0)
+            {
+                foreach (Room child in lockedBranch.children)
+                {
+                    rooms = partitionPastRoom(rooms, child);
+                }
+                return rooms;
+            }else
+            { 
+                return rooms;
+            }
+
+        }
+
 
         //Finds an acceptable x,y position to house a room in the given tilemap.
         //Uses canRoomFit
@@ -267,21 +290,35 @@ namespace DreamStateMachine
         //Generates an World object with the given bounds using constraints outlined
         //at the top of the class.
         //Returns an array of enumerated tiles.
-        public World generateWorld(WorldConfig worldConfig, int numEnemies)
+        public World generateWorld(WorldConfig worldConfig, int difficulty)
         {
-            World world = generateWorld(worldConfig.texture, worldConfig.enemyClasses, worldConfig.width, worldConfig.height, worldConfig.tileSize, numEnemies);
+            World world = generateWorld(worldConfig.texture, worldConfig.enemyConfigs, worldConfig.tileSize, difficulty);
             world.themeMusic = worldConfig.music;
+            world.worldConfig = worldConfig;
             return world;
         }
 
-        public World generateWorld(Texture2D floorTex, List<String> enemyClasses, int width, int height, int tileSize, int numEnemies)
+        public World generateWorld(Texture2D floorTex, List<EnemyConfig> enemyConfigs, int tileSize, int difficulty)
         {
             rooms = new List<Room>();
             spawns = new List<SpawnFlag>();
+            int enemyDifficultyCap = difficulty /5;
+            List<EnemyConfig> availableEnemies = enemyConfigs.FindAll(x => x.difficulty <= difficulty );
+            List<EnemyConfig> chosenEnemies = new List<EnemyConfig>();
+            while (enemyDifficultyCap > 0 && availableEnemies.Count > 0)
+            {
+                EnemyConfig choosenEnemy = availableEnemies[random.Next(0,availableEnemies.Count)];
+                chosenEnemies.Add(choosenEnemy);
+                enemyDifficultyCap -= choosenEnemy.difficulty;
+                availableEnemies = enemyConfigs.FindAll(x => x.difficulty <= difficulty );
+            }
+            maxRooms = (int)(difficulty / 5) + 3;
+            int width = (maxRooms * maxRoomWidth * 2) + (maxRooms * maxHallLength);
+            int height = (maxRooms * maxRoomHeight * 2) + (maxRooms * maxHallLength);
             newWorld = new World(floorTex, tileSize);
             tileMap = new int[height, width];
             collisionMap = new bool[height, width];
-            remainingEnemies = numEnemies;
+            //remainingEnemies = numEnemies;
 
             for (int i = 0; i < tileMap.GetLength(0); i++)
             {
@@ -299,9 +336,11 @@ namespace DreamStateMachine
             Point coors = chooseRoomSite(tileMap, validWorldSpace);
             Room firstRoom = placeRoom(tileMap, collisionMap, coors.X, coors.Y);
             firstRoom.startRoom = true;
+            firstRoom.isOptional = false;
+            firstRoom.depth = 0;
 
             Point spawnPos = new Point(coors.X, coors.Y);
-            SpawnFlag playerSpawn = new SpawnFlag("player", spawnPos, 1);
+            SpawnFlag playerSpawn = new SpawnFlag("player", spawnPos, (int)SPAWNTYPES.ACTOR);
             spawns.Add(playerSpawn);
             newWorld.setSpawnTile(spawnPos);
             tileMap[coors.Y, coors.X] = 14;
@@ -339,12 +378,25 @@ namespace DreamStateMachine
                     if (random.Next(0, 4) == 0)
                     {
                         Room splitRoom = placeRoom(tileMap, collisionMap, hallCoors[4], hallCoors[5]);
+                        splitRoom.hallEntrance = new Point(hallCoors[0], hallCoors[1]);
+                        splitRoom.parent = curRoom;
+                        curRoom.children.Add(splitRoom);
+                        splitRoom.depth = splitRoom.parent.depth + 1;
+                        splitRoom.isOptional = true;
                         rooms.Add(splitRoom);
                     }
                     else
                     {
+                        Room tempRoom = curRoom;
                         curRoom = placeRoom(tileMap, collisionMap, hallCoors[4], hallCoors[5]);
+                        curRoom.hallEntrance = new Point(hallCoors[0], hallCoors[1]);
+                        curRoom.roomCenter = new Point(hallCoors[0], hallCoors[1]);
+                        curRoom.parent = tempRoom;
+                        tempRoom.children.Add(curRoom);
+                        curRoom.depth = curRoom.parent.depth + 1;
+                        curRoom.isOptional = true;
                         rooms.Add(curRoom);
+                        //curRoom.parentRoom = rooms.ElementAt(roomIndex);
                     }
                     
                     placeHall(tileMap, collisionMap, hallCoors[0], hallCoors[1], hallCoors[2], hallCoors[3]);
@@ -353,20 +405,62 @@ namespace DreamStateMachine
                 }
             }
 
-            Room room;
-            String enemyClass;
-            for (int i = 0; i < rooms.Count; i++)
+            Room room = rooms.ElementAt(rooms.Count - 1);
+            tileMap[room.dimensions.Y + room.dimensions.Height / 2, room.dimensions.X + room.dimensions.Width / 2] = 15;
+            room.isLeaf = true;
+            room = room.parent;
+            while (room.parent != null)
             {
-                room = rooms.ElementAt(i);
-                if (i != 0)
+                room.isOptional = false;
+                room.isLeaf = true;
+                room = room.parent;
+            }
+            
+            foreach(EnemyConfig tempConfig in chosenEnemies){
+                room = rooms.ElementAt(random.Next(1,rooms.Count - 2));
+                placeEnemy(collisionMap, room, spawns, tempConfig.enemyClass);
+            }
+
+
+            List<Room> possibleLockedRooms = rooms.FindAll(x => !x.isOptional && !x.startRoom && x.depth > 1);
+
+            if (possibleLockedRooms.Count > 0)
+            {
+                Room lockedRoom = possibleLockedRooms[random.Next(0, possibleLockedRooms.Count - 1)];
+                //tileMap[lockedRoom.hallEntrance.Y, lockedRoom.hallEntrance.X] = 15;
+                SpawnFlag lockedDoorFlag = new SpawnFlag("Generic_Door", lockedRoom.hallEntrance, (int)SPAWNTYPES.DOOR);
+                spawns.Add(lockedDoorFlag);
+                List<Room> possibleKeyRooms = new List<Room>(rooms);
+                possibleKeyRooms = partitionPastRoom(possibleKeyRooms, lockedRoom);
+                Room keyRoom;
+                if (possibleKeyRooms.FindAll(x => x.isLeaf).Count > 0)
                 {
-                    enemyClass = enemyClasses[random.Next(0,enemyClasses.Count)];
-                    placeEnemy(collisionMap, room, spawns, enemyClass);
+                    List<Room> keyRooms = possibleKeyRooms.FindAll(x => x.isLeaf);
+                    keyRoom = keyRooms[random.Next(0, keyRooms.Count - 1)];
                 }
-                if (i == rooms.Count - 1)
+                else
                 {
-                    tileMap[room.dimensions.Y + room.dimensions.Height / 2, room.dimensions.X + room.dimensions.Width / 2] = 15;
+                    keyRoom = possibleKeyRooms[random.Next(0, possibleKeyRooms.Count - 1)];
                 }
+
+                if (keyRoom.spawns.Count > 0)
+                {
+                    SpawnFlag tempEnemyConfig = keyRoom.spawns[random.Next(0, keyRoom.spawns.Count - 1)];
+                    tempEnemyConfig.hasKey = true;
+                }
+                else
+                {
+                    placeKey(collisionMap, keyRoom);
+                }
+            }
+
+            List<Room> possiblePotionRooms = rooms.FindAll(x => !x.isOptional && !x.startRoom && x.depth > 1);
+
+            if (possiblePotionRooms.Count > 0)
+            {
+                Room potionRoom = possiblePotionRooms[random.Next(0, possiblePotionRooms.Count - 1)];
+                SpawnFlag potionFlag = new SpawnFlag("Weak_Potion", potionRoom.roomCenter, (int)SPAWNTYPES.DOOR);
+                spawns.Add(potionFlag);
             }
 
             //Set room list here
@@ -395,8 +489,33 @@ namespace DreamStateMachine
                 }
             }
 
-            SpawnFlag spawnFlag = new SpawnFlag(enemyType, coors, 2);
+            SpawnFlag spawnFlag = new SpawnFlag(enemyType, coors, (int)SPAWNTYPES.ENEMY);
             spawns.Add(spawnFlag);
+            room.spawns.Add(spawnFlag);
+        }
+
+        public void placeKey(bool[,] cMap, Room room)
+        {
+            Rectangle dimensions = room.dimensions;
+            Point coors;
+
+            coors.X = (int)random.Next(dimensions.X + 1, dimensions.X + dimensions.Width - 2);
+            coors.Y = (int)random.Next(dimensions.Y + 1, dimensions.Y + dimensions.Height - 2);
+
+            SpawnFlag curSpawn;
+            for (int i = 0; i < spawns.Count; i++)
+            {
+                curSpawn = spawns[0];
+                if (curSpawn.tilePosition.X == coors.X && curSpawn.tilePosition.Y == coors.Y)
+                {
+                    coors.X = (int)random.Next(dimensions.X + 1, dimensions.X + dimensions.Width - 2);
+                    coors.Y = (int)random.Next(dimensions.Y + 1, dimensions.Y + dimensions.Height - 2);
+                }
+            }
+
+            SpawnFlag spawnFlag = new SpawnFlag("key", coors, (int)SPAWNTYPES.ITEM);
+            spawns.Add(spawnFlag);
+            room.spawns.Add(spawnFlag);
         }
 
         //Places a hall in the given tilemap with given x,y coordinates, direction and length.

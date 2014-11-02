@@ -14,43 +14,53 @@ namespace DreamStateMachine
     {
 
         public event EventHandler<EventArgs> NewGame;
+        public event EventHandler<EventArgs> Tutorial;
+        public event EventHandler<EventArgs> Credits;
+        public event EventHandler<EventArgs> CreditsExit;
 
         public Rectangle drawSpace;
         public List<IDrawable> actors;
+        public List<IDrawable> props;
         public List<IDrawable> menuItems;
         public Dictionary<IDrawable,IDrawable> healthBars;
         public Dictionary<String,Texture2D> guiTextures;
         public List<IDrawable> tutorialGui;
+        List<List<MovingLabel>> credits;
         Actor protagonist;
         SpriteBatch spriteBatch;
         SpriteFont spriteFont;
         bool debug;
         public bool menuEnabled;
+        public bool creditsEnabled;
         IDrawable curWorld;
+        Label helpLabel;
         public UIComponent rootGUIElement;
         UIComponent focusedElement;
         MouseState mouseState;
         MouseState lastMouseState;
         KeyboardState keyboardState;
 
-        //public static event EventHandler<EventArgs> EnableMenu;
-
         public Camera(SpriteBatch sB, Rectangle dS)
         {
             spriteBatch = sB;
             drawSpace = dS;
-            //actors = new List<Actor>();
             actors = new List<IDrawable>();
+            props = new List<IDrawable>();
             menuItems = new List<IDrawable>();
             
             healthBars = new Dictionary<IDrawable, IDrawable>();
             guiTextures = new Dictionary<string,Texture2D>();
             tutorialGui = new List<IDrawable>();
+            credits = new List<List<MovingLabel>>();
             debug = false;
+            menuEnabled = false;
+            creditsEnabled = false;
 
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
+            Prop.Spawn += new EventHandler<SpawnEventArgs>(Prop_Spawn);
             Actor.Hurt += new EventHandler<AttackEventArgs>(Actor_Hurt);
             Actor.Death += new EventHandler<EventArgs>(Actor_Death);
+            Prop.Remove += new EventHandler<EventArgs>(Prop_Remove);
             WorldManager.worldChange += new EventHandler<EventArgs>(World_Change);
 
         }
@@ -64,6 +74,10 @@ namespace DreamStateMachine
             guiTextures["logo"] = content.Load<Texture2D>("titlePanel");
             guiTextures["newGameButton"] = content.Load<Texture2D>("newGameBtnUnfocused");
             guiTextures["newGameButtonFocused"] = content.Load<Texture2D>("newGameBtnFocused");
+            guiTextures["tutorialButton"] = content.Load<Texture2D>("tutorialBtnUnfocused");
+            guiTextures["tutorialButtonFocused"] = content.Load<Texture2D>("tutorialBtnFocused");
+            guiTextures["creditsButton"] = content.Load<Texture2D>("creditsBtnUnfocused");
+            guiTextures["creditsButtonFocused"] = content.Load<Texture2D>("creditsBtnFocused");
             spriteFont = content.Load<SpriteFont>("SpriteFont1");
         }
 
@@ -74,28 +88,38 @@ namespace DreamStateMachine
             if (spawnedActor.className == "player")
             {
                 protagonist = spawnedActor;
-                if (protagonist.health != protagonist.maxHealth)
-                {
-                    healthBars[protagonist] = new HealthBar(protagonist, guiTextures["healthBar"]);
-                }
-                //healthBar = new HealthBar(protagonist, healthBarTexture);
             }
+            if (!healthBars.ContainsKey(spawnedActor) && spawnedActor.health < spawnedActor.maxHealth)
+            {
+                if (spawnedActor.className == "player")
+                    healthBars[spawnedActor] = new HealthBar(spawnedActor, guiTextures["healthBar"]);
+                else
+                    healthBars[spawnedActor] = new HealthBar(spawnedActor, guiTextures["enemyHealthBar"]);
+            }
+        }
+
+        private void Prop_Spawn(object sender, EventArgs e)
+        {
+            Prop spawnedProp = (Prop)sender;
+            props.Add(spawnedProp);
+        }
+
+        private void Prop_Remove(object sender, EventArgs e)
+        {
+            Prop toRemove = (Prop)sender;
+            props.Remove(toRemove);
         }
 
         private void Actor_Hurt(object sender, AttackEventArgs e)
         {
             Actor hurtActor = (Actor)sender;
-            if (healthBars.ContainsKey(hurtActor))
-            {
-            }
-            else
+            if (!healthBars.ContainsKey(hurtActor))
             {
                 if (hurtActor.className == "player")
                     healthBars[hurtActor] = new HealthBar(hurtActor, guiTextures["healthBar"]);
                 else
                     healthBars[hurtActor] = new HealthBar(hurtActor, guiTextures["enemyHealthBar"]);
             }
-            
         }
 
         private void Actor_Death(object sender, EventArgs e)
@@ -105,15 +129,20 @@ namespace DreamStateMachine
             actors.Remove(deadActor);
             if (deadActor.className == "player")
             {
-                Label deadLabel = new Label(spriteFont, "YEAH YOU ARE PRETTY MUCH DEAD HOMBRE");
+                Panel panel = new Panel(guiTextures["whiteSquare"], new Color(Color.TransparentBlack, .1f));
+                panel.dimensions.Width = (int)( drawSpace.Width * 2.5 / 10);
+                panel.dimensions.Height = drawSpace.Width * 1 / 10;
+                panel.dimensions.X = drawSpace.Width / 2 - panel.dimensions.Width/2;
+                panel.dimensions.Y = drawSpace.Height / 2 - panel.dimensions.Height / 2;
+                tutorialGui.Add(panel);
+                Label deadLabel = new Label(spriteFont, "You are dead!");
                 deadLabel.color = Color.Red;
-                deadLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString("YEAH YOU ARE PRETTY MUCH DEAD HOMBRE").X / 2;
-                deadLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString("YEAH YOU ARE PRETTY MUCH DEAD HOMBRE").Y / 2;
+                deadLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString(deadLabel.contents).X / 2;
+                deadLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString(deadLabel.contents).Y / 2 - 25;
                 tutorialGui.Add(deadLabel);
-                Label helpLabel = new Label(spriteFont, "Press e to start over ya dangus");
-                //label.color = Color.Red;
-                helpLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString("Press e to start over ya dangus").X / 2;
-                helpLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString("Press e to start over ya dangus").Y / 2 + 50;
+                Label helpLabel = new Label(spriteFont, "It is 2 spooky 4 you.");
+                helpLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString(helpLabel.contents).X / 2;
+                helpLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString(helpLabel.contents).Y / 2 + 25;
                 tutorialGui.Add(helpLabel);
             }
         }
@@ -125,9 +154,6 @@ namespace DreamStateMachine
         public void drawActors()
         {
             IDrawable curActor;
-            //Rectangle normalizedPosition;
-            //Rectangle sourceRectangle;
-            //Texture2D tex;
 
             for (int i = 0; i < actors.Count; i++)
             {
@@ -135,6 +161,18 @@ namespace DreamStateMachine
                 if (curActor.isInDrawSpace(drawSpace))
                 {
                     curActor.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], debug);
+                }
+            }
+        }
+
+        public void drawCredits()
+        {
+            helpLabel.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], false);
+            foreach (List<MovingLabel> creditList in credits)
+            {
+                foreach (MovingLabel mention in creditList)
+                {
+                    mention.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], false);
                 }
             }
         }
@@ -160,41 +198,85 @@ namespace DreamStateMachine
             {
                 entry.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], debug);
             }
-            //healthBar.draw();
+        }
+
+        public void drawProps()
+        {
+            foreach (Prop prop in props)
+            {
+                prop.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], false);
+            }
         }
 
         public void enterStartMenu()
         {
             menuItems.Clear();
+            credits.Clear();
             drawSpace.X = 0;
             drawSpace.Y = 0;
+
             Panel bg = new Panel(guiTextures["menuPanel"], new Color(255, 255, 255));
             bg.dimensions.X = drawSpace.X;
             bg.dimensions.Y = drawSpace.Y;
             bg.dimensions.Width = drawSpace.Width;
             bg.dimensions.Height = drawSpace.Height;
+
             Panel logo = new Panel(guiTextures["logo"], new Color(255, 255, 255));
-            logo.dimensions.X = drawSpace.Width / 2 - guiTextures["logo"].Width /2;
+            logo.dimensions.Width = drawSpace.Width * 4 / 5;
+            logo.dimensions.Height = drawSpace.Height * 2 / 10;
+            logo.dimensions.X = drawSpace.Width / 2 - logo.dimensions.Width / 2;
             logo.dimensions.Y = 50;
-            logo.dimensions.Width = guiTextures["logo"].Width;
-            logo.dimensions.Height = guiTextures["logo"].Height * 4 / 5;
+            
+            bg.addChild(logo);
+
             Button newGameButton = new Button(guiTextures["newGameButton"]);
-            newGameButton.dimensions.X = drawSpace.Width / 2 - guiTextures["newGameButton"].Width / 2;
-            newGameButton.dimensions.Y = 400;
-            newGameButton.dimensions.Width = guiTextures["newGameButton"].Width;
-            newGameButton.dimensions.Height = guiTextures["newGameButton"].Height * 4 / 5;
+            newGameButton.dimensions.Width = drawSpace.Width * 2 / 5;
+            newGameButton.dimensions.Height = drawSpace.Height / 6;
+            newGameButton.dimensions.X = drawSpace.Width / 2 - newGameButton.dimensions.Width / 2;
+            newGameButton.dimensions.Y = drawSpace.Height * 3 / 10;
             newGameButton.onClick = newGameClicked;
             bg.addChild(newGameButton);
-            bg.addChild(logo);
+
+            Button tutorialButton = new Button(guiTextures["tutorialButton"]);
+            tutorialButton.dimensions.Width = drawSpace.Width * 2 / 5;
+            tutorialButton.dimensions.Height = drawSpace.Height / 6;
+            tutorialButton.dimensions.X = drawSpace.Width / 2 - tutorialButton.dimensions.Width / 2;
+            tutorialButton.dimensions.Y = drawSpace.Height * 5 / 10;
+            tutorialButton.onClick = tutorialClicked;
+            bg.addChild(tutorialButton);
+
+            Button creditsButton = new Button(guiTextures["creditsButton"]);
+            creditsButton.dimensions.Width = drawSpace.Width * 2 / 5;
+            creditsButton.dimensions.Height = drawSpace.Height / 6;
+            creditsButton.dimensions.X = drawSpace.Width / 2 - creditsButton.dimensions.Width / 2;
+            creditsButton.dimensions.Y = drawSpace.Height * 7 / 10;
+            creditsButton.onClick = creditsClicked;
+            bg.addChild(creditsButton);
+
+
             menuItems.Add(bg);
             rootGUIElement = bg;
             menuEnabled = true;
             //EnableMenu(this, EventArgs.Empty);
         }
 
-        public void newGameClicked()
+        private void newGameClicked()
         {
             NewGame(this, EventArgs.Empty);
+        }
+
+        private void tutorialClicked()
+        {
+            Tutorial(this, EventArgs.Empty);
+        }
+
+        private void creditsClicked()
+        {
+            Credits(this, EventArgs.Empty);
+        }
+
+        private void creditsExit(){
+            CreditsExit(this, EventArgs.Empty);
         }
 
         public void handleGuiControls()
@@ -206,9 +288,14 @@ namespace DreamStateMachine
                     mouseMoved(mouseState.X, mouseState.Y);
             }
 
-            if (focusedElement != null && mouseState.LeftButton == ButtonState.Pressed)
+            if (focusedElement != null && mouseState.LeftButton == ButtonState.Pressed && menuEnabled)
             {
                 focusedElement.onClick();
+            }
+
+            if (keyboardState.IsKeyDown(Keys.E) && creditsEnabled)
+            {
+                creditsExit();
             }
 
 
@@ -257,10 +344,149 @@ namespace DreamStateMachine
             
         }
 
+        public void creditsUpdate(float dt)
+        {
+            foreach (List<MovingLabel> creditList in credits)
+            {
+                foreach (MovingLabel mention in creditList)
+                {
+                    mention.update(dt);
+                }
+            }
+        }
+
         public void gameUpdate(float dt)
         {
             if (drawSpace.Center.X != protagonist.hitBox.Center.X || drawSpace.Center.Y != protagonist.hitBox.Center.Y)
                 setFocus(protagonist.hitBox.Center.X, protagonist.hitBox.Center.Y);
+        }
+
+        public void rollCredits()
+        {
+
+            helpLabel = new MovingLabel(spriteFont, "Press E to go back to the menu.");
+            helpLabel.dimensions.X = drawSpace.Width / 2 + 200;
+            helpLabel.dimensions.Y = 20;
+
+
+            MovingLabel header = new MovingLabel(spriteFont, "DREAM STATE MACHINE");
+            List<MovingLabel> gameHeaderList = new List<MovingLabel>();
+            gameHeaderList.Add(header);
+            credits.Add(gameHeaderList);
+            MovingLabel projectLeadHeader = new MovingLabel(spriteFont, "Connor Brinkmann");
+            MovingLabel projectLead = new MovingLabel(spriteFont, "Project lead, Game Architect, Programming, Animation, World design");
+            List<MovingLabel> projectLeadList = new List<MovingLabel>();
+            projectLeadList.Add(projectLeadHeader);
+            projectLeadList.Add(projectLead);
+            credits.Add(projectLeadList);
+
+            MovingLabel MitchProgrammerHeader = new MovingLabel(spriteFont, "Mitchell McClellan");
+            MovingLabel MitchProgrammer = new MovingLabel(spriteFont, "Sound programmer, Item programmer, Character design/animation");
+            List<MovingLabel> MitchProgrammerList = new List<MovingLabel>();
+            MitchProgrammerList.Add(MitchProgrammerHeader);
+            MitchProgrammerList.Add(MitchProgrammer);
+            credits.Add(MitchProgrammerList);
+
+            MovingLabel JeremyProgrammerHeader = new MovingLabel(spriteFont, "Jeremy Feltracco");
+            MovingLabel JeremyProgrammer = new MovingLabel(spriteFont, "Game input programming, Controller support programming");
+            List<MovingLabel> JeremyProgrammerList = new List<MovingLabel>();
+            JeremyProgrammerList.Add(JeremyProgrammerHeader);
+            JeremyProgrammerList.Add(JeremyProgrammer);
+            credits.Add(JeremyProgrammerList);
+
+            MovingLabel AaronProgrammerHeader = new MovingLabel(spriteFont, "Aaron Andrews");
+            MovingLabel AaronProgrammer = new MovingLabel(spriteFont, "Prop programming");
+            List<MovingLabel> AaronProgrammerList = new List<MovingLabel>();
+            AaronProgrammerList.Add(AaronProgrammerHeader);
+            AaronProgrammerList.Add(AaronProgrammer);
+            credits.Add(AaronProgrammerList);
+
+            MovingLabel MattProgrammerHeader = new MovingLabel(spriteFont, "Matt Schmidt");
+            MovingLabel MattProgrammer = new MovingLabel(spriteFont, "Linux assistance");
+            List<MovingLabel> MattProgrammerList = new List<MovingLabel>();
+            MattProgrammerList.Add(MattProgrammerHeader);
+            MattProgrammerList.Add(MattProgrammer);
+            credits.Add(MattProgrammerList);
+
+            MovingLabel HoKeunProgrammerHeader = new MovingLabel(spriteFont, "Ho Keun Kim");
+            MovingLabel HoKeunProgrammer = new MovingLabel(spriteFont, "Tutorial World programming/design");
+            List<MovingLabel> HoKeunProgrammerList = new List<MovingLabel>();
+            HoKeunProgrammerList.Add(HoKeunProgrammerHeader);
+            HoKeunProgrammerList.Add(HoKeunProgrammer);
+            credits.Add(HoKeunProgrammerList);
+
+            MovingLabel OjanProgrammerHeader = new MovingLabel(spriteFont, "Ojan Croft");
+            MovingLabel OjanProgrammer = new MovingLabel(spriteFont, "Rendering programming, world transition programming");
+            List<MovingLabel> OjanProgrammerList = new List<MovingLabel>();
+            OjanProgrammerList.Add(OjanProgrammerHeader);
+            OjanProgrammerList.Add(OjanProgrammer);
+            credits.Add(OjanProgrammerList);
+
+            MovingLabel PatrickArtistHeader = new MovingLabel(spriteFont, "Patrick Sewell");
+            MovingLabel PatrickArtist = new MovingLabel(spriteFont, "Menu design/art, additional Sound effects, Health bar design");
+            List<MovingLabel> PatrickArtistList = new List<MovingLabel>();
+            PatrickArtistList.Add(PatrickArtistHeader);
+            PatrickArtistList.Add(PatrickArtist);
+            credits.Add(PatrickArtistList);
+
+            MovingLabel LarryArtistHeader = new MovingLabel(spriteFont, "Larry Smith");
+            MovingLabel LarryArtist = new MovingLabel(spriteFont, "Character design/animation");
+            List<MovingLabel> LarryArtistList = new List<MovingLabel>();
+            LarryArtistList.Add(LarryArtistHeader);
+            LarryArtistList.Add(LarryArtist);
+            credits.Add(LarryArtistList);
+
+            MovingLabel NickMusicianHeader = new MovingLabel(spriteFont, "Nicholas Shooter");
+            MovingLabel NickMusician = new MovingLabel(spriteFont, "Composer for Ice World, Temple world, Grass world");
+            List<MovingLabel> NickMusicianList = new List<MovingLabel>();
+            NickMusicianList.Add(NickMusicianHeader);
+            NickMusicianList.Add(NickMusician);
+            credits.Add(NickMusicianList);
+
+            MovingLabel XenaMusicianHeader = new MovingLabel(spriteFont, "Xena Grant");
+            MovingLabel XenaMusician = new MovingLabel(spriteFont, "Composer for Nightmare world");
+            List<MovingLabel> XenaMusicianList = new List<MovingLabel>();
+            XenaMusicianList.Add(XenaMusicianHeader);
+            XenaMusicianList.Add(XenaMusician);
+            credits.Add(XenaMusicianList);
+
+            MovingLabel CaylenaMusicianHeader = new MovingLabel(spriteFont, "Caylen Lee");
+            MovingLabel CaylenaMusician = new MovingLabel(spriteFont, "Composer for Credits");
+            List<MovingLabel> CaylenaMusicianList = new List<MovingLabel>();
+            CaylenaMusicianList.Add(CaylenaMusicianHeader);
+            CaylenaMusicianList.Add(CaylenaMusician);
+            credits.Add(CaylenaMusicianList);
+
+            MovingLabel userTestingHeader = new MovingLabel(spriteFont, "USER TESTING:");
+            MovingLabel RobbieTest = new MovingLabel(spriteFont, "Robbie Thomas");
+            MovingLabel ChaseTest = new MovingLabel(spriteFont, "Chase Melton");
+            MovingLabel IdeanTest = new MovingLabel(spriteFont, "Idean Behforouz");
+            MovingLabel MattTest = new MovingLabel(spriteFont, "Mathew Guzdial");
+            MovingLabel ElliotTest = new MovingLabel(spriteFont, "Elliot Outland");
+            List<MovingLabel> UserTestingList = new List<MovingLabel>();
+            UserTestingList.Add(userTestingHeader);
+            UserTestingList.Add(RobbieTest);
+            UserTestingList.Add(ChaseTest);
+            UserTestingList.Add(IdeanTest);
+            UserTestingList.Add(MattTest);
+            UserTestingList.Add(ElliotTest);
+            credits.Add(UserTestingList);
+
+
+            int startingY = drawSpace.Height + 100;
+            int additionalOffsetY = 0;
+            foreach (List<MovingLabel> creditList in credits)
+            {
+                foreach (MovingLabel mention in creditList)
+                {
+                    mention.dimensions.X = 30;
+                    mention.dimensions.Y = startingY + additionalOffsetY;
+                    mention.velocity.Y = -1;
+                    additionalOffsetY += 30;
+                }
+                additionalOffsetY += 50;
+            }
+            //header.dimensions.X = 550;
         }
 
         private void World_Change(Object sender, EventArgs eventArgs)
@@ -273,7 +499,7 @@ namespace DreamStateMachine
             if (worldManager.curWorld != null)
             {
                 this.curWorld = worldManager.curWorld;
-                if (worldManager.curLevel == 1)
+                if (worldManager.curWorld.isTutorial)
                 {
                     WorldLabel walkUpLabel = new WorldLabel(spriteFont, "press w to walk up");
                     walkUpLabel.dimensions.X = 500;

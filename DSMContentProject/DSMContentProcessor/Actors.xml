@@ -9,6 +9,7 @@
     texWidth="64"
     texHeight="64"
     health="100"
+    damageFactor="1"
     sight="200"
     reach="30">
     <Animation name="punch" type="unnarmed_light_attack"/>
@@ -17,19 +18,6 @@
     <Animation name="player_swing_weapon" type="light_weapon_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
-  </Actor>
-  
-  <Actor
-    className="thief"
-    texture="dreamManAnimations"
-    maxSpeed="7"
-    width="25"
-    height="25"
-    texWidth="64"
-    texHeight="64"
-    health="25"
-    sight="200"
-    reach="50">
   </Actor>
 
   <Actor
@@ -41,8 +29,94 @@
     texWidth="64"
     texHeight="64"
     health="50"
+    damageFactor="1"
     sight="400"
     reach="25">
+    <Animation name="over_head_smash" type="unnarmed_light_attack"/>
+    <Animation name="walk" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
+
+  <Actor
+    className="greenSkeleton"
+    texture="skeletonAnimationsGreen"
+    maxSpeed="5"
+    width="25"
+    height="25"
+    texWidth="64"
+    texHeight="64"
+    health="30"
+    damageFactor=".7"
+    sight="400"
+    reach="25">
+    <Animation name="over_head_smash" type="unnarmed_light_attack"/>
+    <Animation name="walk" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
+  
+  <Actor
+    className="redSkeleton"
+    texture="skeletonAnimationsRed"
+    maxSpeed="6"
+    width="25"
+    height="25"
+    texWidth="64"
+    texHeight="64"
+    health="50"
+    damageFactor="1.2"
+    sight="400"
+    reach="25">
+    <Animation name="over_head_smash" type="unnarmed_light_attack"/>
+    <Animation name="walk" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
+
+  <Actor
+    className="pinkSkeleton"
+    texture="skeletonAnimationsPink"
+    maxSpeed="5"
+    width="25"
+    height="25"
+    texWidth="64"
+    texHeight="64"
+    health="80"
+    damageFactor="1.5"
+    sight="400"
+    reach="25">
+    <Animation name="over_head_smash" type="unnarmed_light_attack"/>
+    <Animation name="walk" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
+
+  <Actor
+    className="maskSkeleton"
+    texture="skeletonAnimationsPink"
+    maxSpeed="8"
+    width="25"
+    height="25"
+    texWidth="64"
+    texHeight="64"
+    health="150"
+    damageFactor="2"
+    sight="400"
+    reach="25">
+    <Animation name="over_head_smash" type="unnarmed_light_attack"/>
+    <Animation name="walk" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
+
+  <Actor
+  className="iceSkeleton"
+  texture="skeletonAnimationsBlue"
+  maxSpeed="3"
+  width="25"
+  height="25"
+  texWidth="64"
+  texHeight="64"
+  health="60"
+  damageFactor="1.4"
+  sight="500"
+  reach="25">
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
@@ -57,7 +131,59 @@
     texWidth="96"
     texHeight="96"
     health="60"
+    damageFactor="1"
     sight="600"
+    reach="20">
+    <Animation name="heavy_punch" type="unnarmed_light_attack"/>
+    <Animation name="slow_walk" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
+
+  <Actor
+    className="greenGolem"
+    texture="golemAnimationsGreen"
+    maxSpeed="3"
+    width="42"
+    height="42"
+    texWidth="96"
+    texHeight="96"
+    health="30"
+    damageFactor="0.5"
+    sight="600"
+    reach="20">
+    <Animation name="heavy_punch" type="unnarmed_light_attack"/>
+    <Animation name="slow_walk" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
+
+  <Actor
+    className="pinkGolem"
+    texture="golemAnimationsPink"
+    maxSpeed="3"
+    width="42"
+    height="42"
+    texWidth="96"
+    texHeight="96"
+    health="80"
+    damageFactor="1.2"
+    sight="500"
+    reach="20">
+    <Animation name="heavy_punch" type="unnarmed_light_attack"/>
+    <Animation name="slow_walk" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
+
+  <Actor
+    className="pinkGolem"
+    texture="golemAnimationsRed"
+    maxSpeed="4"
+    width="42"
+    height="42"
+    texWidth="96"
+    texHeight="96"
+    health="100"
+    damageFactor="1.5"
+    sight="800"
     reach="20">
     <Animation name="heavy_punch" type="unnarmed_light_attack"/>
     <Animation name="slow_walk" type="unarmed_walk"/>
@@ -73,6 +199,7 @@
     texWidth="64"
     texHeight="64"
     health="25"
+    damageFactor="1"
     sight="250"
     reach="20">
     <Animation name="peck" type="unnarmed_light_attack"/>

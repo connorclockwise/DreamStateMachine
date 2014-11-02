@@ -17,10 +17,13 @@ namespace DreamStateMachine
         private static object syncRoot = new object();
         static Dictionary<String, Sound> soundPrototypes;
         static Dictionary<String, Song> songPrototypes;
+        private Song curSong;
+        private SongCollection songCollection;
 
         private SoundManager()
         {
-           
+            MediaPlayer.IsRepeating = false;
+            songCollection = new SongCollection();
         }
 
         public static SoundManager Instance
@@ -48,24 +51,12 @@ namespace DreamStateMachine
             XDocument musicDoc = XDocument.Load(musicConfigFile);
             List<XElement> songs = musicDoc.Element("Songs").Elements("Song").ToList();
             String soundClass;
-         
             SoundEffect effect;
-            String songName;
-            String songPath;
-            Song actualSong;
             foreach (XElement sound in sounds)
             {
                 soundClass = sound.Attribute("className").Value;
                 effect = content.Load<SoundEffect>(sound.Attribute("filePath").Value);
                 soundPrototypes[soundClass] = new Sound(effect);
-            }
-            foreach (XElement song in songs)
-            {
-                songName = song.Attribute("name").Value;
-                songPath = song.Attribute("filePath").Value;
-                actualSong = content.Load<Song>("StainedGlassAndSpookySkeletons");
-                //actualSong = content.Load<Song>(song.Attribute("filepath").Value);
-                songPrototypes[songName] = actualSong;
             }
         }
 
@@ -76,7 +67,26 @@ namespace DreamStateMachine
 
         public void playSong(String songName)
         {
-            MediaPlayer.Play(songPrototypes[songName]);
+            soundPrototypes[songName].playLoopedSound();
+        }
+
+        public void crossFadeSongs(String firstSong, String secondSong)
+        {
+            soundPrototypes[firstSong].fadeOutSound(2);
+            soundPrototypes[secondSong].fadeInSound(5);
+        }
+
+        public void stopSong(String songName)
+        {
+            soundPrototypes[songName].stopSound();
+        }
+
+        public void stopAllSounds()
+        {
+            foreach (KeyValuePair<String, Sound> entry in soundPrototypes)
+            {
+                entry.Value.stopSound();
+            }
         }
 
         public void update(float dt)
