@@ -11,6 +11,7 @@ namespace DreamStateMachine
         public List<SpawnFlag> spawns;
         public List<Room> children;
         public Point hallEntrance;
+        public Point roomCenter;
         public Rectangle dimensions;
         public bool startRoom;
         public bool isLeaf;
