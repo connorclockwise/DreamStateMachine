@@ -89,6 +89,13 @@ namespace DreamStateMachine
             {
                 protagonist = spawnedActor;
             }
+            if (!healthBars.ContainsKey(spawnedActor) && spawnedActor.health < spawnedActor.maxHealth)
+            {
+                if (spawnedActor.className == "player")
+                    healthBars[spawnedActor] = new HealthBar(spawnedActor, guiTextures["healthBar"]);
+                else
+                    healthBars[spawnedActor] = new HealthBar(spawnedActor, guiTextures["enemyHealthBar"]);
+            }
         }
 
         private void Prop_Spawn(object sender, EventArgs e)
@@ -106,10 +113,7 @@ namespace DreamStateMachine
         private void Actor_Hurt(object sender, AttackEventArgs e)
         {
             Actor hurtActor = (Actor)sender;
-            if (healthBars.ContainsKey(hurtActor))
-            {
-            }
-            else
+            if (!healthBars.ContainsKey(hurtActor))
             {
                 if (hurtActor.className == "player")
                     healthBars[hurtActor] = new HealthBar(hurtActor, guiTextures["healthBar"]);
