@@ -36,6 +36,7 @@ namespace DreamStateMachine.Behaviors
             String animationName;
             String animationType;
             Texture2D actorTexture;
+            float actorDamageFactor;
             int actorMaxSpeed;
             int actorWidth;
             int actorHeight;
@@ -55,12 +56,14 @@ namespace DreamStateMachine.Behaviors
                 texWidth = int.Parse(actor.Attribute("texWidth").Value);
                 texHeight = int.Parse(actor.Attribute("texHeight").Value);
                 actorHealth = int.Parse(actor.Attribute("health").Value);
+                actorDamageFactor = float.Parse(actor.Attribute("damageFactor").Value);
                 actorSight = int.Parse(actor.Attribute("sight").Value);
                 actorReach = int.Parse(actor.Attribute("reach").Value);
                 actorPrototypes[actorClass] = new Actor(actorTexture, actorWidth, actorHeight, texWidth, texHeight);
                 actorPrototypes[actorClass].className = actorClass;
                 actorPrototypes[actorClass].maxHealth = actorHealth;
                 actorPrototypes[actorClass].health = actorHealth;
+                actorPrototypes[actorClass].damageFactor = actorDamageFactor;
                 actorPrototypes[actorClass].maxSpeed = actorMaxSpeed;
                 actorPrototypes[actorClass].sight = actorSight;
                 actorPrototypes[actorClass].reach = actorReach;

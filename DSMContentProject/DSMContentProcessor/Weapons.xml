@@ -2,7 +2,8 @@
 <Weapons>
   <Weapon
     name="bone"
-    texture="bone">
+    texture="bone"
+    damage="25">
     <Animation name="holding_weapon_walk" type="holding_weapon_walk"/>
     <Animation name="holding_weapon_idle" type="holding_weapon_idle"/>
     <Animation name="light_weapon_attack" type="light_weapon_attack"/>

@@ -37,6 +37,7 @@ namespace DreamStateMachine.Behaviors
             Texture2D weaponTex;
             String animationName;
             String animationType;
+            int weaponDamage;
             String stanceName;
             Vector2 gripPoint;
             Rectangle drawBox;
@@ -48,7 +49,7 @@ namespace DreamStateMachine.Behaviors
                 
                 weaponName = weapon.Attribute("name").Value;
                 weaponTex = content.Load<Texture2D>(weapon.Attribute("texture").Value);
-
+                weaponDamage = int.Parse(weapon.Attribute("damage").Value);
                 animations = weapon.Elements("Animation").ToList();
 
                 foreach(XElement animation in animations){
@@ -77,7 +78,7 @@ namespace DreamStateMachine.Behaviors
                     };
                 }
 
-                weaponPrototypes[weaponName] = new Weapon(weaponName, weaponTex, weaponAnimations, weaponStances);
+                weaponPrototypes[weaponName] = new Weapon(weaponName, weaponTex, weaponDamage, weaponAnimations, weaponStances);
 
             }
         }

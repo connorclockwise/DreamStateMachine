@@ -318,7 +318,7 @@ namespace DreamStateMachine
             //Console.Write("new game selected");
             cam.menuEnabled = false;
             startNewGame();
-            SoundManager.Instance.stopAllSounds();
+            //SoundManager.Instance.stopAllSounds();
 
             gameUpdateStack.Push(MainGameUpdate);
             gameDrawStack.Push(MainGameDraw);

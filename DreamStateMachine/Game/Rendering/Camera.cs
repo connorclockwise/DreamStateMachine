@@ -125,14 +125,20 @@ namespace DreamStateMachine
             actors.Remove(deadActor);
             if (deadActor.className == "player")
             {
-                Label deadLabel = new Label(spriteFont, "YEAH YOU ARE PRETTY MUCH DEAD HOMBRE");
+                Panel panel = new Panel(guiTextures["whiteSquare"], new Color(Color.TransparentBlack, .1f));
+                panel.dimensions.Width = (int)( drawSpace.Width * 2.5 / 10);
+                panel.dimensions.Height = drawSpace.Width * 1 / 10;
+                panel.dimensions.X = drawSpace.Width / 2 - panel.dimensions.Width/2;
+                panel.dimensions.Y = drawSpace.Height / 2 - panel.dimensions.Height / 2;
+                tutorialGui.Add(panel);
+                Label deadLabel = new Label(spriteFont, "You are dead!");
                 deadLabel.color = Color.Red;
-                deadLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString("YEAH YOU ARE PRETTY MUCH DEAD HOMBRE").X / 2;
-                deadLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString("YEAH YOU ARE PRETTY MUCH DEAD HOMBRE").Y / 2;
+                deadLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString(deadLabel.contents).X / 2;
+                deadLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString(deadLabel.contents).Y / 2 - 25;
                 tutorialGui.Add(deadLabel);
-                Label helpLabel = new Label(spriteFont, "Press e to start over ya dangus");
-                helpLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString("Press e to start over ya dangus").X / 2;
-                helpLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString("Press e to start over ya dangus").Y / 2 + 50;
+                Label helpLabel = new Label(spriteFont, "It is 2 spooky 4 you.");
+                helpLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString(helpLabel.contents).X / 2;
+                helpLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString(helpLabel.contents).Y / 2 + 25;
                 tutorialGui.Add(helpLabel);
             }
         }

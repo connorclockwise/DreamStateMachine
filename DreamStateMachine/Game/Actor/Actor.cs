@@ -48,6 +48,7 @@ namespace DreamStateMachine
         public int health;
         public int reach;
         public int sight;
+        public float damageFactor;
         public float rotationVelocity;
         public float maxRotationVelocity;
         
@@ -173,6 +174,7 @@ namespace DreamStateMachine
             actorCopy.animations = animations;
             actorCopy.className = className;
             actorCopy.color = new Color(color.ToVector3());
+            actorCopy.damageFactor = damageFactor;
             actorCopy.gripPoint = new Point(gripPoint.X, gripPoint.Y);
             actorCopy.maxHealth = maxHealth;
             actorCopy.health = health;
