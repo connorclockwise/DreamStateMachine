@@ -32,6 +32,7 @@ namespace DreamStateMachine.Behaviors
             XDocument actorDoc = XDocument.Load(actorConfigFile);
             List<XElement> actors = actorDoc.Element("Actors").Elements("Actor").ToList();
             List<XElement> actorAnimations; 
+            List<XElement> actorItems;
             String actorClass;
             String animationName;
             String animationType;
@@ -45,6 +46,9 @@ namespace DreamStateMachine.Behaviors
             int actorReach;
             int texWidth;
             int texHeight;
+
+            String itemClassName;
+            float itemWeight;
 
             foreach (XElement actor in actors)
             {
@@ -79,6 +83,16 @@ namespace DreamStateMachine.Behaviors
                         actorPrototypes[actorClass].animations[animationType] = animationPrototypes[animationName];
                     }   
                 }
+
+                actorItems = actor.Elements("Item").ToList();
+
+                foreach (XElement item in actorItems) {
+                    itemClassName = item.Attribute("className").Value;
+                    itemWeight = float.Parse(item.Attribute("weight").Value);
+
+                    actorPrototypes[actorClass].lootTable.Add(itemClassName, itemWeight);
+                }
+
             }
         }
 
@@ -203,6 +217,8 @@ namespace DreamStateMachine.Behaviors
                     else
                     {
                         actorToCopy = (Actor)actorPrototypes[spawn.className].Clone();
+                        if (spawn.hasKey)
+                            actorToCopy.hasKey = true;
                         
                     }
                     actorToCopy.setGaze(newSightVector);

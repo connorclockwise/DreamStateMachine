@@ -68,8 +68,8 @@ namespace DreamStateMachine.Behaviors
         public void update(float dt){
             foreach (Actor actor in actors)
             {
-                this.handlePropCollision(actor);
                 this.handleMapCollision(actor);
+                this.handlePropCollision(actor);
                 this.handleMovement(actor);
             }
         }

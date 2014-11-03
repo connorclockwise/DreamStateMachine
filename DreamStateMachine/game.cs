@@ -189,6 +189,7 @@ namespace DreamStateMachine
             physicsController.update(dt);
             SoundManager.Instance.update(dt);
             cam.gameUpdate(dt);
+            cam.notificationsUpdate(dt);
            
             base.Update(gameTime);
         }
@@ -265,8 +266,8 @@ namespace DreamStateMachine
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
                 cam.drawFloor();
-                cam.drawActors();
                 cam.drawProps();
+                cam.drawActors();
                 cam.drawGUI();
             spriteBatch.End();
 

@@ -8,12 +8,98 @@
         texHeight="64">
   </Door>
 
+  <Door className="Big_Door"
+        texture="bigDoor"
+        width="96"
+        height="96"
+        texWidth="96"
+        texHeight="96">
+  </Door>
+
   <Potion className="Weak_Potion"
           texture="potion"
-          width="32"
-          height="32"
+          width="0"
+          height="0"
           texWidth="32"
           texHeight="32"
           restore="5">
   </Potion>
+
+  <Key className="key"
+        texture="larryKey"
+        width="0"
+        height="0"
+        texWidth="18"
+        texHeight="42">
+  </Key>
+
+  <Weapon className="sword"
+        texture="sword"
+        width="0"
+        height="0"
+        offsetX="18"
+        offsetY="0"
+        texWidth="18"
+        texHeight="60">
+  </Weapon>
+
+  <Weapon className="bone"
+        texture="bone"
+        width="0"
+        height="0"
+        offsetX="18"
+        offsetY="0"
+        texWidth="18"
+        texHeight="60">
+  </Weapon>
+
+  <Weapon className="iceBone"
+        texture="iceBone"
+        width="0"
+        height="0"
+        offsetX="18"
+        offsetY="0"
+        texWidth="18"
+        texHeight="60">
+  </Weapon>
+
+  <Weapon className="icicle"
+        texture="icicle"
+        width="0"
+        height="0"
+        offsetX="18"
+        offsetY="0"
+        texWidth="18"
+        texHeight="60">
+  </Weapon>
+
+  <Weapon className="keyBlade"
+        texture="keyBlade"
+        width="0"
+        height="0"
+        offsetX="18"
+        offsetY="0"
+        texWidth="18"
+        texHeight="60">
+  </Weapon>
+
+  <Weapon className="larryBlade"
+       texture="larryBlade"
+        width="0"
+        height="0"
+        offsetX="18"
+        offsetY="0"
+        texWidth="18"
+        texHeight="60">
+  </Weapon>
+
+  <Weapon className="fish"
+       texture="fish"
+        width="0"
+        height="0"
+        offsetX="18"
+        offsetY="0"
+        texWidth="18"
+        texHeight="60">
+  </Weapon>
 </Props>

@@ -35,6 +35,7 @@
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="bone" weight=".25"/>
   </Actor>
 
   <Actor
@@ -52,6 +53,7 @@
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="sword" weight=".5"/>
   </Actor>
   
   <Actor
@@ -69,6 +71,8 @@
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="bone" weight=".5"/>
+    <Item className="keyBlade" weight=".05"/>
   </Actor>
 
   <Actor
@@ -86,6 +90,8 @@
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="bone" weight=".75"/>
+    <Item className="keyBlade" weight=".1"/>
   </Actor>
 
   <Actor
@@ -103,6 +109,7 @@
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="larryBlade" weight=".5"/>
   </Actor>
 
   <Actor
@@ -120,6 +127,7 @@
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="iceBone" weight=".3"/>
   </Actor>
 
   <Actor
@@ -137,6 +145,7 @@
     <Animation name="heavy_punch" type="unnarmed_light_attack"/>
     <Animation name="slow_walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="icicle" weight=".4"/>
   </Actor>
 
   <Actor
@@ -154,6 +163,7 @@
     <Animation name="heavy_punch" type="unnarmed_light_attack"/>
     <Animation name="slow_walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="icicle" weight=".5"/>
   </Actor>
 
   <Actor
@@ -171,6 +181,7 @@
     <Animation name="heavy_punch" type="unnarmed_light_attack"/>
     <Animation name="slow_walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="icicle" weight=".6"/>
   </Actor>
 
   <Actor
@@ -188,6 +199,8 @@
     <Animation name="heavy_punch" type="unnarmed_light_attack"/>
     <Animation name="slow_walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="icicle" weight=".7"/>
+    <Item className="keyBlade" weight=".2"/>
   </Actor>
 
   <Actor
@@ -205,5 +218,6 @@
     <Animation name="peck" type="unnarmed_light_attack"/>
     <Animation name="waddle" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="fish" weight=".5"/>
   </Actor>
 </Actors>

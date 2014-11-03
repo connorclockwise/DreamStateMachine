@@ -26,6 +26,7 @@ namespace DreamStateMachine
         public Dictionary<String,Texture2D> guiTextures;
         public List<IDrawable> tutorialGui;
         List<List<MovingLabel>> credits;
+        List<FadingLabel> notifications;
         Actor protagonist;
         SpriteBatch spriteBatch;
         SpriteFont spriteFont;
@@ -51,6 +52,7 @@ namespace DreamStateMachine
             healthBars = new Dictionary<IDrawable, IDrawable>();
             guiTextures = new Dictionary<string,Texture2D>();
             tutorialGui = new List<IDrawable>();
+            notifications = new List<FadingLabel>();
             credits = new List<List<MovingLabel>>();
             debug = false;
             menuEnabled = false;
@@ -59,6 +61,7 @@ namespace DreamStateMachine
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
             Prop.Spawn += new EventHandler<SpawnEventArgs>(Prop_Spawn);
             Actor.Hurt += new EventHandler<AttackEventArgs>(Actor_Hurt);
+            Actor.OnPickUp += new EventHandler<PickupEventArgs>(Actor_OnPickUp);
             Actor.Death += new EventHandler<EventArgs>(Actor_Death);
             Prop.Remove += new EventHandler<EventArgs>(Prop_Remove);
             WorldManager.worldChange += new EventHandler<EventArgs>(World_Change);
@@ -129,22 +132,34 @@ namespace DreamStateMachine
             actors.Remove(deadActor);
             if (deadActor.className == "player")
             {
-                Panel panel = new Panel(guiTextures["whiteSquare"], new Color(Color.TransparentBlack, .1f));
+                Panel panel = new Panel(guiTextures["whiteSquare"], new Color(Color.TransparentBlack, .5f));
                 panel.dimensions.Width = (int)( drawSpace.Width * 2.5 / 10);
                 panel.dimensions.Height = drawSpace.Width * 1 / 10;
                 panel.dimensions.X = drawSpace.Width / 2 - panel.dimensions.Width/2;
                 panel.dimensions.Y = drawSpace.Height / 2 - panel.dimensions.Height / 2;
                 tutorialGui.Add(panel);
-                Label deadLabel = new Label(spriteFont, "You are dead!");
+                Label deadLabel = new Label(spriteFont, "YOU ARE DEAD");
                 deadLabel.color = Color.Red;
                 deadLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString(deadLabel.contents).X / 2;
                 deadLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString(deadLabel.contents).Y / 2 - 25;
                 tutorialGui.Add(deadLabel);
-                Label helpLabel = new Label(spriteFont, "It is 2 spooky 4 you.");
+                Label helpLabel = new Label(spriteFont, "Press e to restart.");
                 helpLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString(helpLabel.contents).X / 2;
                 helpLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString(helpLabel.contents).Y / 2 + 25;
                 tutorialGui.Add(helpLabel);
             }
+        }
+
+        private void Actor_OnPickUp(object sender, PickupEventArgs e)
+        {
+            Actor pickingUpActor = (Actor)sender;
+            String notificationString = "Picked up " + e.itemClassName;
+            FadingLabel notification = new FadingLabel(spriteFont, notificationString);
+            notification.color = Color.LightGreen;
+            notification.dimensions.X = pickingUpActor.hitBox.Center.X - (int)spriteFont.MeasureString(notificationString).X / 2;
+            notification.dimensions.Y = pickingUpActor.hitBox.Center.Y - (int)spriteFont.MeasureString(notificationString).Y / 2 + 40;
+            //notification.setPos(pickingUpActor.hitBox.Center);
+            notifications.Add(notification);
         }
 
         public void ToggleDebug(){
@@ -195,6 +210,10 @@ namespace DreamStateMachine
                 entry.Value.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], debug);
             }
             foreach( IDrawable entry in tutorialGui)
+            {
+                entry.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], debug);
+            }
+            foreach (IDrawable entry in notifications)
             {
                 entry.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], debug);
             }
@@ -361,6 +380,16 @@ namespace DreamStateMachine
                 setFocus(protagonist.hitBox.Center.X, protagonist.hitBox.Center.Y);
         }
 
+        public void notificationsUpdate(float dt)
+        {
+            foreach (FadingLabel notification in notifications.ToList())
+            {
+                notification.update(dt);
+                if (notification.curTime > notification.timeToFade)
+                    notifications.Remove(notification);
+            }
+        }
+
         public void rollCredits()
         {
 
@@ -415,7 +444,7 @@ namespace DreamStateMachine
             HoKeunProgrammerList.Add(HoKeunProgrammer);
             credits.Add(HoKeunProgrammerList);
 
-            MovingLabel OjanProgrammerHeader = new MovingLabel(spriteFont, "Ojan Croft");
+            MovingLabel OjanProgrammerHeader = new MovingLabel(spriteFont, "Ojan Thornycroft");
             MovingLabel OjanProgrammer = new MovingLabel(spriteFont, "Rendering programming, world transition programming");
             List<MovingLabel> OjanProgrammerList = new List<MovingLabel>();
             OjanProgrammerList.Add(OjanProgrammerHeader);
@@ -430,7 +459,7 @@ namespace DreamStateMachine
             credits.Add(PatrickArtistList);
 
             MovingLabel LarryArtistHeader = new MovingLabel(spriteFont, "Larry Smith");
-            MovingLabel LarryArtist = new MovingLabel(spriteFont, "Character design/animation");
+            MovingLabel LarryArtist = new MovingLabel(spriteFont, "Character design/animation, Item design");
             List<MovingLabel> LarryArtistList = new List<MovingLabel>();
             LarryArtistList.Add(LarryArtistHeader);
             LarryArtistList.Add(LarryArtist);
@@ -521,6 +550,18 @@ namespace DreamStateMachine
                     followLabel.dimensions.X = 400;
                     followLabel.dimensions.Y = 1800;
                     tutorialGui.Add(followLabel);
+                    WorldLabel pickUpLabel = new WorldLabel(spriteFont, "press e to pickup weapons, keys, and health potions");
+                    pickUpLabel.dimensions.X = -450;
+                    pickUpLabel.dimensions.Y = 1000;
+                    tutorialGui.Add(pickUpLabel);
+                    WorldLabel weaponLabel = new WorldLabel(spriteFont, "press q to switch between two picked up weapons");
+                    weaponLabel.dimensions.X = -450;
+                    weaponLabel.dimensions.Y = 800;
+                    tutorialGui.Add(weaponLabel);
+                    WorldLabel doorLabel = new WorldLabel(spriteFont, "press e to unlock doors with keys");
+                    doorLabel.dimensions.X = -450;
+                    doorLabel.dimensions.Y = 600;
+                    tutorialGui.Add(doorLabel);
                     WorldLabel attackLabel = new WorldLabel(spriteFont, "click the left mouse button to attack");
                     attackLabel.dimensions.X = -450;
                     attackLabel.dimensions.Y = 1500;

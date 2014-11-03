@@ -12,8 +12,6 @@ namespace DreamStateMachine
 {
     class Prop:ICloneable, IDrawable
     {
-        
-
         public static event EventHandler<SpawnEventArgs> Spawn;
         public static event EventHandler<EventArgs> Remove;
 
@@ -40,7 +38,6 @@ namespace DreamStateMachine
             
             hitBox = new Rectangle(0, 0, width, height);
             body = new Rectangle(0, 0, texWidth, texHeight);
-
            
         }
 
@@ -147,7 +144,6 @@ namespace DreamStateMachine
 
         virtual public void update(float dt)
         {
-            
         }
     }
 }

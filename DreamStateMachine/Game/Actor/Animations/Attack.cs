@@ -47,6 +47,7 @@ namespace DreamStateMachine.Actions
 
         override public void onStart()
         {
+            SoundManager.Instance.playSound("woosh");
         }
 
         override public void onEnd()

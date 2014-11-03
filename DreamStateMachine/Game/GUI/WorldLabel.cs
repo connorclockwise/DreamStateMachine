@@ -26,7 +26,7 @@ namespace DreamStateMachine
             {
                 normalizedPos.X = dimensions.X - drawSpace.X;
                 normalizedPos.Y = dimensions.Y - drawSpace.Y;
-                spriteBatch.DrawString(base.spriteFont, base.contents, normalizedPos, Color.White);
+                spriteBatch.DrawString(base.spriteFont, base.contents, normalizedPos, color);
             }
             
         }
