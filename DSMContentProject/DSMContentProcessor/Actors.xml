@@ -209,4 +209,36 @@
     <Animation name="waddle" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
   </Actor>
+
+  <Actor
+    className="slime"
+    texture="skeletonAnimationsGreen"
+    maxSpeed="5"
+    width="25"
+    height="25"
+    texWidth="64"
+    texHeight="64"
+    health="30"
+    sight="400"
+    reach="25">
+    <Animation name="over_head_smash" type="unnarmed_light_attack"/>
+    <Animation name="walk" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
+
+  <Actor
+    className="slimejr"
+    texture="skeletonAnimationsGreen"
+    maxSpeed="5"
+    width="25"
+    height="25"
+    texWidth="64"
+    texHeight="64"
+    health="30"
+    sight="400"
+    reach="25">
+    <Animation name="over_head_smash" type="unnarmed_light_attack"/>
+    <Animation name="walk" type="unarmed_walk"/>
+    <Animation name="idle" type="unarmed_idle"/>
+  </Actor>
 </Actors>
