@@ -20,11 +20,13 @@ namespace DreamStateMachine
 
         public Rectangle drawSpace;
         public List<IDrawable> actors;
+        public List<IDrawable> props;
         public List<IDrawable> menuItems;
         public Dictionary<IDrawable,IDrawable> healthBars;
         public Dictionary<String,Texture2D> guiTextures;
         public List<IDrawable> tutorialGui;
         List<List<MovingLabel>> credits;
+        List<FadingLabel> notifications;
         Actor protagonist;
         SpriteBatch spriteBatch;
         SpriteFont spriteFont;
@@ -44,19 +46,24 @@ namespace DreamStateMachine
             spriteBatch = sB;
             drawSpace = dS;
             actors = new List<IDrawable>();
+            props = new List<IDrawable>();
             menuItems = new List<IDrawable>();
             
             healthBars = new Dictionary<IDrawable, IDrawable>();
             guiTextures = new Dictionary<string,Texture2D>();
             tutorialGui = new List<IDrawable>();
+            notifications = new List<FadingLabel>();
             credits = new List<List<MovingLabel>>();
             debug = false;
             menuEnabled = false;
             creditsEnabled = false;
 
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
+            Prop.Spawn += new EventHandler<SpawnEventArgs>(Prop_Spawn);
             Actor.Hurt += new EventHandler<AttackEventArgs>(Actor_Hurt);
+            Actor.OnPickUp += new EventHandler<PickupEventArgs>(Actor_OnPickUp);
             Actor.Death += new EventHandler<EventArgs>(Actor_Death);
+            Prop.Remove += new EventHandler<EventArgs>(Prop_Remove);
             WorldManager.worldChange += new EventHandler<EventArgs>(World_Change);
 
         }
@@ -85,15 +92,31 @@ namespace DreamStateMachine
             {
                 protagonist = spawnedActor;
             }
+            if (!healthBars.ContainsKey(spawnedActor) && spawnedActor.health < spawnedActor.maxHealth)
+            {
+                if (spawnedActor.className == "player")
+                    healthBars[spawnedActor] = new HealthBar(spawnedActor, guiTextures["healthBar"]);
+                else
+                    healthBars[spawnedActor] = new HealthBar(spawnedActor, guiTextures["enemyHealthBar"]);
+            }
+        }
+
+        private void Prop_Spawn(object sender, EventArgs e)
+        {
+            Prop spawnedProp = (Prop)sender;
+            props.Add(spawnedProp);
+        }
+
+        private void Prop_Remove(object sender, EventArgs e)
+        {
+            Prop toRemove = (Prop)sender;
+            props.Remove(toRemove);
         }
 
         private void Actor_Hurt(object sender, AttackEventArgs e)
         {
             Actor hurtActor = (Actor)sender;
-            if (healthBars.ContainsKey(hurtActor))
-            {
-            }
-            else
+            if (!healthBars.ContainsKey(hurtActor))
             {
                 if (hurtActor.className == "player")
                     healthBars[hurtActor] = new HealthBar(hurtActor, guiTextures["healthBar"]);
@@ -109,16 +132,34 @@ namespace DreamStateMachine
             actors.Remove(deadActor);
             if (deadActor.className == "player")
             {
-                Label deadLabel = new Label(spriteFont, "YEAH YOU ARE PRETTY MUCH DEAD HOMBRE");
+                Panel panel = new Panel(guiTextures["whiteSquare"], new Color(Color.TransparentBlack, .5f));
+                panel.dimensions.Width = (int)( drawSpace.Width * 2.5 / 10);
+                panel.dimensions.Height = drawSpace.Width * 1 / 10;
+                panel.dimensions.X = drawSpace.Width / 2 - panel.dimensions.Width/2;
+                panel.dimensions.Y = drawSpace.Height / 2 - panel.dimensions.Height / 2;
+                tutorialGui.Add(panel);
+                Label deadLabel = new Label(spriteFont, "YOU ARE DEAD");
                 deadLabel.color = Color.Red;
-                deadLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString("YEAH YOU ARE PRETTY MUCH DEAD HOMBRE").X / 2;
-                deadLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString("YEAH YOU ARE PRETTY MUCH DEAD HOMBRE").Y / 2;
+                deadLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString(deadLabel.contents).X / 2;
+                deadLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString(deadLabel.contents).Y / 2 - 25;
                 tutorialGui.Add(deadLabel);
-                Label helpLabel = new Label(spriteFont, "Press e to start over ya dangus");
-                helpLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString("Press e to start over ya dangus").X / 2;
-                helpLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString("Press e to start over ya dangus").Y / 2 + 50;
+                Label helpLabel = new Label(spriteFont, "Press e to restart.");
+                helpLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString(helpLabel.contents).X / 2;
+                helpLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString(helpLabel.contents).Y / 2 + 25;
                 tutorialGui.Add(helpLabel);
             }
+        }
+
+        private void Actor_OnPickUp(object sender, PickupEventArgs e)
+        {
+            Actor pickingUpActor = (Actor)sender;
+            String notificationString = "Picked up " + e.itemClassName;
+            FadingLabel notification = new FadingLabel(spriteFont, notificationString);
+            notification.color = Color.LightGreen;
+            notification.dimensions.X = pickingUpActor.hitBox.Center.X - (int)spriteFont.MeasureString(notificationString).X / 2;
+            notification.dimensions.Y = pickingUpActor.hitBox.Center.Y - (int)spriteFont.MeasureString(notificationString).Y / 2 + 40;
+            //notification.setPos(pickingUpActor.hitBox.Center);
+            notifications.Add(notification);
         }
 
         public void ToggleDebug(){
@@ -172,6 +213,18 @@ namespace DreamStateMachine
             {
                 entry.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], debug);
             }
+            foreach (IDrawable entry in notifications)
+            {
+                entry.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], debug);
+            }
+        }
+
+        public void drawProps()
+        {
+            foreach (Prop prop in props)
+            {
+                prop.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], false);
+            }
         }
 
         public void enterStartMenu()
@@ -188,33 +241,34 @@ namespace DreamStateMachine
             bg.dimensions.Height = drawSpace.Height;
 
             Panel logo = new Panel(guiTextures["logo"], new Color(255, 255, 255));
-            logo.dimensions.X = drawSpace.Width / 2 - guiTextures["logo"].Width /2;
+            logo.dimensions.Width = drawSpace.Width * 4 / 5;
+            logo.dimensions.Height = drawSpace.Height * 2 / 10;
+            logo.dimensions.X = drawSpace.Width / 2 - logo.dimensions.Width / 2;
             logo.dimensions.Y = 50;
-            logo.dimensions.Width = guiTextures["logo"].Width;
-            logo.dimensions.Height = guiTextures["logo"].Height * 4 / 5;
+            
             bg.addChild(logo);
 
             Button newGameButton = new Button(guiTextures["newGameButton"]);
-            newGameButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
-            newGameButton.dimensions.Y = 300;
-            newGameButton.dimensions.Width = 450;
-            newGameButton.dimensions.Height = 125;
+            newGameButton.dimensions.Width = drawSpace.Width * 2 / 5;
+            newGameButton.dimensions.Height = drawSpace.Height / 6;
+            newGameButton.dimensions.X = drawSpace.Width / 2 - newGameButton.dimensions.Width / 2;
+            newGameButton.dimensions.Y = drawSpace.Height * 3 / 10;
             newGameButton.onClick = newGameClicked;
             bg.addChild(newGameButton);
 
             Button tutorialButton = new Button(guiTextures["tutorialButton"]);
-            tutorialButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
-            tutorialButton.dimensions.Y = 425;
-            tutorialButton.dimensions.Width = 450;
-            tutorialButton.dimensions.Height = 125;
+            tutorialButton.dimensions.Width = drawSpace.Width * 2 / 5;
+            tutorialButton.dimensions.Height = drawSpace.Height / 6;
+            tutorialButton.dimensions.X = drawSpace.Width / 2 - tutorialButton.dimensions.Width / 2;
+            tutorialButton.dimensions.Y = drawSpace.Height * 5 / 10;
             tutorialButton.onClick = tutorialClicked;
             bg.addChild(tutorialButton);
 
             Button creditsButton = new Button(guiTextures["creditsButton"]);
-            creditsButton.dimensions.X = drawSpace.Width / 2 - 450 / 2;
-            creditsButton.dimensions.Y = 550;
-            creditsButton.dimensions.Width = 450;
-            creditsButton.dimensions.Height = 125;
+            creditsButton.dimensions.Width = drawSpace.Width * 2 / 5;
+            creditsButton.dimensions.Height = drawSpace.Height / 6;
+            creditsButton.dimensions.X = drawSpace.Width / 2 - creditsButton.dimensions.Width / 2;
+            creditsButton.dimensions.Y = drawSpace.Height * 7 / 10;
             creditsButton.onClick = creditsClicked;
             bg.addChild(creditsButton);
 
@@ -326,6 +380,16 @@ namespace DreamStateMachine
                 setFocus(protagonist.hitBox.Center.X, protagonist.hitBox.Center.Y);
         }
 
+        public void notificationsUpdate(float dt)
+        {
+            foreach (FadingLabel notification in notifications.ToList())
+            {
+                notification.update(dt);
+                if (notification.curTime > notification.timeToFade)
+                    notifications.Remove(notification);
+            }
+        }
+
         public void rollCredits()
         {
 
@@ -366,6 +430,13 @@ namespace DreamStateMachine
             AaronProgrammerList.Add(AaronProgrammer);
             credits.Add(AaronProgrammerList);
 
+            MovingLabel MattProgrammerHeader = new MovingLabel(spriteFont, "Matt Schmidt");
+            MovingLabel MattProgrammer = new MovingLabel(spriteFont, "Linux assistance");
+            List<MovingLabel> MattProgrammerList = new List<MovingLabel>();
+            MattProgrammerList.Add(MattProgrammerHeader);
+            MattProgrammerList.Add(MattProgrammer);
+            credits.Add(MattProgrammerList);
+
             MovingLabel HoKeunProgrammerHeader = new MovingLabel(spriteFont, "Ho Keun Kim");
             MovingLabel HoKeunProgrammer = new MovingLabel(spriteFont, "Tutorial World programming/design");
             List<MovingLabel> HoKeunProgrammerList = new List<MovingLabel>();
@@ -373,7 +444,7 @@ namespace DreamStateMachine
             HoKeunProgrammerList.Add(HoKeunProgrammer);
             credits.Add(HoKeunProgrammerList);
 
-            MovingLabel OjanProgrammerHeader = new MovingLabel(spriteFont, "Ojan Croft");
+            MovingLabel OjanProgrammerHeader = new MovingLabel(spriteFont, "Ojan Thornycroft");
             MovingLabel OjanProgrammer = new MovingLabel(spriteFont, "Rendering programming, world transition programming");
             List<MovingLabel> OjanProgrammerList = new List<MovingLabel>();
             OjanProgrammerList.Add(OjanProgrammerHeader);
@@ -388,7 +459,7 @@ namespace DreamStateMachine
             credits.Add(PatrickArtistList);
 
             MovingLabel LarryArtistHeader = new MovingLabel(spriteFont, "Larry Smith");
-            MovingLabel LarryArtist = new MovingLabel(spriteFont, "Character design/animation");
+            MovingLabel LarryArtist = new MovingLabel(spriteFont, "Character design/animation, Item design");
             List<MovingLabel> LarryArtistList = new List<MovingLabel>();
             LarryArtistList.Add(LarryArtistHeader);
             LarryArtistList.Add(LarryArtist);
@@ -420,12 +491,14 @@ namespace DreamStateMachine
             MovingLabel ChaseTest = new MovingLabel(spriteFont, "Chase Melton");
             MovingLabel IdeanTest = new MovingLabel(spriteFont, "Idean Behforouz");
             MovingLabel MattTest = new MovingLabel(spriteFont, "Mathew Guzdial");
+            MovingLabel ElliotTest = new MovingLabel(spriteFont, "Elliot Outland");
             List<MovingLabel> UserTestingList = new List<MovingLabel>();
             UserTestingList.Add(userTestingHeader);
             UserTestingList.Add(RobbieTest);
             UserTestingList.Add(ChaseTest);
             UserTestingList.Add(IdeanTest);
             UserTestingList.Add(MattTest);
+            UserTestingList.Add(ElliotTest);
             credits.Add(UserTestingList);
 
 
@@ -477,6 +550,18 @@ namespace DreamStateMachine
                     followLabel.dimensions.X = 400;
                     followLabel.dimensions.Y = 1800;
                     tutorialGui.Add(followLabel);
+                    WorldLabel pickUpLabel = new WorldLabel(spriteFont, "press e to pickup weapons, keys, and health potions");
+                    pickUpLabel.dimensions.X = -450;
+                    pickUpLabel.dimensions.Y = 1000;
+                    tutorialGui.Add(pickUpLabel);
+                    WorldLabel weaponLabel = new WorldLabel(spriteFont, "press q to switch between two picked up weapons");
+                    weaponLabel.dimensions.X = -450;
+                    weaponLabel.dimensions.Y = 800;
+                    tutorialGui.Add(weaponLabel);
+                    WorldLabel doorLabel = new WorldLabel(spriteFont, "press e to unlock doors with keys");
+                    doorLabel.dimensions.X = -450;
+                    doorLabel.dimensions.Y = 600;
+                    tutorialGui.Add(doorLabel);
                     WorldLabel attackLabel = new WorldLabel(spriteFont, "click the left mouse button to attack");
                     attackLabel.dimensions.X = -450;
                     attackLabel.dimensions.Y = 1500;

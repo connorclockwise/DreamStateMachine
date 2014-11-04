@@ -10,13 +10,10 @@ using DreamStateMachine.Actions;
 
 namespace DreamStateMachine
 {
-    class Prop:ICloneable
+    class Prop:ICloneable, IDrawable
     {
-        
-
-        public static event EventHandler<EventArgs> Use;
         public static event EventHandler<SpawnEventArgs> Spawn;
-        
+        public static event EventHandler<EventArgs> Remove;
 
 
         //public Attributes attributes;
@@ -27,13 +24,10 @@ namespace DreamStateMachine
         public Rectangle hitBox;
         public Rectangle body;
         public String className;
+        public float rotation;
        
         public World world;
         //public Weapon activeWeapon;
-
-        
-
-
         
 
         public Prop(Texture2D tex, int width, int height, int texWidth, int texHeight)
@@ -44,25 +38,55 @@ namespace DreamStateMachine
             
             hitBox = new Rectangle(0, 0, width, height);
             body = new Rectangle(0, 0, texWidth, texHeight);
-
            
         }
 
-        public Object Clone()
+        public virtual Object Clone()
         {
             Prop PropCopy = new Prop(texture, hitBox.Width, hitBox.Height, body.Width, body.Height);
             
             PropCopy.className = className;
+            PropCopy.texture = texture;
             PropCopy.color = color;
 
             return PropCopy;
         }
 
 
+        public void draw(SpriteBatch spriteBatch, Rectangle drawSpace, Texture2D debugTex, bool debugging = false)
+        {
+            Rectangle normalizedPosition;
+            Rectangle sourceRectangle;
+            Texture2D tex;
+            tex = this.getTexture();
+            normalizedPosition = new Rectangle(this.body.X - drawSpace.X,
+                                               this.body.Y - drawSpace.Y,
+                                               this.body.Width,
+                                               this.body.Height);
 
 
+            sourceRectangle = new Rectangle(this.curAnimFrame.X * this.body.Width,
+                                            this.curAnimFrame.Y * this.body.Height,
+                                            this.body.Width,
+                                            this.body.Height);
 
+            spriteBatch.Draw(
+                tex,
+                new Vector2(normalizedPosition.X + this.body.Width / 2, normalizedPosition.Y + this.body.Height / 2),
+                sourceRectangle,
+                this.color,
+                this.rotation,
+                new Vector2(normalizedPosition.Width / 2.0f, normalizedPosition.Height / 2.0f),
+                1,
+                SpriteEffects.None,
+                0
+            );
+        }
 
+        public bool isInDrawSpace(Rectangle drawSpace)
+        {
+            return this.hitBox.Intersects(drawSpace);
+        }
 
         public void onSpawn( Point spawnTile, int spawnType )
         {
@@ -72,7 +96,7 @@ namespace DreamStateMachine
 
         public void onUse()
         {
-            Use(this, EventArgs.Empty);
+            
         }
 
         public void setAnimationFrame(int x, int y)
@@ -113,9 +137,13 @@ namespace DreamStateMachine
             return texture;
         }
 
+        public void onRemove()
+        {
+            Remove(this, EventArgs.Empty);
+        }
+
         virtual public void update(float dt)
         {
-            
         }
     }
 }

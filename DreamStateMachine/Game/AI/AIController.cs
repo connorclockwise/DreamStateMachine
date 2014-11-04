@@ -30,11 +30,11 @@ namespace DreamStateMachine.Behaviors
         private void Actor_Spawn(object sender, SpawnEventArgs e)
         {
             Actor spawnedActor = (Actor)sender;
-            if (e.spawnType == 1)
+            if (spawnedActor.className == "player")
             {
                 protagonist = spawnedActor;
             }
-            else if (e.spawnType == 2)
+            else
             {
                 ActionList behaviorList = new ActionList(spawnedActor);
                 Neutral neutral = new Neutral(behaviorList, spawnedActor);

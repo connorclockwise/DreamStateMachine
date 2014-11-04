@@ -62,6 +62,7 @@
     <Compile Include="game\Events\PickupEventArgs.cs" />
     <Compile Include="game\Events\SpawnEventArgs.cs" />
     <Compile Include="game\GUI\Button.cs" />
+    <Compile Include="game\GUI\FadingLabel.cs" />
     <Compile Include="game\GUI\MovingLabel.cs" />
     <Compile Include="game\GUI\WorldLabel.cs" />
     <Compile Include="game\GUI\HealthBar.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="game\GUI\Panel.cs" />
     <Compile Include="game\GUI\UIComponent.cs" />
     <Compile Include="game\Input\Command.cs" />
+    <Compile Include="game\Input\RotateWeaponCommand.cs" />
     <Compile Include="game\Input\DebugCommand.cs" />
     <Compile Include="game\Input\GazeCommand.cs" />
     <Compile Include="game\Input\InputHandler.cs" />
@@ -81,7 +83,11 @@
     <Compile Include="game\Rendering\IDrawable.cs" />
     <Compile Include="game\Sound\Sound.cs" />
     <Compile Include="game\Sound\SoundManager.cs" />
+    <Compile Include="game\World\WeaponItem.cs" />
+    <Compile Include="game\World\Key.cs" />
+    <Compile Include="game\World\Door.cs" />
     <Compile Include="game\World\EnemyConfig.cs" />
+    <Compile Include="game\World\Potion.cs" />
     <Compile Include="game\World\Prop.cs" />
     <Compile Include="game\World\PropManager.cs" />
     <Compile Include="game\World\Room.cs" />

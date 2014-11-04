@@ -47,6 +47,7 @@ namespace DreamStateMachine.Actions
 
         override public void onStart()
         {
+            SoundManager.Instance.playSound("woosh");
         }
 
         override public void onEnd()
@@ -86,7 +87,16 @@ namespace DreamStateMachine.Actions
 
                     attackBoxes.Add(damageRect);
                 }
-                DamageInfo damageInfo = new DamageInfo(owner, frameInfo.attackDamage, this.attackBoxes);
+                DamageInfo damageInfo;
+                if (owner.activeWeapon != null)
+                {
+                    damageInfo = new DamageInfo(owner, (int)(owner.activeWeapon.damage * owner.damageFactor), this.attackBoxes);
+                }
+                else 
+                { 
+                    damageInfo = new DamageInfo(owner, (int)(frameInfo.attackDamage * owner.damageFactor), this.attackBoxes);
+                }
+
                 owner.onAttack(damageInfo);
                 attackBoxes.Clear();
             }

@@ -9,6 +9,7 @@
     texWidth="64"
     texHeight="64"
     health="100"
+    damageFactor="1"
     sight="200"
     reach="30">
     <Animation name="punch" type="unnarmed_light_attack"/>
@@ -28,11 +29,13 @@
     texWidth="64"
     texHeight="64"
     health="50"
+    damageFactor="1"
     sight="400"
     reach="25">
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="bone" weight=".25"/>
   </Actor>
 
   <Actor
@@ -44,28 +47,15 @@
     texWidth="64"
     texHeight="64"
     health="30"
+    damageFactor=".7"
     sight="400"
     reach="25">
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="sword" weight=".5"/>
   </Actor>
-  <Actor
-    className="greenSkeleton"
-    texture="skeletonAnimationsGreen"
-    maxSpeed="5"
-    width="25"
-    height="25"
-    texWidth="64"
-    texHeight="64"
-    health="30"
-    sight="400"
-    reach="25">
-    <Animation name="over_head_smash" type="unnarmed_light_attack"/>
-    <Animation name="walk" type="unarmed_walk"/>
-    <Animation name="idle" type="unarmed_idle"/>
-  </Actor>
-
+  
   <Actor
     className="redSkeleton"
     texture="skeletonAnimationsRed"
@@ -75,11 +65,14 @@
     texWidth="64"
     texHeight="64"
     health="50"
+    damageFactor="1.2"
     sight="400"
     reach="25">
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="bone" weight=".5"/>
+    <Item className="keyBlade" weight=".05"/>
   </Actor>
 
   <Actor
@@ -91,11 +84,14 @@
     texWidth="64"
     texHeight="64"
     health="80"
+    damageFactor="1.5"
     sight="400"
     reach="25">
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="bone" weight=".75"/>
+    <Item className="keyBlade" weight=".1"/>
   </Actor>
 
   <Actor
@@ -107,11 +103,13 @@
     texWidth="64"
     texHeight="64"
     health="150"
+    damageFactor="2"
     sight="400"
     reach="25">
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="larryBlade" weight=".5"/>
   </Actor>
 
   <Actor
@@ -123,11 +121,13 @@
   texWidth="64"
   texHeight="64"
   health="60"
+  damageFactor="1.4"
   sight="500"
   reach="25">
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
     <Animation name="walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="iceBone" weight=".3"/>
   </Actor>
 
   <Actor
@@ -139,11 +139,13 @@
     texWidth="96"
     texHeight="96"
     health="60"
+    damageFactor="1"
     sight="600"
     reach="20">
     <Animation name="heavy_punch" type="unnarmed_light_attack"/>
     <Animation name="slow_walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="icicle" weight=".4"/>
   </Actor>
 
   <Actor
@@ -155,11 +157,13 @@
     texWidth="96"
     texHeight="96"
     health="30"
+    damageFactor="0.5"
     sight="600"
     reach="20">
     <Animation name="heavy_punch" type="unnarmed_light_attack"/>
     <Animation name="slow_walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="icicle" weight=".5"/>
   </Actor>
 
   <Actor
@@ -171,11 +175,13 @@
     texWidth="96"
     texHeight="96"
     health="80"
+    damageFactor="1.2"
     sight="500"
     reach="20">
     <Animation name="heavy_punch" type="unnarmed_light_attack"/>
     <Animation name="slow_walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="icicle" weight=".6"/>
   </Actor>
 
   <Actor
@@ -187,11 +193,14 @@
     texWidth="96"
     texHeight="96"
     health="100"
+    damageFactor="1.5"
     sight="800"
     reach="20">
     <Animation name="heavy_punch" type="unnarmed_light_attack"/>
     <Animation name="slow_walk" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="icicle" weight=".7"/>
+    <Item className="keyBlade" weight=".2"/>
   </Actor>
 
   <Actor
@@ -203,10 +212,12 @@
     texWidth="64"
     texHeight="64"
     health="25"
+    damageFactor="1"
     sight="250"
     reach="20">
     <Animation name="peck" type="unnarmed_light_attack"/>
     <Animation name="waddle" type="unarmed_walk"/>
     <Animation name="idle" type="unarmed_idle"/>
+    <Item className="fish" weight=".5"/>
   </Actor>
 </Actors>
