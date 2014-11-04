@@ -264,5 +264,4 @@ namespace DreamStateMachine
             worldChange(this, EventArgs.Empty);
         }
     }
-
 }
