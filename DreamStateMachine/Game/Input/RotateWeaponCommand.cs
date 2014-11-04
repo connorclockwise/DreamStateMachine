@@ -7,15 +7,15 @@ using Microsoft.Xna.Framework;
 
 namespace DreamStateMachine.Input
 {
-    class DebugCommand: Command
+    class RotateWeaponCommand: Command
     {
         public override void Execute(Actor player)
         {
-            player.onPickup("bone");
+            //player.onPickup("bone");
             //List<Rectangle> attackRect = new List<Rectangle>();
             //attackRect.Add(player.hitBox);
             //player.onHurt(new DamageInfo(player, 100, attackRect));
-            //player.kill();
+            player.rotateWeapon();
         }
 
         public override void Execute(Game.GUI.UIComponent uiComponent)

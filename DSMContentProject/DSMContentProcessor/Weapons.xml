@@ -3,11 +3,167 @@
   <Weapon
     name="bone"
     texture="bone"
-    damage="25">
+    damage="20">
     <Animation name="holding_weapon_walk" type="holding_weapon_walk"/>
     <Animation name="holding_weapon_idle" type="holding_weapon_idle"/>
     <Animation name="light_weapon_attack" type="light_weapon_attack"/>
     
+    <Stance name="idle"
+    texX="0"
+    texY="0"
+    texWidth="18"
+    texHeight="30"
+    gripX="8"
+    gripY="8">
+    </Stance>
+    <Stance name="swing"
+    texX="18"
+    texY="0"
+    texWidth="18"
+    texHeight="60"
+    gripX="8"
+    gripY="12">
+    </Stance>
+  </Weapon>
+
+  <Weapon
+    name="iceBone"
+    texture="iceBone"
+    damage="30">
+    <Animation name="holding_weapon_walk" type="holding_weapon_walk"/>
+    <Animation name="holding_weapon_idle" type="holding_weapon_idle"/>
+    <Animation name="light_weapon_attack" type="light_weapon_attack"/>
+
+    <Stance name="idle"
+    texX="0"
+    texY="0"
+    texWidth="18"
+    texHeight="30"
+    gripX="8"
+    gripY="8">
+    </Stance>
+    <Stance name="swing"
+    texX="18"
+    texY="0"
+    texWidth="18"
+    texHeight="60"
+    gripX="8"
+    gripY="12">
+    </Stance>
+  </Weapon>
+
+  <Weapon
+    name="keyBlade"
+    texture="keyBlade"
+    damage="50">
+    <Animation name="holding_weapon_walk" type="holding_weapon_walk"/>
+    <Animation name="holding_weapon_idle" type="holding_weapon_idle"/>
+    <Animation name="light_weapon_attack" type="light_weapon_attack"/>
+
+    <Stance name="idle"
+    texX="0"
+    texY="0"
+    texWidth="18"
+    texHeight="30"
+    gripX="8"
+    gripY="8">
+    </Stance>
+    <Stance name="swing"
+    texX="18"
+    texY="0"
+    texWidth="18"
+    texHeight="60"
+    gripX="8"
+    gripY="12">
+    </Stance>
+  </Weapon>
+
+  <Weapon
+    name="icicle"
+    texture="icicle"
+    damage="25">
+    <Animation name="holding_weapon_walk" type="holding_weapon_walk"/>
+    <Animation name="holding_weapon_idle" type="holding_weapon_idle"/>
+    <Animation name="light_weapon_attack" type="light_weapon_attack"/>
+
+    <Stance name="idle"
+    texX="0"
+    texY="0"
+    texWidth="18"
+    texHeight="30"
+    gripX="8"
+    gripY="8">
+    </Stance>
+    <Stance name="swing"
+    texX="18"
+    texY="0"
+    texWidth="18"
+    texHeight="60"
+    gripX="8"
+    gripY="12">
+    </Stance>
+  </Weapon>
+
+  <Weapon
+    name="larryBlade"
+    texture="larryBlade"
+    damage="100">
+    <Animation name="holding_weapon_walk" type="holding_weapon_walk"/>
+    <Animation name="holding_weapon_idle" type="holding_weapon_idle"/>
+    <Animation name="light_weapon_attack" type="light_weapon_attack"/>
+
+    <Stance name="idle"
+    texX="0"
+    texY="0"
+    texWidth="18"
+    texHeight="30"
+    gripX="8"
+    gripY="8">
+    </Stance>
+    <Stance name="swing"
+    texX="18"
+    texY="0"
+    texWidth="18"
+    texHeight="60"
+    gripX="8"
+    gripY="12">
+    </Stance>
+  </Weapon>
+
+  <Weapon
+    name="sword"
+    texture="sword"
+    damage="15">
+    <Animation name="holding_weapon_walk" type="holding_weapon_walk"/>
+    <Animation name="holding_weapon_idle" type="holding_weapon_idle"/>
+    <Animation name="light_weapon_attack" type="light_weapon_attack"/>
+
+    <Stance name="idle"
+    texX="0"
+    texY="0"
+    texWidth="18"
+    texHeight="30"
+    gripX="8"
+    gripY="8">
+    </Stance>
+    <Stance name="swing"
+    texX="18"
+    texY="0"
+    texWidth="18"
+    texHeight="60"
+    gripX="8"
+    gripY="12">
+    </Stance>
+  </Weapon>
+
+  <Weapon
+    name="fish"
+    texture="fish"
+    damage="1">
+    <Animation name="holding_weapon_walk" type="holding_weapon_walk"/>
+    <Animation name="holding_weapon_idle" type="holding_weapon_idle"/>
+    <Animation name="light_weapon_attack" type="light_weapon_attack"/>
+
     <Stance name="idle"
     texX="0"
     texY="0"

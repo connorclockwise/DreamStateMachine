@@ -8,7 +8,7 @@ using DreamStateMachine2.game.World;
 
 namespace DreamStateMachine
 {
-    enum SPAWNTYPES { ACTOR, ENEMY, PROP, DOOR, ITEM, POTION };
+    enum SPAWNTYPES { ACTOR, ENEMY, PROP, DOOR, ITEM, POTION, KEY };
 
     class WorldFactory
     {
@@ -303,6 +303,7 @@ namespace DreamStateMachine
             rooms = new List<Room>();
             spawns = new List<SpawnFlag>();
             int enemyDifficultyCap = difficulty /5;
+            int healthPotions = difficulty / 30;
             List<EnemyConfig> availableEnemies = enemyConfigs.FindAll(x => x.difficulty <= difficulty );
             List<EnemyConfig> chosenEnemies = new List<EnemyConfig>();
             while (enemyDifficultyCap > 0 && availableEnemies.Count > 0)
@@ -343,7 +344,7 @@ namespace DreamStateMachine
             SpawnFlag playerSpawn = new SpawnFlag("player", spawnPos, (int)SPAWNTYPES.ACTOR);
             spawns.Add(playerSpawn);
             newWorld.setSpawnTile(spawnPos);
-            tileMap[coors.Y, coors.X] = 14;
+            //tileMap[coors.Y, coors.X] = 14;
 
             rooms.Add(firstRoom);
 
@@ -409,6 +410,7 @@ namespace DreamStateMachine
             tileMap[room.dimensions.Y + room.dimensions.Height / 2, room.dimensions.X + room.dimensions.Width / 2] = 15;
             room.isLeaf = true;
             room = room.parent;
+
             while (room.parent != null)
             {
                 room.isOptional = false;
@@ -421,14 +423,17 @@ namespace DreamStateMachine
                 placeEnemy(collisionMap, room, spawns, tempConfig.enemyClass);
             }
 
-
             List<Room> possibleLockedRooms = rooms.FindAll(x => !x.isOptional && !x.startRoom && x.depth > 1);
 
             if (possibleLockedRooms.Count > 0)
             {
                 Room lockedRoom = possibleLockedRooms[random.Next(0, possibleLockedRooms.Count - 1)];
                 //tileMap[lockedRoom.hallEntrance.Y, lockedRoom.hallEntrance.X] = 15;
-                SpawnFlag lockedDoorFlag = new SpawnFlag("Generic_Door", lockedRoom.hallEntrance, (int)SPAWNTYPES.DOOR);
+                SpawnFlag lockedDoorFlag;
+                if (floorTex.Name == "hellTiles")
+                    lockedDoorFlag = new SpawnFlag("Big_Door", lockedRoom.hallEntrance, (int)SPAWNTYPES.DOOR);
+                else
+                    lockedDoorFlag = new SpawnFlag("Generic_Door", lockedRoom.hallEntrance, (int)SPAWNTYPES.DOOR);
                 spawns.Add(lockedDoorFlag);
                 List<Room> possibleKeyRooms = new List<Room>(rooms);
                 possibleKeyRooms = partitionPastRoom(possibleKeyRooms, lockedRoom);
@@ -454,13 +459,13 @@ namespace DreamStateMachine
                 }
             }
 
-            List<Room> possiblePotionRooms = rooms.FindAll(x => !x.isOptional && !x.startRoom && x.depth > 1);
+            List<Room> possiblePotionRooms = rooms;
 
-            if (possiblePotionRooms.Count > 0)
+            while(healthPotions > 0)
             {
                 Room potionRoom = possiblePotionRooms[random.Next(0, possiblePotionRooms.Count - 1)];
-                SpawnFlag potionFlag = new SpawnFlag("Weak_Potion", potionRoom.roomCenter, (int)SPAWNTYPES.DOOR);
-                spawns.Add(potionFlag);
+                placePotion(collisionMap, potionRoom, spawns, "Weak_Potion");
+                healthPotions--;
             }
 
             //Set room list here
@@ -469,6 +474,29 @@ namespace DreamStateMachine
             return newWorld;
         }
 
+        public void placePotion(bool[,] cMap, Room room, List<SpawnFlag> spawns, String potionType)
+        {
+            Rectangle dimensions = room.dimensions;
+            Point coors;
+
+            coors.X = (int)random.Next(dimensions.X + 1, dimensions.X + dimensions.Width - 2);
+            coors.Y = (int)random.Next(dimensions.Y + 1, dimensions.Y + dimensions.Height - 2);
+
+            SpawnFlag curSpawn;
+            for (int i = 0; i < spawns.Count; i++)
+            {
+                curSpawn = spawns[0];
+                if (curSpawn.tilePosition.X == coors.X && curSpawn.tilePosition.Y == coors.Y)
+                {
+                    coors.X = (int)random.Next(dimensions.X + 1, dimensions.X + dimensions.Width - 2);
+                    coors.Y = (int)random.Next(dimensions.Y + 1, dimensions.Y + dimensions.Height - 2);
+                }
+            }
+
+            SpawnFlag spawnFlag = new SpawnFlag(potionType, coors, (int)SPAWNTYPES.POTION);
+            spawns.Add(spawnFlag);
+            room.spawns.Add(spawnFlag);
+        }
 
         public void placeEnemy(bool[,] cMap, Room room, List<SpawnFlag> spawns, String enemyType)
         {
@@ -513,7 +541,7 @@ namespace DreamStateMachine
                 }
             }
 
-            SpawnFlag spawnFlag = new SpawnFlag("key", coors, (int)SPAWNTYPES.ITEM);
+            SpawnFlag spawnFlag = new SpawnFlag("key", coors, (int)SPAWNTYPES.KEY);
             spawns.Add(spawnFlag);
             room.spawns.Add(spawnFlag);
         }

@@ -38,7 +38,7 @@ namespace DreamStateMachine
         private void Actor_Use(object sender, EventArgs args)
         {
             Actor usingActor = (Actor)sender;
-            if (usingActor.health > 0)
+            if (usingActor.health > 0 && usingActor.hasKey)
             {
                 int reach = usingActor.reach;
                 Vector2 sightVector = usingActor.sightVector;
@@ -48,6 +48,7 @@ namespace DreamStateMachine
                 if (hitBox.Contains(usePoint))
                 {
                     onRemove();
+                    usingActor.hasKey = false;
                 }
             }
         }

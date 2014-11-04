@@ -86,7 +86,7 @@ namespace DreamStateMachine.Behaviors
         private void Actor_Pickup_Item(Object sender, PickupEventArgs pickupEventArgs)
         {
             Actor pickingUpActor = (Actor)sender;
-            pickingUpActor.activeWeapon = (Weapon)weaponPrototypes[pickupEventArgs.itemClassName].Clone();
+            pickingUpActor.giveWeapon((Weapon)weaponPrototypes[pickupEventArgs.itemClassName].Clone());
         }
 
     }
