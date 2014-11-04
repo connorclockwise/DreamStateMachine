@@ -230,6 +230,7 @@
     texWidth="64"
     texHeight="64"
     health="30"
+    damageFactor="1"
     sight="400"
     reach="25">
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
@@ -246,6 +247,7 @@
     texWidth="64"
     texHeight="64"
     health="30"
+    damageFactor="1"
     sight="400"
     reach="25">
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
