@@ -24,7 +24,23 @@ namespace DreamStateMachine.Behaviors
             animationPrototypes = new Dictionary<string, AnimationInfo>();
             random = new Random();
 
+            Actor.Death += new EventHandler<EventArgs>(Actor_Death);
             WorldManager.worldChange += new EventHandler<EventArgs>(World_Change);
+        }
+
+        void Actor_Death(object sender, EventArgs e)
+        {
+            if (((Actor)sender).className == "slime")
+            {
+                float x = ((Actor)sender).hitBox.Center.X / ((Actor)sender).world.tileSize;
+                float y = ((Actor)sender).hitBox.Center.Y / ((Actor)sender).world.tileSize;
+                List<SpawnFlag> spawns = new List<SpawnFlag>();
+                SpawnFlag enemySpawn = new SpawnFlag("slimejr", new Point((int)x, (int)y), 2);
+                //SpawnFlag enemySpawn2 = new SpawnFlag("slimejr", new Point((int)x, (int)y), 2);
+                spawns.Add(enemySpawn);
+                //spawns.Add(enemySpawn2);
+                spawnActors(spawns);
+            }
         }
 
         public void initActorConfig(ContentManager content, String actorConfigFile)
