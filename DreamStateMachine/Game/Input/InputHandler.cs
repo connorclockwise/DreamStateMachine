@@ -87,6 +87,10 @@ namespace DreamStateMachine.Input
             {
                 commands.Add(new DebugCommand());
             }
+            if (keyBoardState.IsKeyDown(Keys.Q))
+            {
+                commands.Add(new RotateWeaponCommand());
+            }
 
             float curMousePosX = mouseState.X;
             float curMousePosY = mouseState.Y;

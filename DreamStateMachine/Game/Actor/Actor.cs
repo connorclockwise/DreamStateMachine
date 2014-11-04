@@ -20,11 +20,14 @@ namespace DreamStateMachine
         public static event EventHandler<EventArgs> Death;
         public static event EventHandler<AttackEventArgs> Hurt;
         public static event EventHandler<PickupEventArgs> OnPickUp;
+        public static event EventHandler<PickupEventArgs> Drop;
         public static event EventHandler<EventArgs> Use;
         public static event EventHandler<SpawnEventArgs> Spawn;
         
         public Dictionary<String, AnimationInfo> animations;
+        public Dictionary<String, float> lootTable;
         public List<Rectangle> debugSquares;
+        public Weapon[] weapons;
         public Color color;
         public Point curAnimFrame;
         public Point posOffset;
@@ -41,6 +44,7 @@ namespace DreamStateMachine
         public Vector2 velocity;
         public World world;
         public Weapon activeWeapon;
+        public bool hasKey;
         public int id;
         public int maxHealth;
         public int maxSpeed;
@@ -48,8 +52,13 @@ namespace DreamStateMachine
         public int health;
         public int reach;
         public int sight;
+        public int activeWeaponIndex;
+        public float damageFactor;
         public float rotationVelocity;
         public float maxRotationVelocity;
+        public float pickUpCoolDown;
+        public float useCoolDown;
+        public float switchCoolDown;
         
         public bool isWalking; 
         public bool lockedMovement;
@@ -63,7 +72,9 @@ namespace DreamStateMachine
         {
             texture = tex;
             animations = new Dictionary<String, AnimationInfo>();
+            lootTable = new Dictionary<String, float>();
             debugSquares = new List<Rectangle>();
+            weapons = new Weapon[2];
             color = new Color(255, 255, 255, 255);
             gripPoint = new Point();
             attackBox = new Rectangle(0, 0, 0, 0);
@@ -82,6 +93,10 @@ namespace DreamStateMachine
             rotationVelocity = 0;
             maxHealth = 100;
             health = maxHealth;
+            activeWeaponIndex = 0;
+            pickUpCoolDown = 0;
+            switchCoolDown = 0;
+            useCoolDown = 0;
             
             maxRotationVelocity = MathHelper.Pi / 16f;
             lockedMovement = false;
@@ -171,8 +186,10 @@ namespace DreamStateMachine
         {
             Actor actorCopy = new Actor(texture, hitBox.Width, hitBox.Height, body.Width, body.Height);
             actorCopy.animations = animations;
+            actorCopy.lootTable = lootTable;
             actorCopy.className = className;
             actorCopy.color = new Color(color.ToVector3());
+            actorCopy.damageFactor = damageFactor;
             actorCopy.gripPoint = new Point(gripPoint.X, gripPoint.Y);
             actorCopy.maxHealth = maxHealth;
             actorCopy.health = health;
@@ -180,6 +197,9 @@ namespace DreamStateMachine
             actorCopy.sight = sight;
             actorCopy.sightVector = new Vector2(sightVector.X, sightVector.Y);
             actorCopy.reach = reach;
+            actorCopy.activeWeapon = activeWeapon;
+            actorCopy.weapons = (Weapon[])weapons.Clone();
+            actorCopy.activeWeaponIndex = activeWeaponIndex;
             return actorCopy;
         }
 
@@ -190,6 +210,7 @@ namespace DreamStateMachine
 
         public void giveWeapon(Weapon weapon)
         {
+            weapons[activeWeaponIndex] = weapon;
             activeWeapon = weapon;
         }
 
@@ -213,8 +234,15 @@ namespace DreamStateMachine
         {
             DamageInfo damageInfo = attackEventArgs.damageInfo;
             Actor attacker = (Actor) sender;
+
             if (this.id != attacker.id)
-                handleActorAttack(attackEventArgs.damageInfo);
+            {
+                if (this.className != "player" && attacker.className == "player")
+                    handleActorAttack(attackEventArgs.damageInfo);
+                else if (this.className == "player" && attacker.className != "player")
+                    handleActorAttack(attackEventArgs.damageInfo);
+            }
+                
         }
 
         public void onAttack(DamageInfo damageInfo)
@@ -248,6 +276,13 @@ namespace DreamStateMachine
             OnPickUp(this, pickupEventArgs);
         }
 
+        public void onDrop(String itemClassName)
+        {
+            activeWeapon = null;
+            PickupEventArgs pickupEventArgs = new PickupEventArgs(itemClassName);
+            Drop(this, pickupEventArgs);
+        }
+
         public void onSpawn( Point spawnTile, int spawnType )
         {
             SpawnEventArgs spawnEventArgs = new SpawnEventArgs(spawnTile, spawnType);
@@ -256,7 +291,11 @@ namespace DreamStateMachine
 
         public void onUse()
         {
-            Use(this, EventArgs.Empty);
+            if (useCoolDown <= 0)
+            {
+                Use(this, EventArgs.Empty);
+                useCoolDown = .25f;
+            }
         }
 
         public void setAnimationFrame(int x, int y)
@@ -339,6 +378,14 @@ namespace DreamStateMachine
 
         virtual public void update(float dt)
         {
+            if(switchCoolDown > 0)
+                switchCoolDown -= dt;
+
+            if (useCoolDown > 0)
+                useCoolDown -= dt;
+
+            if (pickUpCoolDown > 0)
+                pickUpCoolDown -= dt;
 
             if (this.bodyRotation != this.targetRotation)
             {
@@ -374,6 +421,24 @@ namespace DreamStateMachine
 
         public void remove(){
             Actor.DamagedPoint -= new EventHandler<AttackEventArgs>(Actor_Attacked);
+        }
+
+        public void rotateWeapon()
+        {
+            if (switchCoolDown <= 0)
+            {
+                activeWeaponIndex++;
+                if (activeWeaponIndex >= weapons.Length)
+                {
+                    activeWeaponIndex = 0;
+                }
+                if (activeWeaponIndex >= 0 && weapons[activeWeaponIndex] != null)
+                    activeWeapon = weapons[activeWeaponIndex];
+                else
+                    activeWeapon = null;
+
+                switchCoolDown = 0.25f;
+            }
         }
     }
 }

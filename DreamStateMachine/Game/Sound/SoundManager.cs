@@ -81,6 +81,14 @@ namespace DreamStateMachine
             soundPrototypes[songName].stopSound();
         }
 
+        public void stopAllSounds()
+        {
+            foreach (KeyValuePair<String, Sound> entry in soundPrototypes)
+            {
+                entry.Value.stopSound();
+            }
+        }
+
         public void update(float dt)
         {
             foreach(KeyValuePair<String, Sound> soundPrototype in soundPrototypes)

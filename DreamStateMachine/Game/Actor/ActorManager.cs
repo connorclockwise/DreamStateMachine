@@ -48,10 +48,12 @@ namespace DreamStateMachine.Behaviors
             XDocument actorDoc = XDocument.Load(actorConfigFile);
             List<XElement> actors = actorDoc.Element("Actors").Elements("Actor").ToList();
             List<XElement> actorAnimations; 
+            List<XElement> actorItems;
             String actorClass;
             String animationName;
             String animationType;
             Texture2D actorTexture;
+            float actorDamageFactor;
             int actorMaxSpeed;
             int actorWidth;
             int actorHeight;
@@ -60,6 +62,9 @@ namespace DreamStateMachine.Behaviors
             int actorReach;
             int texWidth;
             int texHeight;
+
+            String itemClassName;
+            float itemWeight;
 
             foreach (XElement actor in actors)
             {
@@ -71,12 +76,14 @@ namespace DreamStateMachine.Behaviors
                 texWidth = int.Parse(actor.Attribute("texWidth").Value);
                 texHeight = int.Parse(actor.Attribute("texHeight").Value);
                 actorHealth = int.Parse(actor.Attribute("health").Value);
+                actorDamageFactor = float.Parse(actor.Attribute("damageFactor").Value);
                 actorSight = int.Parse(actor.Attribute("sight").Value);
                 actorReach = int.Parse(actor.Attribute("reach").Value);
                 actorPrototypes[actorClass] = new Actor(actorTexture, actorWidth, actorHeight, texWidth, texHeight);
                 actorPrototypes[actorClass].className = actorClass;
                 actorPrototypes[actorClass].maxHealth = actorHealth;
                 actorPrototypes[actorClass].health = actorHealth;
+                actorPrototypes[actorClass].damageFactor = actorDamageFactor;
                 actorPrototypes[actorClass].maxSpeed = actorMaxSpeed;
                 actorPrototypes[actorClass].sight = actorSight;
                 actorPrototypes[actorClass].reach = actorReach;
@@ -92,6 +99,16 @@ namespace DreamStateMachine.Behaviors
                         actorPrototypes[actorClass].animations[animationType] = animationPrototypes[animationName];
                     }   
                 }
+
+                actorItems = actor.Elements("Item").ToList();
+
+                foreach (XElement item in actorItems) {
+                    itemClassName = item.Attribute("className").Value;
+                    itemWeight = float.Parse(item.Attribute("weight").Value);
+
+                    actorPrototypes[actorClass].lootTable.Add(itemClassName, itemWeight);
+                }
+
             }
         }
 
@@ -216,6 +233,8 @@ namespace DreamStateMachine.Behaviors
                     else
                     {
                         actorToCopy = (Actor)actorPrototypes[spawn.className].Clone();
+                        if (spawn.hasKey)
+                            actorToCopy.hasKey = true;
                         
                     }
                     actorToCopy.setGaze(newSightVector);

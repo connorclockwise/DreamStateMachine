@@ -16,6 +16,11 @@
   </Sound>
 
   <Sound
+   className="woosh"
+   filePath="sfx/wooshSwing">
+  </Sound>
+
+  <Sound
     className="templeTheme"
     filePath="StainedGlassAndSpookySkeletons">
   </Sound>

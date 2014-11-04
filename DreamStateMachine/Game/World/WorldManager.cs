@@ -59,10 +59,14 @@ namespace DreamStateMachine
                 int[,] tileMap = this.curWorld.getTileMap();
                 if (tileMap[usePoint.Y, usePoint.X] == 15)
                 {
-                    if (this.getWorldChild(0) == null)
+                    if (this.getWorldChild(0) == null && !curWorld.isTutorial)
                     {
                         playerTransfer = usingActor;
                         this.createNextWorld(0);
+                        onWorldChange();
+                    }
+                    else if (curWorld.isTutorial)
+                    {
                         onWorldChange();
                     }
                 }
@@ -194,6 +198,7 @@ namespace DreamStateMachine
                 for(int i = 0; i < enemyTypeList.Count; i++)
                 {
                     enemySpawn = new SpawnFlag(enemyTypeList.ElementAt(i), enemySpawnPosList.ElementAt(i), 2);
+                    enemySpawn.hasKey = true;
                     spawns.Add(enemySpawn);
                 }
             }
@@ -244,8 +249,10 @@ namespace DreamStateMachine
             Point playerSpawnPos = new Point(15,14);
             List<String> enemyTypeList = new List<String>();
             enemyTypeList.Add("skeleton");
+            enemyTypeList.Add("Generic_Door");
             List<Point> enemySpawnPosList = new List<Point>();
             enemySpawnPosList.Add(new Point(4, 13));
+            enemySpawnPosList.Add(new Point(4, 9));
             return this.loadFromCustom(worldPrototypes["forest"], tileMap, collisionMap, playerSpawnPos, enemyTypeList, enemySpawnPosList);
         }
 

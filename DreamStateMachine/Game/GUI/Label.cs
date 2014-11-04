@@ -48,8 +48,8 @@ namespace DreamStateMachine
 
         public override void setPos(int x, int y)
         {
-            pos.X = (float)x;
-            pos.Y = (float)y;
+            pos.X = (float)x - spriteFont.MeasureString(contents).X / 2;
+            pos.Y = (float)y - spriteFont.MeasureString(contents).Y / 2; ;
         }
 
         public override void setPos(Point point)
