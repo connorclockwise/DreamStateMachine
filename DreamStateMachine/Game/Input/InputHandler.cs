@@ -9,7 +9,11 @@ namespace DreamStateMachine.Input
 {
     class InputHandler
     {
+
+        public event EventHandler<EventArgs> pauseButtonPressed;
+
         public bool controller = false;
+        float pauseCoolDown = 0;
         KeyboardState keyBoardState;
         MouseState mouseState;
         GamePadState padState;
@@ -83,13 +87,21 @@ namespace DreamStateMachine.Input
 
                 commands.Add(new UseCommand());
             }
-            if (keyBoardState.IsKeyDown(Keys.G))
-            {
-                commands.Add(new DebugCommand());
-            }
+            //if (keyBoardState.IsKeyDown(Keys.G))
+            //{
+            //    commands.Add(new DebugCommand());
+            //}
             if (keyBoardState.IsKeyDown(Keys.Q))
             {
                 commands.Add(new RotateWeaponCommand());
+            }
+            if (keyBoardState.IsKeyDown(Keys.Escape))
+            {
+                if (pauseCoolDown <= 0)
+                {
+                    pauseButtonPressed(this, EventArgs.Empty);
+                    pauseCoolDown = .25f;
+                }
             }
 
             float curMousePosX = mouseState.X;
@@ -104,5 +116,12 @@ namespace DreamStateMachine.Input
             
             return commands;
         }
+
+        public void update(float dt)
+        {
+            if (pauseCoolDown > 0)
+                pauseCoolDown -= dt;
+        }
+
     }
 }

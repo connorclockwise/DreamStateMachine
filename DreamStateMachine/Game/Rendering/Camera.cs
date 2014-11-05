@@ -17,6 +17,7 @@ namespace DreamStateMachine
         public event EventHandler<EventArgs> Tutorial;
         public event EventHandler<EventArgs> Credits;
         public event EventHandler<EventArgs> CreditsExit;
+        public event EventHandler<EventArgs> ExitPause;
 
         public Rectangle drawSpace;
         public List<IDrawable> actors;
@@ -34,6 +35,10 @@ namespace DreamStateMachine
         public bool menuEnabled;
         public bool creditsEnabled;
         IDrawable curWorld;
+        Panel pausePanel;
+        Label pauseLabel;
+        Button pauseButton;
+
         Label helpLabel;
         public UIComponent rootGUIElement;
         UIComponent focusedElement;
@@ -81,6 +86,7 @@ namespace DreamStateMachine
             guiTextures["tutorialButtonFocused"] = content.Load<Texture2D>("tutorialBtnFocused");
             guiTextures["creditsButton"] = content.Load<Texture2D>("creditsBtnUnfocused");
             guiTextures["creditsButtonFocused"] = content.Load<Texture2D>("creditsBtnFocused");
+            guiTextures["exitButton"] = content.Load<Texture2D>("exitGameButton");
             spriteFont = content.Load<SpriteFont>("SpriteFont1");
         }
 
@@ -219,6 +225,13 @@ namespace DreamStateMachine
             }
         }
 
+        public void drawPauseMenu()
+        {
+            pausePanel.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], false);
+            pauseLabel.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], false);
+            pauseButton.draw(spriteBatch, drawSpace, guiTextures["debugSquare"], false);
+        }
+
         public void drawProps()
         {
             foreach (Prop prop in props)
@@ -230,11 +243,13 @@ namespace DreamStateMachine
         public void enterStartMenu()
         {
             menuItems.Clear();
+            actors.Clear();
+            props.Clear();
             credits.Clear();
             drawSpace.X = 0;
             drawSpace.Y = 0;
 
-            Panel bg = new Panel(guiTextures["menuPanel"], new Color(255, 255, 255));
+            Panel bg = new Panel(guiTextures["menuPanel"], Color.White);
             bg.dimensions.X = drawSpace.X;
             bg.dimensions.Y = drawSpace.Y;
             bg.dimensions.Width = drawSpace.Width;
@@ -279,6 +294,38 @@ namespace DreamStateMachine
             //EnableMenu(this, EventArgs.Empty);
         }
 
+        public void enterPauseMenu()
+        {
+            menuItems.Clear();
+
+            Panel pauseMenu = new Panel(guiTextures["whiteSquare"], Color.Black);
+            pauseMenu.dimensions.Width = drawSpace.Width / 4;
+            pauseMenu.dimensions.Height = drawSpace.Height / 4;
+            pauseMenu.dimensions.X = drawSpace.Width / 2 - pauseMenu.dimensions.Width/2;
+            pauseMenu.dimensions.Y = drawSpace.Height / 2 - pauseMenu.dimensions.Height / 2;
+
+            pauseLabel = new Label(spriteFont, "Paused");
+            pauseLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString("Paused").X /2;
+            pauseLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString("Paused").Y / 2 - 60;
+
+            pauseButton = new Button(guiTextures["exitButton"]);
+            pauseButton.dimensions.Width = drawSpace.Width / 6;
+            pauseButton.dimensions.Height = drawSpace.Height / 8;
+            pauseButton.dimensions.X = drawSpace.Width / 2 - pauseButton.dimensions.Width / 2;
+            pauseButton.dimensions.Y = drawSpace.Height / 2 - pauseButton.dimensions.Height / 2 + 30;
+            pauseButton.onClick = exitClicked;
+
+            pausePanel = pauseMenu;
+            menuItems.Add(pauseMenu);
+            menuItems.Add(pauseLabel);
+            menuItems.Add(pauseButton);
+            pauseMenu.children.Add(pauseLabel);
+            pauseMenu.children.Add(pauseButton);
+            rootGUIElement = pauseMenu;
+            menuEnabled = true;
+            //EnableMenu(this, EventArgs.Empty);
+        }
+
         private void newGameClicked()
         {
             NewGame(this, EventArgs.Empty);
@@ -292,6 +339,11 @@ namespace DreamStateMachine
         private void creditsClicked()
         {
             Credits(this, EventArgs.Empty);
+        }
+
+        private void exitClicked()
+        {
+            ExitPause(this, EventArgs.Empty);
         }
 
         private void creditsExit(){
@@ -410,7 +462,7 @@ namespace DreamStateMachine
             credits.Add(projectLeadList);
 
             MovingLabel MitchProgrammerHeader = new MovingLabel(spriteFont, "Mitchell McClellan");
-            MovingLabel MitchProgrammer = new MovingLabel(spriteFont, "Sound programmer, Item programmer, Character design/animation");
+            MovingLabel MitchProgrammer = new MovingLabel(spriteFont, "Sound programmer, Item programmer/designer, Character design/animation");
             List<MovingLabel> MitchProgrammerList = new List<MovingLabel>();
             MitchProgrammerList.Add(MitchProgrammerHeader);
             MitchProgrammerList.Add(MitchProgrammer);
@@ -550,6 +602,10 @@ namespace DreamStateMachine
                     followLabel.dimensions.X = 400;
                     followLabel.dimensions.Y = 1800;
                     tutorialGui.Add(followLabel);
+                    WorldLabel escapeLabel = new WorldLabel(spriteFont, "Press escape to pause");
+                    escapeLabel.dimensions.X = 0;
+                    escapeLabel.dimensions.Y = 1800;
+                    tutorialGui.Add(escapeLabel);
                     WorldLabel pickUpLabel = new WorldLabel(spriteFont, "press e to pickup weapons, keys, and health potions");
                     pickUpLabel.dimensions.X = -450;
                     pickUpLabel.dimensions.Y = 1000;

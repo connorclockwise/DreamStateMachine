@@ -27,6 +27,7 @@ namespace DreamStateMachine
         ActorManager actorManager;
         AIController aiController;
         ItemManager itemManager;
+        InputHandler inputHandler;
         PhysicsController physicsController;
         PropManager propManager;
         WorldManager worldManager;
@@ -39,8 +40,8 @@ namespace DreamStateMachine
         Point origin;
         Camera cam;
         SpriteBatch spriteBatch;
-        
-        InputHandler inputHandler;
+
+        bool paused;
 
         
 
@@ -55,6 +56,7 @@ namespace DreamStateMachine
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.SynchronizeWithVerticalRetrace = true;
             var screen = Screen.AllScreens.First(e => e.Primary);
             Window.IsBorderless = true;
             Window.Position = new Point(screen.Bounds.X, screen.Bounds.Y);
@@ -75,6 +77,7 @@ namespace DreamStateMachine
             gameDraw = gameDrawStack.Peek();
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
             Actor.Use += new EventHandler<EventArgs>(Actor_Use);
+            
         }
 
         /// <summary>
@@ -136,6 +139,8 @@ namespace DreamStateMachine
             cam.Tutorial += new EventHandler<EventArgs>(TutorialSelected);
             cam.Credits += new EventHandler<EventArgs>(CreditsSelected);
             cam.CreditsExit += new EventHandler<EventArgs>(CreditsExited);
+            cam.ExitPause += new EventHandler<EventArgs>(MainGameExited);
+            inputHandler.pauseButtonPressed += new EventHandler<EventArgs>(Pause);
             WorldManager.worldChange += new EventHandler<EventArgs>(WorldManager_worldChange);
 
         }
@@ -182,16 +187,22 @@ namespace DreamStateMachine
 
         public void MainGameUpdate(GameTime gameTime)
         {
-            float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
+             float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
             UpdateInput();
-            actorController.update(dt);
-            aiController.update(dt);
-            physicsController.update(dt);
-            SoundManager.Instance.update(dt);
-            cam.gameUpdate(dt);
-            cam.notificationsUpdate(dt);
-           
-            base.Update(gameTime);
+            inputHandler.update(dt);
+            if (!paused)
+            {
+               
+                
+                actorController.update(dt);
+                aiController.update(dt);
+                physicsController.update(dt);
+                SoundManager.Instance.update(dt);
+                cam.gameUpdate(dt);
+                cam.notificationsUpdate(dt);
+
+                base.Update(gameTime);
+            }
         }
 
         //public void LoadWorldUpdate(GameTime gameTime)
@@ -238,13 +249,15 @@ namespace DreamStateMachine
                         c.Execute(player);
                 }
             }
-            else if (cam.menuEnabled && cam.rootGUIElement != null && inputHandler.controller)
+            
+            if (cam.menuEnabled && cam.rootGUIElement != null && inputHandler.controller)
             {
                 List<Command> commands = inputHandler.handleInput();
                 foreach (Command c in commands)
                     c.Execute(cam.rootGUIElement);
             }
-            else if ((cam.creditsEnabled || cam.menuEnabled) && cam.rootGUIElement != null)
+
+            if ((cam.creditsEnabled || cam.menuEnabled) && cam.rootGUIElement != null)
             {
                 cam.handleGuiControls();
             }
@@ -264,11 +277,13 @@ namespace DreamStateMachine
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, DepthStencilState.None, RasterizerState.CullNone);
                 cam.drawFloor();
                 cam.drawProps();
                 cam.drawActors();
                 cam.drawGUI();
+                if (paused)
+                    cam.drawPauseMenu();
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -287,6 +302,8 @@ namespace DreamStateMachine
             base.Draw(gameTime);
 
         }
+
+        
 
         //public void LoadWorldDraw(GameTime gameTime)
         //{
@@ -364,6 +381,26 @@ namespace DreamStateMachine
             SoundManager.Instance.stopSong("creditsTheme");
         }
 
+        public void MainGameExited(Object sender, EventArgs eventArgs){
+            if(gameUpdateStack.Count > 1)
+            {
+                paused = false;
+                player = null;
+                cam.tutorialGui.Clear();
+                SoundManager.Instance.stopAllSounds();
+                cam.enterStartMenu();
+                cam.drawSpace.X = 0;
+                cam.drawSpace.Y = 0;
+                gameUpdateStack.Pop();
+                gameDrawStack.Pop();
+                gameUpdate = gameUpdateStack.Peek();
+                gameDraw = gameDrawStack.Peek();
+                SoundManager.Instance.stopSong("creditsTheme");
+            }
+            
+        }
+
+
         private void Actor_Spawn(Object sender, EventArgs eventArgs)
         {
             Actor actor = (Actor)sender;
@@ -388,6 +425,16 @@ namespace DreamStateMachine
                 gameUpdate = gameUpdateStack.Peek();
                 gameDraw = gameDrawStack.Peek();
             }
+        }
+
+        private void Pause(Object sender, EventArgs eventArgs)
+        {
+            if (!paused)
+                cam.enterPauseMenu();
+            else
+                cam.menuEnabled = false;
+            paused = !paused;
+
         }
 
         private void WorldManager_worldChange(Object sender, EventArgs eventArgs)

@@ -26,20 +26,27 @@ namespace DreamStateMachine
         public bool isTutorial;
         public WorldConfig worldConfig;
 
+        Texture2D floorTileTex;
+        Rectangle screenRectangle;
+        Rectangle sourceRectangle;
+
         public World(Texture2D floorTex, int ts)
         {
             floorTiles = floorTex;
             tileSize = ts;
             roomList = new List<Room>();
+
+            screenRectangle = new Rectangle();
+            sourceRectangle = new Rectangle();
         }
 
         public void draw(SpriteBatch spriteBatch, Rectangle drawSpace, Texture2D debugTex, bool debuging = false)
         {
-            Texture2D floorTileTex = this.floorTiles;
-            int[,] tileMap = this.tileMap;
-            int tileSize = this.tileSize;
-            Rectangle screenRectangle = new Rectangle(0, 0, 0, 0);
-            Rectangle sourceRectangle = new Rectangle(0, 0, 0, 0);
+            floorTileTex = this.floorTiles;
+            //int[,] tileMap = this.tileMap;
+            //int tileSize = this.tileSize;
+            //Rectangle screenRectangle = new Rectangle(0, 0, 0, 0);
+            //Rectangle sourceRectangle = new Rectangle(0, 0, 0, 0);
             Point offset = new Point();
             Point tileWorldPos = new Point();
             Vector2 tilePos = new Vector2((float)drawSpace.X / tileSize, (float)drawSpace.Y / tileSize);
