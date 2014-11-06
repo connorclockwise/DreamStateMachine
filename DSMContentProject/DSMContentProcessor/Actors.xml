@@ -29,7 +29,7 @@
     texWidth="64"
     texHeight="64"
     health="50"
-    damageFactor="1"
+    damageFactor="1.2"
     sight="400"
     reach="25">
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
@@ -46,8 +46,8 @@
     height="25"
     texWidth="64"
     texHeight="64"
-    health="30"
-    damageFactor=".7"
+    health="40"
+    damageFactor="1"
     sight="400"
     reach="25">
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
@@ -64,8 +64,8 @@
     height="25"
     texWidth="64"
     texHeight="64"
-    health="50"
-    damageFactor="1.2"
+    health="80"
+    damageFactor="1.3"
     sight="400"
     reach="25">
     <Animation name="over_head_smash" type="unnarmed_light_attack"/>
@@ -83,7 +83,7 @@
     height="25"
     texWidth="64"
     texHeight="64"
-    health="80"
+    health="100"
     damageFactor="1.5"
     sight="400"
     reach="25">
@@ -120,7 +120,7 @@
   height="25"
   texWidth="64"
   texHeight="64"
-  health="60"
+  health="80"
   damageFactor="1.4"
   sight="500"
   reach="25">
@@ -156,8 +156,8 @@
     height="42"
     texWidth="96"
     texHeight="96"
-    health="30"
-    damageFactor="0.5"
+    health="50"
+    damageFactor="0.9"
     sight="600"
     reach="20">
     <Animation name="heavy_punch" type="unnarmed_light_attack"/>
@@ -174,7 +174,7 @@
     height="42"
     texWidth="96"
     texHeight="96"
-    health="80"
+    health="100"
     damageFactor="1.2"
     sight="500"
     reach="20">
@@ -185,14 +185,14 @@
   </Actor>
 
   <Actor
-    className="pinkGolem"
+    className="redGolem"
     texture="golemAnimationsRed"
     maxSpeed="4"
     width="42"
     height="42"
     texWidth="96"
     texHeight="96"
-    health="100"
+    health="200"
     damageFactor="1.5"
     sight="800"
     reach="20">
@@ -206,12 +206,12 @@
   <Actor
     className="penguin"
     texture="penguinAnimations"
-    maxSpeed="4"
+    maxSpeed="5"
     width="20"
     height="20"
     texWidth="64"
     texHeight="64"
-    health="25"
+    health="35"
     damageFactor="1"
     sight="250"
     reach="20">

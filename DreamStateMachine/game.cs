@@ -43,9 +43,6 @@ namespace DreamStateMachine
 
         bool paused;
 
-        
-
-
         public delegate void GameUpdate(GameTime gameTime);
         public delegate void GameDraw(GameTime gameTime);
         public Stack<GameDraw> gameDrawStack;
@@ -77,7 +74,6 @@ namespace DreamStateMachine
             gameDraw = gameDrawStack.Peek();
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
             Actor.Use += new EventHandler<EventArgs>(Actor_Use);
-            
         }
 
         /// <summary>
@@ -111,6 +107,7 @@ namespace DreamStateMachine
             origin.X = graphics.PreferredBackBufferWidth / 2;
             origin.Y = graphics.PreferredBackBufferHeight / 2;
             inputHandler = new InputHandler(origin);
+            inputHandler.controller = true;
             random = new Random();
             tileRect = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             //tileRect = Window.ClientBounds;
@@ -183,6 +180,7 @@ namespace DreamStateMachine
         public void startTutorial()
         {
             worldManager.initTutorial();
+            cam.startTutorialGui(inputHandler.controller);
         }
 
         public void MainGameUpdate(GameTime gameTime)
@@ -192,17 +190,19 @@ namespace DreamStateMachine
             inputHandler.update(dt);
             if (!paused)
             {
-               
-                
                 actorController.update(dt);
                 aiController.update(dt);
                 physicsController.update(dt);
                 SoundManager.Instance.update(dt);
                 cam.gameUpdate(dt);
                 cam.notificationsUpdate(dt);
-
-                base.Update(gameTime);
             }
+            else
+            {
+                cam.startMenuUpdate(dt);
+            }
+
+            base.Update(gameTime);
         }
 
         //public void LoadWorldUpdate(GameTime gameTime)
@@ -250,12 +250,12 @@ namespace DreamStateMachine
                 }
             }
             
-            if (cam.menuEnabled && cam.rootGUIElement != null && inputHandler.controller)
-            {
-                List<Command> commands = inputHandler.handleInput();
-                foreach (Command c in commands)
-                    c.Execute(cam.rootGUIElement);
-            }
+            //if (cam.menuEnabled && cam.rootGUIElement != null)
+            //{
+            //    List<Command> commands = inputHandler.handleInput();
+            //    foreach (Command c in commands)
+            //        c.Execute(cam.rootGUIElement);
+            //}
 
             if ((cam.creditsEnabled || cam.menuEnabled) && cam.rootGUIElement != null)
             {
@@ -359,7 +359,7 @@ namespace DreamStateMachine
         {
             cam.menuEnabled = false;
             cam.creditsEnabled = true;
-            cam.rollCredits();
+            cam.rollCredits(inputHandler.controller);
             gameUpdateStack.Push(CreditsUpdate);
             gameDrawStack.Push(CreditsDraw);
             gameUpdate = gameUpdateStack.Peek();

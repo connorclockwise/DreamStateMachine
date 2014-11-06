@@ -42,7 +42,6 @@ namespace DreamStateMachine.Behaviors
             Point spawnPoint = new Point(e.spawnTile.X * world.tileSize, e.spawnTile.Y * world.tileSize);
             spawnedActor.setPos(spawnPoint);
             actors.Add(spawnedActor);
-            
         }
 
         private void Prop_Spawn(object sender, SpawnEventArgs e)
@@ -51,12 +50,26 @@ namespace DreamStateMachine.Behaviors
             Point spawnPoint = new Point(e.spawnTile.X * world.tileSize, e.spawnTile.Y * world.tileSize);
             spawnedProp.setPos(spawnPoint);
             props.Add(spawnedProp);
+            if (spawnedProp is Door)
+            {
+                Point tilePos = new Point();
+                tilePos.X = spawnedProp.body.Center.X / world.tileSize;
+                tilePos.Y = spawnedProp.body.Center.Y / world.tileSize;
+                world.collisionMap[tilePos.Y, tilePos.X] = false;
+            }
         }
 
         private void Prop_Remove(object sender, EventArgs e)
         {
             Prop toRemoveProp = (Prop)sender;
             props.Remove(toRemoveProp);
+            if (toRemoveProp is Door)
+            {
+                Point tilePos = new Point();
+                tilePos.X = toRemoveProp.body.Center.X / world.tileSize;
+                tilePos.Y = toRemoveProp.body.Center.Y / world.tileSize;
+                world.collisionMap[tilePos.Y, tilePos.X] = true;
+            }
         }
 
         private void Actor_Death(object sender, EventArgs e)

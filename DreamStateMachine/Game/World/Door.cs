@@ -45,7 +45,7 @@ namespace DreamStateMachine
                 Point usePoint = new Point();
                 usePoint.X = (int)(usingActor.hitBox.Center.X + (int)(sightVector.X * reach));
                 usePoint.Y = (int)(usingActor.hitBox.Center.Y + (int)(sightVector.Y * reach));
-                if (hitBox.Contains(usePoint))
+                if (body.Contains(usePoint))
                 {
                     onRemove();
                     usingActor.hasKey = false;

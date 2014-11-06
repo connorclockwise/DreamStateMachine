@@ -45,6 +45,8 @@ namespace DreamStateMachine
         MouseState mouseState;
         MouseState lastMouseState;
         KeyboardState keyboardState;
+        GamePadState gamepadState;
+        float clickCoolDown;
 
         public Camera(SpriteBatch sB, Rectangle dS)
         {
@@ -62,6 +64,7 @@ namespace DreamStateMachine
             debug = false;
             menuEnabled = false;
             creditsEnabled = false;
+            clickCoolDown = 0;
 
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
             Prop.Spawn += new EventHandler<SpawnEventArgs>(Prop_Spawn);
@@ -149,7 +152,7 @@ namespace DreamStateMachine
                 deadLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString(deadLabel.contents).X / 2;
                 deadLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString(deadLabel.contents).Y / 2 - 25;
                 tutorialGui.Add(deadLabel);
-                Label helpLabel = new Label(spriteFont, "Press e to restart.");
+                Label helpLabel = new Label(spriteFont, "Press use to restart.");
                 helpLabel.dimensions.X = drawSpace.Width / 2 - (int)spriteFont.MeasureString(helpLabel.contents).X / 2;
                 helpLabel.dimensions.Y = drawSpace.Height / 2 - (int)spriteFont.MeasureString(helpLabel.contents).Y / 2 + 25;
                 tutorialGui.Add(helpLabel);
@@ -243,6 +246,8 @@ namespace DreamStateMachine
         public void enterStartMenu()
         {
             menuItems.Clear();
+            tutorialGui.Clear();
+            healthBars.Clear();
             actors.Clear();
             props.Clear();
             credits.Clear();
@@ -354,17 +359,19 @@ namespace DreamStateMachine
         {
             mouseState = Mouse.GetState();
             keyboardState = Keyboard.GetState();
+            gamepadState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
             if(lastMouseState != null){
                 if (lastMouseState.X != mouseState.X || lastMouseState.Y != mouseState.Y)
                     mouseMoved(mouseState.X, mouseState.Y);
             }
 
-            if (focusedElement != null && mouseState.LeftButton == ButtonState.Pressed && menuEnabled)
+            if (focusedElement != null && mouseState.LeftButton == ButtonState.Pressed && menuEnabled && clickCoolDown <= 0)
             {
                 focusedElement.onClick();
+                clickCoolDown = .25f;
             }
 
-            if (keyboardState.IsKeyDown(Keys.E) && creditsEnabled)
+            if ((keyboardState.IsKeyDown(Keys.E) || gamepadState.IsButtonDown(Buttons.X)) && creditsEnabled)
             {
                 creditsExit();
             }
@@ -412,7 +419,7 @@ namespace DreamStateMachine
 
         public void startMenuUpdate(float dt)
         {
-            
+            clickCoolDown -= dt;
         }
 
         public void creditsUpdate(float dt)
@@ -442,12 +449,20 @@ namespace DreamStateMachine
             }
         }
 
-        public void rollCredits()
+        public void rollCredits(bool controller = false)
         {
-
-            helpLabel = new MovingLabel(spriteFont, "Press E to go back to the menu.");
-            helpLabel.dimensions.X = drawSpace.Width / 2 + 200;
-            helpLabel.dimensions.Y = 20;
+            if (!controller)
+            {
+                helpLabel = new MovingLabel(spriteFont, "Press E to go back to the menu.");
+                helpLabel.dimensions.X = drawSpace.Width / 2 + 200;
+                helpLabel.dimensions.Y = 20;
+            }
+            else
+            {
+                helpLabel = new MovingLabel(spriteFont, "Press X to go back to the menu.");
+                helpLabel.dimensions.X = drawSpace.Width / 2 + 200;
+                helpLabel.dimensions.Y = 20;
+            }
 
 
             MovingLabel header = new MovingLabel(spriteFont, "DREAM STATE MACHINE");
@@ -502,6 +517,13 @@ namespace DreamStateMachine
             OjanProgrammerList.Add(OjanProgrammerHeader);
             OjanProgrammerList.Add(OjanProgrammer);
             credits.Add(OjanProgrammerList);
+
+            MovingLabel JonathanProgrammerHeader = new MovingLabel(spriteFont, "Jonathan Hunter");
+            MovingLabel JonathanProgrammer = new MovingLabel(spriteFont, "Additional Enemy programming");
+            List<MovingLabel> JonathanProgrammerList = new List<MovingLabel>();
+            JonathanProgrammerList.Add(JonathanProgrammerHeader);
+            JonathanProgrammerList.Add(JonathanProgrammer);
+            credits.Add(JonathanProgrammerList);
 
             MovingLabel PatrickArtistHeader = new MovingLabel(spriteFont, "Patrick Sewell");
             MovingLabel PatrickArtist = new MovingLabel(spriteFont, "Menu design/art, additional Sound effects, Health bar design");
@@ -570,64 +592,100 @@ namespace DreamStateMachine
             //header.dimensions.X = 550;
         }
 
+        public void startTutorialGui(bool controller =false)
+        {
+            if (!controller)
+            {
+                WorldLabel walkUpLabel = new WorldLabel(spriteFont, "press w to walk up");
+                walkUpLabel.dimensions.X = 500;
+                walkUpLabel.dimensions.Y = 500;
+                tutorialGui.Add(walkUpLabel);
+                WorldLabel walkRightLabel = new WorldLabel(spriteFont, "press d to walk right");
+                walkRightLabel.dimensions.X = 1100;
+                walkRightLabel.dimensions.Y = 700;
+                tutorialGui.Add(walkRightLabel);
+                WorldLabel walkDownLabel = new WorldLabel(spriteFont, "press s to walk down");
+                walkDownLabel.dimensions.X = 1800;
+                walkDownLabel.dimensions.Y = 400;
+                tutorialGui.Add(walkDownLabel);
+                WorldLabel walkLeftLabel = new WorldLabel(spriteFont, "press a to walk left");
+                walkLeftLabel.dimensions.X = 1100;
+                walkLeftLabel.dimensions.Y = 1200;
+                tutorialGui.Add(walkLeftLabel);
+                WorldLabel followLabel = new WorldLabel(spriteFont, "Your character faces the mouse cursor");
+                followLabel.dimensions.X = 400;
+                followLabel.dimensions.Y = 1800;
+                tutorialGui.Add(followLabel);
+                WorldLabel escapeLabel = new WorldLabel(spriteFont, "Press escape to pause");
+                escapeLabel.dimensions.X = 0;
+                escapeLabel.dimensions.Y = 1800;
+                tutorialGui.Add(escapeLabel);
+                WorldLabel pickUpLabel = new WorldLabel(spriteFont, "press e to pickup weapons, keys, and health potions");
+                pickUpLabel.dimensions.X = -450;
+                pickUpLabel.dimensions.Y = 1000;
+                tutorialGui.Add(pickUpLabel);
+                WorldLabel weaponLabel = new WorldLabel(spriteFont, "press q to switch between two picked up weapons");
+                weaponLabel.dimensions.X = -450;
+                weaponLabel.dimensions.Y = 800;
+                tutorialGui.Add(weaponLabel);
+                WorldLabel doorLabel = new WorldLabel(spriteFont, "press e to unlock doors with keys");
+                doorLabel.dimensions.X = -450;
+                doorLabel.dimensions.Y = 600;
+                tutorialGui.Add(doorLabel);
+                WorldLabel attackLabel = new WorldLabel(spriteFont, "click the left mouse button to attack");
+                attackLabel.dimensions.X = -450;
+                attackLabel.dimensions.Y = 1500;
+                tutorialGui.Add(attackLabel);
+                WorldLabel useLabel = new WorldLabel(spriteFont, "press e when you are standing over stairs to go down a floor");
+                useLabel.dimensions.X = -200;
+                useLabel.dimensions.Y = 50;
+                tutorialGui.Add(useLabel);
+            }
+            else
+            {
+                WorldLabel walkRightLabel = new WorldLabel(spriteFont, "Use the left thumbstick to move");
+                walkRightLabel.dimensions.X = 1100;
+                walkRightLabel.dimensions.Y = 700;
+                tutorialGui.Add(walkRightLabel);
+                WorldLabel followLabel = new WorldLabel(spriteFont, "Your character faces where you point the right thumbstick");
+                followLabel.dimensions.X = 400;
+                followLabel.dimensions.Y = 1800;
+                tutorialGui.Add(followLabel);
+                WorldLabel escapeLabel = new WorldLabel(spriteFont, "Press start to pause");
+                escapeLabel.dimensions.X = 0;
+                escapeLabel.dimensions.Y = 1800;
+                tutorialGui.Add(escapeLabel);
+                WorldLabel pickUpLabel = new WorldLabel(spriteFont, "Press X to pickup weapons, keys, and health potions");
+                pickUpLabel.dimensions.X = -450;
+                pickUpLabel.dimensions.Y = 1000;
+                tutorialGui.Add(pickUpLabel);
+                WorldLabel weaponLabel = new WorldLabel(spriteFont, "Press Y to switch between two picked up weapons");
+                weaponLabel.dimensions.X = -450;
+                weaponLabel.dimensions.Y = 800;
+                tutorialGui.Add(weaponLabel);
+                WorldLabel doorLabel = new WorldLabel(spriteFont, "Press X to unlock doors with keys");
+                doorLabel.dimensions.X = -450;
+                doorLabel.dimensions.Y = 600;
+                tutorialGui.Add(doorLabel);
+                WorldLabel attackLabel = new WorldLabel(spriteFont, "Press the right bumper button to attack");
+                attackLabel.dimensions.X = -450;
+                attackLabel.dimensions.Y = 1500;
+                tutorialGui.Add(attackLabel);
+                WorldLabel useLabel = new WorldLabel(spriteFont, "Press X when you are standing over stairs to go down a floor");
+                useLabel.dimensions.X = -200;
+                useLabel.dimensions.Y = 50;
+                tutorialGui.Add(useLabel);
+            }
+        }
+
         private void World_Change(Object sender, EventArgs eventArgs)
         {
 
             WorldManager worldManager = (WorldManager)sender;
+            curWorld = worldManager.curWorld;
             healthBars.Clear();
             actors.Clear();
             tutorialGui.Clear();
-            if (worldManager.curWorld != null)
-            {
-                this.curWorld = worldManager.curWorld;
-                if (worldManager.curWorld.isTutorial)
-                {
-                    WorldLabel walkUpLabel = new WorldLabel(spriteFont, "press w to walk up");
-                    walkUpLabel.dimensions.X = 500;
-                    walkUpLabel.dimensions.Y = 500;
-                    tutorialGui.Add(walkUpLabel);
-                    WorldLabel walkRightLabel = new WorldLabel(spriteFont, "press d to walk right");
-                    walkRightLabel.dimensions.X = 1100;
-                    walkRightLabel.dimensions.Y = 700;
-                    tutorialGui.Add(walkRightLabel);
-                    WorldLabel walkDownLabel = new WorldLabel(spriteFont, "press s to walk down");
-                    walkDownLabel.dimensions.X = 1800;
-                    walkDownLabel.dimensions.Y = 400;
-                    tutorialGui.Add(walkDownLabel);
-                    WorldLabel walkLeftLabel = new WorldLabel(spriteFont, "press a to walk left");
-                    walkLeftLabel.dimensions.X = 1100;
-                    walkLeftLabel.dimensions.Y = 1200;
-                    tutorialGui.Add(walkLeftLabel);
-                    WorldLabel followLabel = new WorldLabel(spriteFont, "Your character faces the mouse cursor");
-                    followLabel.dimensions.X = 400;
-                    followLabel.dimensions.Y = 1800;
-                    tutorialGui.Add(followLabel);
-                    WorldLabel escapeLabel = new WorldLabel(spriteFont, "Press escape to pause");
-                    escapeLabel.dimensions.X = 0;
-                    escapeLabel.dimensions.Y = 1800;
-                    tutorialGui.Add(escapeLabel);
-                    WorldLabel pickUpLabel = new WorldLabel(spriteFont, "press e to pickup weapons, keys, and health potions");
-                    pickUpLabel.dimensions.X = -450;
-                    pickUpLabel.dimensions.Y = 1000;
-                    tutorialGui.Add(pickUpLabel);
-                    WorldLabel weaponLabel = new WorldLabel(spriteFont, "press q to switch between two picked up weapons");
-                    weaponLabel.dimensions.X = -450;
-                    weaponLabel.dimensions.Y = 800;
-                    tutorialGui.Add(weaponLabel);
-                    WorldLabel doorLabel = new WorldLabel(spriteFont, "press e to unlock doors with keys");
-                    doorLabel.dimensions.X = -450;
-                    doorLabel.dimensions.Y = 600;
-                    tutorialGui.Add(doorLabel);
-                    WorldLabel attackLabel = new WorldLabel(spriteFont, "click the left mouse button to attack");
-                    attackLabel.dimensions.X = -450;
-                    attackLabel.dimensions.Y = 1500;
-                    tutorialGui.Add(attackLabel);
-                    WorldLabel useLabel = new WorldLabel(spriteFont, "press e when you are standing over stairs to go down a floor");
-                    useLabel.dimensions.X = -200;
-                    useLabel.dimensions.Y = 50;
-                    tutorialGui.Add(useLabel);
-                }
-            }
         }
     }
 }

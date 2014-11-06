@@ -57,6 +57,19 @@ namespace DreamStateMachine.Input
 
             if (padState.IsButtonDown(Buttons.RightShoulder))
                 commands.Add(new PunchCommand());
+            if (padState.IsButtonDown(Buttons.X))
+                commands.Add(new UseCommand());
+            if (padState.IsButtonDown(Buttons.Y))
+                commands.Add(new RotateWeaponCommand());
+            if(padState.IsButtonDown(Buttons.Start))
+            {
+                if (pauseCoolDown <= 0)
+                {
+                    pauseButtonPressed(this, EventArgs.Empty);
+                    pauseCoolDown = .25f;
+                }
+            }
+
             return commands;
         }
 
@@ -84,7 +97,6 @@ namespace DreamStateMachine.Input
                 commands.Add(new PunchCommand());
             if (keyBoardState.IsKeyDown(Keys.E))
             {
-
                 commands.Add(new UseCommand());
             }
             //if (keyBoardState.IsKeyDown(Keys.G))

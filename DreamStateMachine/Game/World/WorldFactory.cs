@@ -302,7 +302,7 @@ namespace DreamStateMachine
         {
             rooms = new List<Room>();
             spawns = new List<SpawnFlag>();
-            int enemyDifficultyCap = difficulty /5;
+            int enemyDifficultyCap = difficulty / 4;
             int healthPotions = difficulty / 30;
             List<EnemyConfig> availableEnemies = enemyConfigs.FindAll(x => x.difficulty <= difficulty );
             List<EnemyConfig> chosenEnemies = new List<EnemyConfig>();
@@ -313,7 +313,7 @@ namespace DreamStateMachine
                 enemyDifficultyCap -= choosenEnemy.difficulty;
                 availableEnemies = enemyConfigs.FindAll(x => x.difficulty <= difficulty );
             }
-            maxRooms = (int)(difficulty / 5) + 3;
+            maxRooms = (int)(difficulty/7) + 3;
             int width = (maxRooms * maxRoomWidth * 2) + (maxRooms * maxHallLength);
             int height = (maxRooms * maxRoomHeight * 2) + (maxRooms * maxHallLength);
             newWorld = new World(floorTex, tileSize);

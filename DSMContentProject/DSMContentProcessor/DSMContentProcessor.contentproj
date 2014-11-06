@@ -242,6 +242,12 @@
       <Processor>PassThroughProcessor</Processor>
       <SubType>Designer</SubType>
     </None>
+    <Compile Include="xboxControllerLeftThumbstick.tga">
+      <Name>xboxControllerLeftThumbstick</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="music\" />

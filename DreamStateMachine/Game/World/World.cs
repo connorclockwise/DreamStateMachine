@@ -20,8 +20,8 @@ namespace DreamStateMachine
         Point bottomRightTilePos;
         public String themeMusic;
         Texture2D floorTiles;
-        int[,] tileMap;
-        bool[,] collisionMap;
+        public int[,] tileMap;
+        public bool[,] collisionMap;
         public int tileSize;
         public bool isTutorial;
         public WorldConfig worldConfig;
