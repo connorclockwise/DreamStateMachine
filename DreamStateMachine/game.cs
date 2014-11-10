@@ -15,6 +15,7 @@ using System.Threading;
 using DreamStateMachine;
 using DreamStateMachine.Input;
 using System.Windows.Forms;
+using DreamStateMachine2.game.GUI;
 
 namespace DreamStateMachine
 {
@@ -26,6 +27,7 @@ namespace DreamStateMachine
         ActorController actorController;
         ActorManager actorManager;
         AIController aiController;
+        GuiManager guiManager;
         ItemManager itemManager;
         InputHandler inputHandler;
         PhysicsController physicsController;
@@ -107,12 +109,17 @@ namespace DreamStateMachine
             origin.X = graphics.PreferredBackBufferWidth / 2;
             origin.Y = graphics.PreferredBackBufferHeight / 2;
             inputHandler = new InputHandler(origin);
-            inputHandler.controller = true;
+            inputHandler.controller = false;
             random = new Random();
             tileRect = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             //tileRect = Window.ClientBounds;
+
+            
             cam = new Camera(spriteBatch, tileRect);
-            cam.loadGuiTextures(Content);
+            cam.loadDebugTex(Content);
+
+            guiManager = new GuiManager(cam);
+            guiManager.loadTextures(Content);
 
             aiController = new AIController();
             physicsController = new PhysicsController();
@@ -131,12 +138,12 @@ namespace DreamStateMachine
             propManager = new PropManager();
             propManager.initPropConfig(Content, "Content/Props.xml");
 
-            cam.enterStartMenu();
-            cam.NewGame += new EventHandler<EventArgs>(NewGameSelected);
-            cam.Tutorial += new EventHandler<EventArgs>(TutorialSelected);
-            cam.Credits += new EventHandler<EventArgs>(CreditsSelected);
-            cam.CreditsExit += new EventHandler<EventArgs>(CreditsExited);
-            cam.ExitPause += new EventHandler<EventArgs>(MainGameExited);
+            guiManager.enterStartMenu();
+            guiManager.NewGame += new EventHandler<EventArgs>(NewGameSelected);
+            guiManager.Tutorial += new EventHandler<EventArgs>(TutorialSelected);
+            guiManager.Credits += new EventHandler<EventArgs>(CreditsSelected);
+            guiManager.CreditsExit += new EventHandler<EventArgs>(CreditsExited);
+            guiManager.ExitPause += new EventHandler<EventArgs>(MainGameExited);
             inputHandler.pauseButtonPressed += new EventHandler<EventArgs>(Pause);
             WorldManager.worldChange += new EventHandler<EventArgs>(WorldManager_worldChange);
 
@@ -180,7 +187,7 @@ namespace DreamStateMachine
         public void startTutorial()
         {
             worldManager.initTutorial();
-            cam.startTutorialGui(inputHandler.controller);
+            guiManager.startTutorialGui(inputHandler.controller);
         }
 
         public void MainGameUpdate(GameTime gameTime)
@@ -188,6 +195,7 @@ namespace DreamStateMachine
              float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
             UpdateInput();
             inputHandler.update(dt);
+            guiManager.update(dt);
             if (!paused)
             {
                 actorController.update(dt);
@@ -195,11 +203,7 @@ namespace DreamStateMachine
                 physicsController.update(dt);
                 SoundManager.Instance.update(dt);
                 cam.gameUpdate(dt);
-                cam.notificationsUpdate(dt);
-            }
-            else
-            {
-                cam.startMenuUpdate(dt);
+                
             }
 
             base.Update(gameTime);
@@ -226,14 +230,14 @@ namespace DreamStateMachine
         public void StartMenuUpdate(GameTime gameTime)
         {
             float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
-            cam.startMenuUpdate(dt);
+            guiManager.update(dt);
             UpdateInput();
         }
 
         public void CreditsUpdate(GameTime gameTime)
         {
             float dt = (gameTime.ElapsedGameTime.Seconds) + (gameTime.ElapsedGameTime.Milliseconds / 1000f);
-            cam.creditsUpdate(dt);
+            guiManager.update(dt);
             UpdateInput();
         }
 
@@ -257,9 +261,9 @@ namespace DreamStateMachine
             //        c.Execute(cam.rootGUIElement);
             //}
 
-            if ((cam.creditsEnabled || cam.menuEnabled) && cam.rootGUIElement != null)
+            if ((guiManager.creditsEnabled || guiManager.menuEnabled) && guiManager.rootGUIElement != null)
             {
-                cam.handleGuiControls();
+                guiManager.handleGuiControls();
             }
         }
 
@@ -296,7 +300,7 @@ namespace DreamStateMachine
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
-                cam.drawCredits();
+                cam.drawGUI();
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -334,7 +338,7 @@ namespace DreamStateMachine
         public void NewGameSelected(Object sender, EventArgs eventArgs)
         {
             //Console.Write("new game selected");
-            cam.menuEnabled = false;
+            guiManager.menuEnabled = false;
             startNewGame();
             //SoundManager.Instance.stopAllSounds();
 
@@ -346,7 +350,7 @@ namespace DreamStateMachine
 
         public void TutorialSelected(Object sender, EventArgs eventArgs)
         {
-            cam.menuEnabled = false;
+            guiManager.menuEnabled = false;
             startTutorial();
 
             gameUpdateStack.Push(MainGameUpdate);
@@ -357,9 +361,9 @@ namespace DreamStateMachine
 
         public void CreditsSelected(Object sender, EventArgs eventArgs)
         {
-            cam.menuEnabled = false;
-            cam.creditsEnabled = true;
-            cam.rollCredits(inputHandler.controller);
+            guiManager.menuEnabled = false;
+            guiManager.creditsEnabled = true;
+            guiManager.rollCredits(inputHandler.controller);
             gameUpdateStack.Push(CreditsUpdate);
             gameDrawStack.Push(CreditsDraw);
             gameUpdate = gameUpdateStack.Peek();
@@ -369,9 +373,9 @@ namespace DreamStateMachine
 
         public void CreditsExited(Object sender, EventArgs eventArgs)
         {
-            cam.creditsEnabled = false;
+            guiManager.creditsEnabled = false;
             SoundManager.Instance.stopAllSounds();
-            cam.enterStartMenu();
+            guiManager.enterStartMenu();
             cam.drawSpace.X = 0;
             cam.drawSpace.Y = 0;
             gameUpdateStack.Pop();
@@ -386,9 +390,8 @@ namespace DreamStateMachine
             {
                 paused = false;
                 player = null;
-                cam.tutorialGui.Clear();
                 SoundManager.Instance.stopAllSounds();
-                cam.enterStartMenu();
+                guiManager.enterStartMenu();
                 cam.drawSpace.X = 0;
                 cam.drawSpace.Y = 0;
                 gameUpdateStack.Pop();
@@ -416,7 +419,7 @@ namespace DreamStateMachine
                 player = null;
                 SoundManager.Instance.stopAllSounds();
 
-                cam.enterStartMenu();
+                guiManager.enterStartMenu();
                 cam.drawSpace.X = 0;
                 cam.drawSpace.Y = 0;
                 worldManager.restart();
@@ -430,9 +433,9 @@ namespace DreamStateMachine
         private void Pause(Object sender, EventArgs eventArgs)
         {
             if (!paused)
-                cam.enterPauseMenu();
+                guiManager.enterPauseMenu();
             else
-                cam.menuEnabled = false;
+                guiManager.menuEnabled = false;
             paused = !paused;
 
         }
@@ -442,13 +445,12 @@ namespace DreamStateMachine
             WorldManager worldManager = (WorldManager)sender;
             if (worldManager.curWorld != null && worldManager.curWorld.isTutorial && gameUpdateStack.Count > 1)
             {
+                paused = false;
                 player = null;
                 SoundManager.Instance.stopAllSounds();
-
-                cam.enterStartMenu();
+                guiManager.enterStartMenu();
                 cam.drawSpace.X = 0;
                 cam.drawSpace.Y = 0;
-                worldManager.restart();
                 gameUpdateStack.Pop();
                 gameDrawStack.Pop();
                 gameUpdate = gameUpdateStack.Peek();

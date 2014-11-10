@@ -64,6 +64,7 @@ namespace DreamStateMachine
                         playerTransfer = usingActor;
                         this.createNextWorld(0);
                         onWorldChange();
+                        playerTransfer = null;
                     }
                     else if (curWorld.isTutorial)
                     {

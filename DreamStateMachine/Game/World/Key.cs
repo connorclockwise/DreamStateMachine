@@ -41,9 +41,9 @@ namespace DreamStateMachine
 
                 if (body.Intersects(usePoint))
                 {
-                    onRemove();
                     SoundManager.Instance.playSound("pickup");
                     usingActor.hasKey = true;
+                    onRemove();
                 }
 
             }

@@ -63,6 +63,7 @@
     <Compile Include="game\Events\SpawnEventArgs.cs" />
     <Compile Include="game\GUI\Button.cs" />
     <Compile Include="game\GUI\FadingLabel.cs" />
+    <Compile Include="game\GUI\GuiManager.cs" />
     <Compile Include="game\GUI\MovingLabel.cs" />
     <Compile Include="game\GUI\WorldLabel.cs" />
     <Compile Include="game\GUI\HealthBar.cs" />

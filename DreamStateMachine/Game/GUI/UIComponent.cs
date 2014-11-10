@@ -9,6 +9,10 @@ namespace DreamStateMachine.Game.GUI
 {
     abstract class UIComponent:IDrawable
     {
+
+        public static event EventHandler<EventArgs> Initialize;
+        public static event EventHandler<EventArgs> Remove;
+
         public UIComponent parent;
         public List<UIComponent> children;
         public Rectangle dimensions;
@@ -23,6 +27,11 @@ namespace DreamStateMachine.Game.GUI
         public abstract void takeFocus();
         public abstract void setPos(Point pos);
         public abstract void setPos(int x, int y);
+
+        public UIComponent()
+        {
+            children = new List<UIComponent>();
+        }
 
         public void rotateFocusNext()
         {
@@ -99,6 +108,28 @@ namespace DreamStateMachine.Game.GUI
                 return curChild;
             }
             return null;
+        }
+
+        public void initialize()
+        {
+            Initialize(this, EventArgs.Empty);
+            foreach (UIComponent uiChild in children)
+            {
+                uiChild.initialize();
+            }
+        }
+
+        public void remove()
+        {
+            Remove(this, EventArgs.Empty);
+            foreach (UIComponent uiChild in children)
+            {
+                uiChild.remove();
+            }
+        }
+
+        public virtual void update(float dt)
+        {
         }
     }
 }

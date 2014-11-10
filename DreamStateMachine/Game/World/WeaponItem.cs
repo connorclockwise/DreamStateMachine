@@ -48,10 +48,10 @@ namespace DreamStateMachine
                     {
                         usingActor.onDrop(usingActor.activeWeapon.name);
                     }
-                    onRemove();
                     usingActor.onPickup(className);
                     SoundManager.Instance.playSound("pickup");
                     usingActor.pickUpCoolDown = .25f;
+                    onRemove();
                 }
 
             }

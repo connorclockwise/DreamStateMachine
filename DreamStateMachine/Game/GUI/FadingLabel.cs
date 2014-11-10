@@ -19,7 +19,7 @@ namespace DreamStateMachine
             curTime = 0;
         }
 
-        public void update(float dt)
+        public override void update(float dt)
         {
             curTime += dt;
             if (timeToFade > curTime)

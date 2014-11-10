@@ -18,7 +18,7 @@ namespace DreamStateMachine
             velocity = new Vector2(0, 0);
         }
 
-        public void update(float dt)
+        public override void update(float dt)
         {
             this.dimensions.X += (int)velocity.X;
             this.dimensions.Y += (int)velocity.Y;
