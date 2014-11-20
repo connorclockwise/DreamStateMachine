@@ -20,7 +20,6 @@ namespace DreamStateMachine.Behaviors
         {
             //itemPrototypes = new Dictionary<string, Actor>();
             weaponPrototypes = new Dictionary<string, Weapon>();
-
             Actor.OnPickUp += new EventHandler<PickupEventArgs>(Actor_Pickup_Item);
         }
 

@@ -5,11 +5,12 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using DreamStateMachine.Actions;
+using DreamStateMachine2.game.World;
 
 
 namespace DreamStateMachine
 {
-    class WeaponItem:Prop
+    class WeaponItem:Prop, IUseable
     {
         public WeaponItem(Texture2D tex, String className, int width, int height, int offsetX, int offsetY, int texWidth, int texHeight):base(tex, width, height, texWidth, texHeight)
         {
@@ -18,7 +19,7 @@ namespace DreamStateMachine
             body.Width = texWidth;
             body.Height = texHeight;
             this.className = className;
-            Actor.Use += new EventHandler<EventArgs>(Actor_Use);
+            //Actor.Use += new EventHandler<EventArgs>(Actor_Use);
             setAnimationFrame(1, 0);
         }
 
@@ -30,31 +31,35 @@ namespace DreamStateMachine
             return WeaponCopy;
         }
 
-        private void Actor_Use(object sender, EventArgs args)
+        public void Use(Actor actor)
         {
-            Actor usingActor = (Actor)sender;
-            if (usingActor.health > 0 && usingActor.pickUpCoolDown <= 0)
+            if (actor.activeWeapon != null)
+            {
+                actor.onDrop(actor.activeWeapon.name);
+            }
+            actor.onPickup(className);
+            SoundManager.Instance.playSound("pickup");
+            actor.pickUpCoolDown = .25f;
+            onRemove();
+        }
+
+        public bool CanUse(Actor actor)
+        {
+            if (actor.health > 0 && actor.pickUpCoolDown <= 0)
             {
 
-                int reach = usingActor.reach;
-                Vector2 sightVector = usingActor.sightVector;
-                Rectangle usePoint = new Rectangle(0,0,20,20);
-                usePoint.X = (int)(usingActor.hitBox.Center.X + (int)(sightVector.X * reach)) - usePoint.Width / 2;
-                usePoint.Y = (int)(usingActor.hitBox.Center.Y + (int)(sightVector.Y * reach)) - usePoint.Height / 2;
+                int reach = actor.reach;
+                Vector2 sightVector = actor.sightVector;
+                Rectangle usePoint = new Rectangle(0, 0, 20, 20);
+                usePoint.X = (int)(actor.hitBox.Center.X + (int)(sightVector.X * reach)) - usePoint.Width / 2;
+                usePoint.Y = (int)(actor.hitBox.Center.Y + (int)(sightVector.Y * reach)) - usePoint.Height / 2;
 
-                if (body.Intersects(usePoint))
+                if (body.Intersects(actor.body))
                 {
-                    if (usingActor.activeWeapon != null)
-                    {
-                        usingActor.onDrop(usingActor.activeWeapon.name);
-                    }
-                    usingActor.onPickup(className);
-                    SoundManager.Instance.playSound("pickup");
-                    usingActor.pickUpCoolDown = .25f;
-                    onRemove();
+                    return true;
                 }
-
             }
+            return false;
         }
     }
 }

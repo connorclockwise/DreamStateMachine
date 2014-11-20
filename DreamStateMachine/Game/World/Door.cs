@@ -6,16 +6,17 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 //using MonoGame.Framework;
 using DreamStateMachine.Actions;
+using DreamStateMachine2.game.World;
 
 
 namespace DreamStateMachine
 {
-    class Door:Prop
+    class Door : Prop, IUseable
     {
 
         public Door(Texture2D tex, int width, int height, int texWidth, int texHeight):base(tex, width, height, texWidth, texHeight)
         {
-            Actor.Use += new EventHandler<EventArgs>(Actor_Use);
+            //Actor.Use += new EventHandler<EventArgs>(Actor_Use);
         }
 
         public override Object Clone()
@@ -35,22 +36,27 @@ namespace DreamStateMachine
             curAnimFrame.Y = y;
         }
 
-        private void Actor_Use(object sender, EventArgs args)
+        public void Use(Actor actor)
         {
-            Actor usingActor = (Actor)sender;
-            if (usingActor.health > 0 && usingActor.hasKey)
+            actor.hasKey = false;
+            onRemove();
+        }
+
+        public bool CanUse(Actor actor)
+        {
+            if (actor.health > 0 && actor.hasKey)
             {
-                int reach = usingActor.reach;
-                Vector2 sightVector = usingActor.sightVector;
+                int reach = actor.reach;
+                Vector2 sightVector = actor.sightVector;
                 Point usePoint = new Point();
-                usePoint.X = (int)(usingActor.hitBox.Center.X + (int)(sightVector.X * reach));
-                usePoint.Y = (int)(usingActor.hitBox.Center.Y + (int)(sightVector.Y * reach));
+                usePoint.X = (int)(actor.hitBox.Center.X + (int)(sightVector.X * reach));
+                usePoint.Y = (int)(actor.hitBox.Center.Y + (int)(sightVector.Y * reach));
                 if (body.Contains(usePoint))
                 {
-                    usingActor.hasKey = false;
-                    onRemove();
+                    return true;
                 }
             }
+            return false;
         }
 
 

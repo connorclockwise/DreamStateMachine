@@ -18,6 +18,7 @@ namespace DreamStateMachine2.game.GUI
         public event EventHandler<EventArgs> Credits;
         public event EventHandler<EventArgs> CreditsExit;
         public event EventHandler<EventArgs> ExitPause;
+        public event EventHandler<EventArgs> MenuExit;
 
         public List<UIComponent> guiItems;
         public List<UIComponent> menuItems;
@@ -43,6 +44,7 @@ namespace DreamStateMachine2.game.GUI
         Panel pausePanel;
         Label pauseLabel;
         Button pauseButton;
+        Panel hudPanel;
         SpriteFont spriteFont;
 
         public GuiManager(Camera camera)
@@ -86,6 +88,7 @@ namespace DreamStateMachine2.game.GUI
             guiTextures["creditsButton"] = content.Load<Texture2D>("creditsBtnUnfocused");
             guiTextures["creditsButtonFocused"] = content.Load<Texture2D>("creditsBtnFocused");
             guiTextures["exitButton"] = content.Load<Texture2D>("exitGameButton");
+            guiTextures["exitMenuButton"] = content.Load<Texture2D>("exitBtn");
             spriteFont = content.Load<SpriteFont>("SpriteFont1");
         }
 
@@ -130,7 +133,7 @@ namespace DreamStateMachine2.game.GUI
             Button newGameButton = new Button(guiTextures["newGameButton"]);
             newGameButton.dimensions.Width = camera.drawSpace.Width * 2 / 5;
             newGameButton.dimensions.Height = camera.drawSpace.Height / 6;
-            newGameButton.dimensions.X = camera.drawSpace.Width / 2 - newGameButton.dimensions.Width / 2;
+            newGameButton.dimensions.X = camera.drawSpace.Width / 4 - newGameButton.dimensions.Width / 2;
             newGameButton.dimensions.Y = camera.drawSpace.Height * 3 / 10;
             newGameButton.onClick = newGameClicked;
             bg.addChild(newGameButton);
@@ -138,7 +141,7 @@ namespace DreamStateMachine2.game.GUI
             Button tutorialButton = new Button(guiTextures["tutorialButton"]);
             tutorialButton.dimensions.Width = camera.drawSpace.Width * 2 / 5;
             tutorialButton.dimensions.Height = camera.drawSpace.Height / 6;
-            tutorialButton.dimensions.X = camera.drawSpace.Width / 2 - tutorialButton.dimensions.Width / 2;
+            tutorialButton.dimensions.X = camera.drawSpace.Width / 4 - tutorialButton.dimensions.Width / 2;
             tutorialButton.dimensions.Y = camera.drawSpace.Height * 5 / 10;
             tutorialButton.onClick = tutorialClicked;
             bg.addChild(tutorialButton);
@@ -146,10 +149,18 @@ namespace DreamStateMachine2.game.GUI
             Button creditsButton = new Button(guiTextures["creditsButton"]);
             creditsButton.dimensions.Width = camera.drawSpace.Width * 2 / 5;
             creditsButton.dimensions.Height = camera.drawSpace.Height / 6;
-            creditsButton.dimensions.X = camera.drawSpace.Width / 2 - creditsButton.dimensions.Width / 2;
-            creditsButton.dimensions.Y = camera.drawSpace.Height * 7 / 10;
+            creditsButton.dimensions.X = camera.drawSpace.Width * 3 / 4 - creditsButton.dimensions.Width / 2;
+            creditsButton.dimensions.Y = camera.drawSpace.Height * 3 / 10;
             creditsButton.onClick = creditsClicked;
             bg.addChild(creditsButton);
+
+            Button exitButton = new Button(guiTextures["exitMenuButton"]);
+            exitButton.dimensions.Width = camera.drawSpace.Width * 2 / 5;
+            exitButton.dimensions.Height = camera.drawSpace.Height / 6;
+            exitButton.dimensions.X = camera.drawSpace.Width * 3 / 4 - exitButton.dimensions.Width / 2;
+            exitButton.dimensions.Y = camera.drawSpace.Height * 5 / 10;
+            exitButton.onClick = exitMenuClicked;
+            bg.addChild(exitButton);
 
             guiItems.Add(bg);
             bg.initialize();
@@ -157,6 +168,18 @@ namespace DreamStateMachine2.game.GUI
             rootGUIElement = bg;
             menuEnabled = true;
             //EnableMenu(this, EventArgs.Empty);
+        }
+
+        public void enterGame()
+        {
+            Panel hudPanel = new Panel(guiTextures["whiteSquare"], Color.Black);
+            hudPanel.dimensions.Width = camera.drawSpace.Width;
+            hudPanel.dimensions.Height = camera.drawSpace.Height / 5;
+            hudPanel.dimensions.X = 0;
+            hudPanel.dimensions.Y = camera.drawSpace.Height / 5;
+
+            hudPanel.initialize();
+            guiItems.Add(hudPanel);
         }
 
         public void enterPauseMenu()
@@ -209,6 +232,11 @@ namespace DreamStateMachine2.game.GUI
         private void exitClicked()
         {
             ExitPause(this, EventArgs.Empty);
+        }
+
+        private void exitMenuClicked()
+        {
+            MenuExit(this, EventArgs.Empty);
         }
 
         private void creditsExit()

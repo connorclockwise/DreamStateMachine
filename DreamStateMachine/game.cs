@@ -144,6 +144,7 @@ namespace DreamStateMachine
             guiManager.Credits += new EventHandler<EventArgs>(CreditsSelected);
             guiManager.CreditsExit += new EventHandler<EventArgs>(CreditsExited);
             guiManager.ExitPause += new EventHandler<EventArgs>(MainGameExited);
+            guiManager.MenuExit += new EventHandler<EventArgs>(MainGameQuit);
             inputHandler.pauseButtonPressed += new EventHandler<EventArgs>(Pause);
             WorldManager.worldChange += new EventHandler<EventArgs>(WorldManager_worldChange);
 
@@ -339,6 +340,7 @@ namespace DreamStateMachine
         {
             //Console.Write("new game selected");
             guiManager.menuEnabled = false;
+            guiManager.enterGame();
             startNewGame();
             //SoundManager.Instance.stopAllSounds();
 
@@ -401,6 +403,10 @@ namespace DreamStateMachine
                 SoundManager.Instance.stopSong("creditsTheme");
             }
             
+        }
+
+        private void MainGameQuit(Object sender, EventArgs eventArgs) {
+            this.Exit();
         }
 
 

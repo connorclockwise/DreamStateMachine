@@ -84,6 +84,7 @@
     <Compile Include="game\Rendering\IDrawable.cs" />
     <Compile Include="game\Sound\Sound.cs" />
     <Compile Include="game\Sound\SoundManager.cs" />
+    <Compile Include="game\World\IUseable.cs" />
     <Compile Include="game\World\WeaponItem.cs" />
     <Compile Include="game\World\Key.cs" />
     <Compile Include="game\World\Door.cs" />

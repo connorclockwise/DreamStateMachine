@@ -7,6 +7,7 @@ using DreamStateMachine.Actions;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System.Xml.Linq;
+using DreamStateMachine2.game.World;
 
 namespace DreamStateMachine.Behaviors
 {
@@ -30,10 +31,29 @@ namespace DreamStateMachine.Behaviors
             random = new Random();
 
             Actor.Spawn += new EventHandler<SpawnEventArgs>(Actor_Spawn);
+            Actor.Use += new EventHandler<EventArgs>(Actor_Use);
             Prop.Spawn += new EventHandler<SpawnEventArgs>(Prop_Spawn);
             Prop.Remove += new EventHandler<EventArgs>(Prop_Remove);
             Actor.Death += new EventHandler<EventArgs>(Actor_Death);
             WorldManager.worldChange +=new EventHandler<EventArgs>(World_Change);
+        }
+
+        void Actor_Use(object sender, EventArgs e)
+        {
+            Actor usingActor = (Actor)sender;
+            IUseable usableProp;
+            foreach (Prop prop in props)
+            {
+                if (prop is IUseable)
+                {
+                    usableProp = ((IUseable)prop);
+                    if (usableProp.CanUse(usingActor))
+                    {
+                        usableProp.Use(usingActor);
+                        return;
+                    }
+                }
+            }
         }
 
         private void Actor_Spawn(object sender, SpawnEventArgs e)
